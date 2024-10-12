@@ -17,16 +17,19 @@ const handleLogin = async(req, res) => {
 }
 
 const getUser = async(req, res) => {
-
     const data = await getUserService();
-
     return res.status(200).json(data)
-    
+}
+
+const getAccount = async(req, res) => {
+    const data = await getUserService();
+    return res.status(200).json(req.user)
 }
 
 module.exports = {
     createUser,
     handleLogin,
     getUser,
+    getAccount
 
 }
