@@ -1,39 +1,50 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from './context/auth.context';
 
 const Header = () => {
 
     const navigate = useNavigate();
+    const {auth, setAuth} = useContext(AuthContext);
+    console.log(">>> Chech auth", auth);
     const items = [
         {
           label: <Link to="/">Home Page</Link>,
           key: 'home',
           icon: <MailOutlined />,
         },
+        ...(auth.isAuthenticated ? [{
+          label: <Link to="/user">Users</Link>,
+          key: 'user',
+          icon: <MailOutlined />,}] : []),
         {
-            label: <Link to="/user">Users</Link>,
-            key: 'user',
-            icon: <MailOutlined />,
-          },
-        {
-          label: 'Welcome Bobby',
+          label: `Welcome ${auth?.user?.name}`,
           key: 'SubMenu',
           icon: <SettingOutlined />,
           children: [
-            {
-                label: <Link to={'/login'}>Login</Link> ,
-                key: 'login',
-            },
-            {
-                label: <span onClick={()=> {
-                  localStorage.clear("access_token")
+            ...(auth.isAuthenticated ? [
+              {
+                label: <span onClick={() => {
+                  localStorage.clear("access_token");
                   setCurrent("home");
+                  setAuth({
+                    isAuthenticated: false,
+                    user: {
+                      email: "",
+                      name: ""
+                    }
+                  })
                   navigate("/");
                 }}>Log out</span>,
                 key: 'logout',
-            },
+              },] : [
+              {
+                label: <Link to={'/login'}>Login</Link> ,
+                key: 'login',
+              }
+           ]),   
           ],
         },
       ];
