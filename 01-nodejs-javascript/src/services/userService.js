@@ -1,5 +1,5 @@
 require("dotenv").config();
-const User = require("../models/user");
+const User = require("../models/Account");
 const { sequelize } = require('../config/database');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -22,7 +22,8 @@ const createUserService = async (name, email, password, dateOfBirth, gender) => 
             email,
             password: hashPassword,
             dateOfBirth,
-            gender
+            gender,
+            role: 'User'
         });
         return result;
 
@@ -30,7 +31,7 @@ const createUserService = async (name, email, password, dateOfBirth, gender) => 
         console.log(error);
         return { EC: 3, EM: "Error creating user" };
     }
-}
+};
 
 const loginService = async (email, password) => {
     try {
@@ -48,7 +49,8 @@ const loginService = async (email, password) => {
                 // Create an access token
                 const payload = {
                     email: user.email,
-                    name: user.name
+                    name: user.name,
+                    role: user.role
                 };
 
                 const access_token = jwt.sign(
@@ -63,7 +65,8 @@ const loginService = async (email, password) => {
                     access_token,
                     user: {
                         email: user.email,
-                        name: user.name
+                        name: user.name,
+                        role: user.role
                     }
                 };
             }
@@ -78,7 +81,7 @@ const loginService = async (email, password) => {
         console.log(error);
         return { EC: 4, EM: "Error logging in" };
     }
-}
+};
 
 const getUserService = async () => {
     try {
@@ -89,8 +92,62 @@ const getUserService = async () => {
         console.log(error);
         return { EC: 5, EM: "Error fetching users" };
     }
-}
+};
+
+const updateUserService = async(id, dateOfBirth, gender) => {
+    try {
+        // Fetch user by ID
+        const user = await User.findByPk(id);
+        if (!user) {
+          return { EC: 6, EM: "User  not found" };
+        }
+    
+        // Update date of birth
+        user.dateOfBirth = dateOfBirth;
+    
+        // Update gender
+        user.gender = gender;
+    
+        await user.save();
+    
+        return { EC: 0, EM: "Profile updated successfully" };
+      } catch (error) {
+        console.log(error);
+        return { EC: 7, EM: "Error updating profile" };
+      }
+};
+
+const updatePasswordService = async (id, password, newPassword, confirmPassword) => {
+    try {
+      // Fetch user by ID
+      const user = await User.findByPk(id);
+      if (!user) {
+        return { EC: 6, EM: "User  not found" };
+      }
+  
+      // Check if current password is correct
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        return { EC: 7, EM: "Invalid current password" };
+      }
+  
+      // Check if new password and confirmation match
+      if (newPassword !== confirmPassword) {
+        return { EC: 8, EM: "New password and confirmation do not match" };
+      }
+  
+      // Update password
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+      await user.save();
+  
+      return { EC: 0, EM: "Password updated successfully" };
+    } catch (error) {
+      console.log(error);
+      return { EC: 9, EM: "Error updating password" };
+    }
+  };
 
 module.exports = {
-    createUserService, loginService, getUserService
+    createUserService, loginService, getUserService, updateUserService, updatePasswordService
 }

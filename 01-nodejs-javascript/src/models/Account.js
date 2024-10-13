@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
-const User = sequelize.define('users', {
+const Account = sequelize.define('users', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -27,9 +27,13 @@ const User = sequelize.define('users', {
     gender: {
         type: DataTypes.ENUM('Man', 'Woman', 'Non-binary', 'Somthing else', 'Prefer not to say'),
         allowNull: false
+    },
+    role: {
+        type: DataTypes.ENUM('Administrator', 'User', 'Assistant Administrator'),
+        allowNull: false
     }
 }, {
     timestamps: false // Disable timestamps if not needed
 });
 
-module.exports = User;
+module.exports = Account;
