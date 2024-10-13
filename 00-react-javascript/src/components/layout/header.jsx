@@ -43,6 +43,10 @@ const Header = () => {
               {
                 label: <Link to={'/login'}>Login</Link> ,
                 key: 'login',
+              },
+              {
+                label: <Link to={'/register'}>Sign up</Link> ,
+                key: 'register',
               }
            ]),   
           ],

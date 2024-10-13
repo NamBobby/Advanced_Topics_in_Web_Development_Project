@@ -26,7 +26,7 @@ function App() {
     }
 
     fetchAccount()
-  }, [])
+  }, [setAppLoading, setAuth])
 
   return (
     <div>

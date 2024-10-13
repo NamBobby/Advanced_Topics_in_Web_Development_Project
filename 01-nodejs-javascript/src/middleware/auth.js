@@ -8,8 +8,8 @@ const auth = (req, res, next) => {
     if(allow_lists.find(item => '/v1/api' + item === req.originalUrl)){
         next();
     }else {
-        // if ( req.headers && req.headers.authorization)
-        if ( req?.headers?.authorization?.split(' ')?.[1]) {
+        if ( req.headers && req.headers.authorization){
+        // if ( req?.headers?.authorization?.split(' ')?.[1]) {
             const token = req.headers.authorization.split(' ')[1];
 
             //verify token

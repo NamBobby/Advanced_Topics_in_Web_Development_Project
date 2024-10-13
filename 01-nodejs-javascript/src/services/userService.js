@@ -1,54 +1,55 @@
-require("dotenv").config()
+require("dotenv").config();
 const User = require("../models/user");
-const bcrypt = require('bcrypt')
+const { sequelize } = require('../config/database');
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 
-const createUserService = async (name, email, password) => {
+const createUserService = async (name, email, password, dateOfBirth, gender) => {
     try {
-        //check user exist 
-        const user = await User.findOne({email});
-        if(user){
-            console.log(`>>> user exist, use another email: " ${email} "`);
+        // Check user existence
+        const user = await User.findOne({ where: { email } });
+        if (user) {
+            console.log(`>>> user exists, use another email: "${email}"`);
             return null;
         }
 
-
-        //hashuser password 
-        const hashPassword = await bcrypt.hash(password, saltRounds)
-        //save user to database
+        // Hash user password
+        const hashPassword = await bcrypt.hash(password, saltRounds);
+        // Save user to database
         let result = await User.create({
-            name: name,
-            email: email,
+            name,
+            email,
             password: hashPassword,
-            role: "BOBBY"
-        })
+            dateOfBirth,
+            gender
+        });
         return result;
 
     } catch (error) {
         console.log(error);
-        return null;
+        return { EC: 3, EM: "Error creating user" };
     }
 }
 
 const loginService = async (email, password) => {
     try {
-        //fetch user by email 
-        const user = await User.findOne({ email: email});
-        if (user){
-            //compare password
-            const isMatchPassword = await bcrypt.compare(password, user.password)
-            if(!isMatchPassword) {
+        // Fetch user by email
+        const user = await User.findOne({ where: { email } });
+        if (user) {
+            // Compare password
+            const isMatchPassword = await bcrypt.compare(password, user.password);
+            if (!isMatchPassword) {
                 return {
                     EC: 2,
                     EM: "Email/Password errors"
-                }
-            }else {
-                //create an access token
+                };
+            } else {
+                // Create an access token
                 const payload = {
                     email: user.email,
                     name: user.name
-                }
+                };
 
                 const access_token = jwt.sign(
                     payload,
@@ -56,7 +57,7 @@ const loginService = async (email, password) => {
                     {
                         expiresIn: process.env.JWT_EXPIRE
                     }
-                 )
+                );
                 return {
                     EC: 0,
                     access_token,
@@ -64,36 +65,31 @@ const loginService = async (email, password) => {
                         email: user.email,
                         name: user.name
                     }
-                }; 
+                };
             }
-        }else {
+        } else {
             return {
                 EC: 1,
                 EM: "Email/Password errors"
-            }
+            };
         }
 
     } catch (error) {
         console.log(error);
-        return null;
+        return { EC: 4, EM: "Error logging in" };
     }
 }
 
-const getUserService = async (name, email, password) => {
+const getUserService = async () => {
     try {
-    
-        let result = await User.find({}).select("-password");
+        let result = await User.findAll({ attributes: { exclude: ['password'] } });
         return result;
 
     } catch (error) {
         console.log(error);
-        return null;
+        return { EC: 5, EM: "Error fetching users" };
     }
 }
-
-
-
-
 
 module.exports = {
     createUserService, loginService, getUserService
