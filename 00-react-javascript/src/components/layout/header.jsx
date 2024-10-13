@@ -15,10 +15,6 @@ const Header = () => {
           key: 'home',
           icon: <HomeOutlined />,
         },
-        ...(auth.isAuthenticated ? [{
-          label: <Link to="/user">Users</Link>,
-          key: 'user',
-          icon: <UsergroupAddOutlined />,}] : []),
         {
           label: `Welcome ${auth?.user?.name ?? ""}`,
           key: 'SubMenu',
