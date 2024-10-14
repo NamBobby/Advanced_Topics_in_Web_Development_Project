@@ -4,6 +4,8 @@ const { sequelize } = require('../config/database');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
+const mailService = require('../services/mailService');
+const UserOTPVerification = require("../models/UserOTPVerification");
 
 const createUserService = async (name, email, password, dateOfBirth, gender) => {
     try {
@@ -23,7 +25,7 @@ const createUserService = async (name, email, password, dateOfBirth, gender) => 
             password: hashPassword,
             dateOfBirth,
             gender,
-            role: 'User'
+            role: 'User '
         });
         return result;
 
@@ -99,7 +101,7 @@ const updateUserService = async(id, dateOfBirth, gender) => {
         // Fetch user by ID
         const user = await User.findByPk(id);
         if (!user) {
-          return { EC: 6, EM: "User  not found" };
+          return { EC: 6, EM: "User   not found" };
         }
     
         // Update date of birth
@@ -148,6 +150,79 @@ const updatePasswordService = async (id, password, newPassword, confirmPassword)
     }
   };
 
+const generateOtp = async (email) => {
+  try {
+    // Find the user by email
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return { EC: 1, EM: "User   not found" };
+    }
+
+    // Generate a random OTP
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    // Hash the OTP
+    const hashedOTP = await bcrypt.hash(otp.toString(), saltRounds);
+
+    // Check if an OTP verification record already exists
+    const existingOTPVerification = await UserOTPVerification.findOne({ where: { email } });
+    if (existingOTPVerification) {
+      // Update the existing record
+      existingOTPVerification.otp = hashedOTP;
+      existingOTPVerification.createdAt = Date.now();
+      existingOTPVerification.expiresAt = Date.now() + 180000;
+      await existingOTPVerification.save();
+    } else {
+      // Create a new OTP verification record
+      const newOTPVerification = await UserOTPVerification.create({
+        email, // Include the email value here
+        otp: hashedOTP,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 180000,
+      });
+      await newOTPVerification.save();
+    }
+
+    // Send the OTP to the user's email
+    await mailService.sendOTP(email, otp);
+
+    return { EC: 0, EM: `OTP: ${otp} sent successfully` };
+  } catch (error) {
+    console.log(error);
+    return { EC: 3, EM: "Error sending OTP" };
+  }
+};
+
+  const verifyOtpAndUpdatePassword = async (email, otp, newPassword, confirmPassword) => {
+    try {
+      // Find the user by email
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return { EC: 1, EM: "User not found" };
+      }
+  
+      // Verify the OTP
+      const existingOTPVerification = await UserOTPVerification.findOne({ where: { email } });
+      if (!existingOTPVerification) {
+        return { EC: 2, EM: "OTP not found" };
+      }
+  
+      const isMatchOtp = await bcrypt.compare(otp.toString(), existingOTPVerification.otp);
+      if (!isMatchOtp) {
+        return { EC: 2, EM: "Invalid OTP" };
+      }
+  
+      // Update the password
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+      await user.save();  
+      return { EC: 0, EM: "Password updated successfully" };
+    } catch (error) {
+      console.log(error);
+      return { EC: 3, EM: "Error updating password" };
+    }
+  };
+
 module.exports = {
-    createUserService, loginService, getUserService, updateUserService, updatePasswordService
+    createUserService, loginService, getUserService, updateUserService, updatePasswordService, generateOtp, verifyOtpAndUpdatePassword,
 }

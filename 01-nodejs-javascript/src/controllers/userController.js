@@ -1,4 +1,4 @@
-const { createUserService, loginService, getUserService, updateUserService, updatePasswordService } = require("../services/userService");
+const { createUserService, loginService, getUserService, updateUserService, updatePasswordService, generateOtp, verifyOtpAndUpdatePassword } = require("../services/userService");
 
 const UserRegister = async (req, res) => {
     const { name, email, password, dateOfBirth, gender } = req.body;
@@ -43,10 +43,36 @@ const updatePassword = async (req, res) => {
     return res.status(200).json(data);
   };
 
+const sendOtp = async (req, res) => {
+  const { email } = req.body;
+  const data = await generateOtp(email);
+  if (data.EC !== 0) {
+    return res.status(400).json(data);
+  }
+  return res.status(200).json(data);
+};
+
+const verifyOtp = async (req, res) => {
+  const { email, otp, newPassword, confirmPassword} = req.body;
+  const data = await verifyOtpAndUpdatePassword(email, otp, newPassword, confirmPassword);
+  if (data.EC !== 0) {
+    return res.status(400).json(data);
+  }
+  return res.status(200).json(data);
+};
+
+const getAccount = async(req, res) => {
+  const data = await getUserService();
+  return res.status(200).json(req.user)
+}
+
 module.exports = {
     UserRegister,
     handleLogin,
     getUser,
+    getAccount,
     updateUser,
     updatePassword,
+    sendOtp,
+    verifyOtp,
 }

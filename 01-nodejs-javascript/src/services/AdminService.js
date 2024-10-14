@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 
-const createUserService = async (name, email, password, dateOfBirth, gender) => {
+const createUserService = async (name, email, password, dateOfBirth, gender, role) => {
     try {
         // Check admin existence
         const admin = await Admin.findOne({ where: { email } });

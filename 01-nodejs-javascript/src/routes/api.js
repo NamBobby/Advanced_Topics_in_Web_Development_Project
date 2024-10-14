@@ -1,30 +1,29 @@
 const express = require('express');
-const { UserRegister, handleLogin, getUser, updateUser, updatePassword } = require('../controllers/userController');
+const { UserRegister, handleLogin, updateUser, updatePassword, getAccount, sendOtp, verifyOtp } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delaymodule = require('../middleware/delay');
-const { getAccount, createUser, deleteUser } = require('../controllers/AdminController');
-
+const { createUser, deleteUser, getUser } = require('../controllers/AdminController');
+const { SendEmail } = require('../controllers/mailController');
+const { getHomepage } = require('../controllers/homeController');
 
 const routerAPI = express.Router();
 
 routerAPI.all("*", auth);
 
-routerAPI.get("/", (req, res) => {
-    return res.status(200).json("Hello world api")
-})
+routerAPI.get("/", getHomepage);
 
 routerAPI.post("/register", UserRegister);
 routerAPI.post("/createuser", createUser);
 routerAPI.post("/login", handleLogin);
 routerAPI.post("/deleteaccount", deleteUser);
-
-
+routerAPI.post("/sendotp", sendOtp);
+routerAPI.post("/verifyotp", delaymodule, verifyOtp);
+routerAPI.post("/sendemail", SendEmail);
 
 routerAPI.get("/user", getUser);
 routerAPI.get("/account", delaymodule, getAccount);
 
 routerAPI.patch("/profile/:id", delaymodule, updateUser);
 routerAPI.patch("/profile/:id/password", delaymodule, updatePassword);
-
 
 module.exports = routerAPI; //export default
