@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
+const fakeDatabase = require('../config/fakebase');
 
 const sequelize = new Sequelize(process.env.DB_DATABASE_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
@@ -33,6 +34,7 @@ const connectToDatabase = async () => {
         console.log(`Connected to database at ${sequelize.options.host}:${sequelize.options.port}`); // connected to db
     } catch (error) {
         console.error("Unable to connect to the database:", error);
+        return fakeDatabase;
     }
 }
 

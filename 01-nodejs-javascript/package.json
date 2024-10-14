@@ -4,8 +4,8 @@
   "description": "Backend nodejs",
   "main": "server.js",
   "scripts": {
+    "dev": "nodemon ./src/server.js && node src/config/fakebase.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./src/server.js",
     "start": "nodemon ./src/server.js"
   },
   "keywords": [

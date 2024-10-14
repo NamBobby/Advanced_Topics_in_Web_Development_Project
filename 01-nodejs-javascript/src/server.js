@@ -5,6 +5,7 @@ const apiRoutes = require('./routes/api');
 const { connectToDatabase } = require('./config/database');
 const { getHomepage } = require('./controllers/homeController');
 const cors = require('cors')
+// const fakeDatabase = require('./config/fakedatabase');
 
 const app = express();
 const port = process.env.PORT || 8888;
@@ -30,7 +31,7 @@ app.use('/v1/api/', apiRoutes);
 
 (async () => {
     try {
-        //using mySQL
+        //using mySQL or fake database
         await connectToDatabase();
 
         app.listen(port, () => {
