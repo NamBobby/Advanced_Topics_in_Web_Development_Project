@@ -8,29 +8,29 @@ import { Spin } from 'antd';
 
 function App() {
 
-  const {setAuth, appLoading, setAppLoading} = useContext(AuthContext);
-  useEffect(() => {
-    const fetchAccount = async() => {
-      setAppLoading(true);
-      const res = await axios.get(`/v1/api/account`);
-      if(res && !res.message) {
-        setAuth({
-          isAuthenticated: true,
-          user: {
-          email: res.email,
-          name: res.name
-          }
-        })
-      }
-      setAppLoading(false);
-    }
+  // const {setAuth, appLoading, setAppLoading} = useContext(AuthContext);
+  // useEffect(() => {
+  //   const fetchAccount = async() => {
+  //     setAppLoading(true);
+  //     const res = await axios.get(`/v1/api/account`);
+  //     if(res && !res.message) {
+  //       setAuth({
+  //         isAuthenticated: true,
+  //         user: {
+  //         email: res.email,
+  //         name: res.name
+  //         }
+  //       })
+  //     }
+  //     setAppLoading(false);
+  //   }
 
-    fetchAccount()
-  }, [setAppLoading, setAuth])
+  //   fetchAccount()
+  // }, [])
 
   return (
     <div>
-      {appLoading === true ?
+      {/* {appLoading === true ?
         <div style={{
           position: 'fixed',
           top: "50%",
@@ -39,12 +39,12 @@ function App() {
         }}>
           <Spin></Spin>
         </div>
-        :
+        : */}
         <>
           <Header/>
           <Outlet/>
         </>
-      }
+      {/* } */}
     </div>
   )
 }
