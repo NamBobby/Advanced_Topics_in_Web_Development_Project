@@ -1,13 +1,11 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react';
 import axios from './util/axios.customize';
-import Header from './components/layout/header';
+import Header from './components/layout/header/header';
 import { Outlet } from 'react-router-dom';
 import { AuthContext } from './components/layout/context/auth.context';
 import { Spin } from 'antd';
 
-
 function App() {
-
   // const {setAuth, appLoading, setAppLoading} = useContext(AuthContext);
   // useEffect(() => {
   //   const fetchAccount = async() => {
@@ -40,13 +38,20 @@ function App() {
           <Spin></Spin>
         </div>
         : */}
-        <>
-          <Header/>
-          <Outlet/>
-        </>
+      <>
+        <Header />
+
+        <Outlet />
+        <Outlet />
+        <Outlet />
+        <Outlet />
+        <Outlet />
+        <Outlet />
+        <Outlet />
+      </>
       {/* } */}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
