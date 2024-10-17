@@ -6,6 +6,8 @@ import { AuthContext } from './components/layout/context/auth.context';
 import { Spin } from 'antd';
 import Footer from './components/layout/footer/footer';
 import SiderBar from './components/layout/sider/sider';
+import Content from './components/layout/content/content';
+import SongContent from './components/layout/content/songContent';
 
 function App() {
   // const {setAuth, appLoading, setAppLoading} = useContext(AuthContext);
@@ -43,11 +45,7 @@ function App() {
       <>
         <Header />
         <SiderBar />
-        <Outlet />
-        <Outlet />
-        <Outlet />
-        <Outlet />
-        <Outlet />
+        <Content />
 
         <Footer />
       </>

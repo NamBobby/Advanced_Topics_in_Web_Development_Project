@@ -1,0 +1,54 @@
+.content-wrapper {
+  padding-top: 100px;
+  display: flex; /* Sử dụng Flexbox để quản lý bố cục các phần tử con */
+  gap: 20px; /* Khoảng cách giữa các phần tử */
+  justify-content: center; /* Căn giữa các phần tử theo chiều ngang */
+  align-items: center; /* Căn giữa các phần tử theo chiều dọc */
+}
+
+.content-wrapper div {
+  cursor: pointer; /* Thay đổi con trỏ để người dùng nhận ra có thể bấm */
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.content-wrapper div:hover {
+  background-color: #ddd; /* Hiệu ứng khi di chuột qua */
+}
+
+.content-wrapper-2 {
+  display: flex;
+  flex-direction: column; /* Sắp xếp các phần tử theo chiều dọc */
+  gap: 20px; /* Tạo khoảng cách giữa các phần tử */
+  justify-content: flex-start; /* Đảm bảo các phần tử căn theo chiều dọc nếu có chiều cao */
+  align-items: flex-start; /* Căn các phần tử qua bên trái */
+}
+
+.content-wrapper-2 div {
+  cursor: pointer;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  text-align: center; /* Đảm bảo văn bản trong các thẻ div căn trái */
+}
+
+.content-wrapper-0 {
+  display: flex; /* Sử dụng Flexbox để quản lý bố cục các phần tử con */
+  gap: 20px; /* Khoảng cách giữa các phần tử */
+  padding-left: 300px;
+  height: 600px;
+}
+
+.content-wrapper-3 {
+  display: flex; /* Sử dụng Flexbox để quản lý bố cục các phần tử con */
+  gap: 40px; /* Khoảng cách giữa các phần tử */
+  justify-content: center; /* Căn giữa các phần tử theo chiều ngang */
+  /* flex-wrap: wrap; */
+}
+
+.content-4 {
+  display: flex;
+  flex-wrap: wrap; /* Đảm bảo các phần tử sẽ xuống hàng khi không đủ không gian */
+}
