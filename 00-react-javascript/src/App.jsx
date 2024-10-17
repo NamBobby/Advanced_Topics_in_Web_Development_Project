@@ -4,6 +4,8 @@ import Header from './components/layout/header/header';
 import { Outlet } from 'react-router-dom';
 import { AuthContext } from './components/layout/context/auth.context';
 import { Spin } from 'antd';
+import Footer from './components/layout/footer/footer';
+import SiderBar from './components/layout/sider/sider';
 
 function App() {
   // const {setAuth, appLoading, setAppLoading} = useContext(AuthContext);
@@ -40,14 +42,14 @@ function App() {
         : */}
       <>
         <Header />
+        <SiderBar />
+        <Outlet />
+        <Outlet />
+        <Outlet />
+        <Outlet />
+        <Outlet />
 
-        <Outlet />
-        <Outlet />
-        <Outlet />
-        <Outlet />
-        <Outlet />
-        <Outlet />
-        <Outlet />
+        <Footer />
       </>
       {/* } */}
     </div>

@@ -98,58 +98,60 @@ const Header = () => {
     setCurrent(e.key);
   };
   return (
-    <div className="header-container">
-      <div className="logo">
-        <Link to="/">
-          <img
-            src="./src/assets/img/logo.PNG" // Thay bằng đường dẫn logo của bạn
-            alt="logo"
-            style={{ width: '100px', height: '40px' }} // Điều chỉnh kích thước logo
-          />
-        </Link>
-      </div>
+    <div>
+      <div className="header-container">
+        <div className="logo">
+          <Link to="/">
+            <img
+              src="./src/assets/img/logo.PNG" // Thay bằng đường dẫn logo của bạn
+              alt="logo"
+              style={{ width: '100px', height: '40px' }} // Điều chỉnh kích thước logo
+            />
+          </Link>
+        </div>
 
-      <Menu
-        className="menu-header"
-        onClick={onClick}
-        selectedKeys={[current]}
-        mode="horizontal"
-        items={items}
-      />
-
-      <div className="search-box">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="What do you want to play?"
-          value={searchQuery} // Liên kết giá trị với state
-          onChange={(e) => setSearchQuery(e.target.value)} // Cập nhật giá trị khi nhập
-          onKeyDown={handleKeyDown} // Xử lý nhấn phím
+        <Menu
+          className="menu-header"
+          onClick={onClick}
+          selectedKeys={[current]}
+          mode="horizontal"
+          items={items}
         />
-        <SearchOutlined className="search-icon" onClick={handleSearch} />
-      </div>
 
-      <div className="auth-buttons">
-        {auth.isAuthenticated ? (
-          <button className="logout-btn" onClick={handleLogout}>
-            Log out
-          </button>
-        ) : (
-          <>
-            <Link to="/login" className="login-btn">
-              Login
-            </Link>
-            <Link to="/register" className="signup-btn">
-              Sign Up
-            </Link>
-            <Link to="/admin" className="signup-btn">
-              Text
-            </Link>
-            <Link to="/userInfo" className="signup-btn">
-              Text2
-            </Link>
-          </>
-        )}
+        <div className="search-box">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="What do you want to play?"
+            value={searchQuery} // Liên kết giá trị với state
+            onChange={(e) => setSearchQuery(e.target.value)} // Cập nhật giá trị khi nhập
+            onKeyDown={handleKeyDown} // Xử lý nhấn phím
+          />
+          <SearchOutlined className="search-icon" onClick={handleSearch} />
+        </div>
+
+        <div className="auth-buttons">
+          {auth.isAuthenticated ? (
+            <button className="logout-btn" onClick={handleLogout}>
+              Log out
+            </button>
+          ) : (
+            <>
+              <Link to="/login" className="login-btn">
+                Login
+              </Link>
+              <Link to="/register" className="signup-btn">
+                Sign Up
+              </Link>
+              <Link to="/admin" className="signup-btn">
+                Text
+              </Link>
+              <Link to="/userInfo" className="signup-btn">
+                Text2
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
