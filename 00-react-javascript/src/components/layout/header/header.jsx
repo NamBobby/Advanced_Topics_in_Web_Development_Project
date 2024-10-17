@@ -142,6 +142,12 @@ const Header = () => {
             <Link to="/register" className="signup-btn">
               Sign Up
             </Link>
+            <Link to="/admin" className="signup-btn">
+              Text
+            </Link>
+            <Link to="/userInfo" className="signup-btn">
+              Text2
+            </Link>
           </>
         )}
       </div>
