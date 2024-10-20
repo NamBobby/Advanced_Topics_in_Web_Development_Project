@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken")
 
 const auth = (req, res, next) => {
     
-    const allow_lists = ["/", "/register", "/login", "/deleteaccount", "/sendemail", "/sendotp", "/verifyotp"];
+    const allow_lists = ["/", "/register", "/login", "/sendemail", "/sendotp", "/verifyotp", "/createuser"];
 
     if(allow_lists.find(item => '/v1/api' + item === req.originalUrl)){
         next();

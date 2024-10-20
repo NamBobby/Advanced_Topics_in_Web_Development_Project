@@ -29,11 +29,11 @@ const Account = sequelize.define('users', {
         allowNull: false
     },
     role: {
-        type: DataTypes.ENUM('Administrator', 'User', 'Assistant Administrator'),
+        type: DataTypes.ENUM('Administrator', 'User', 'Artist'),
         allowNull: false
     }
 }, {
-    timestamps: false // Disable timestamps if not needed
+    timestamps: false 
 });
 
 module.exports = Account;

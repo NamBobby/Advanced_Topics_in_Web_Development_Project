@@ -1,9 +1,7 @@
 require("dotenv").config();
 const Admin = require("../models/Account");
-const { sequelize } = require('../config/database');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const jwt = require('jsonwebtoken');
 
 const createUserService = async (name, email, password, dateOfBirth, gender, role) => {
     try {
@@ -29,12 +27,13 @@ const createUserService = async (name, email, password, dateOfBirth, gender, rol
 
     } catch (error) {
         console.log(error);
-        return { EC: 3, EM: "Error creating admin" };
+        return { EC: 3, EM: "Error creating account" };
     }
 };
 
 const deleteUserService = async (email) => {
     try {
+
       // Find the user by email
       const user = await Admin.findOne({ where: { email } });
       if (!user) {
@@ -42,7 +41,7 @@ const deleteUserService = async (email) => {
       }
   
       // Delete the user
-      await user.destroy();
+      await Admin.destroy({ where: { email } });
       return { EC: 0, EM: "Account deleted successfully" };
     } catch (error) {
       console.log(error);
