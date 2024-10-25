@@ -9,39 +9,51 @@ const Music = sequelize.define('music', {
     },
     title: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     },
     artist: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     },
     genre: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     },
     album: {
         type: DataTypes.STRING,
         allowNull: true
     },
     filePath: {
-        type: DataTypes.STRING, // This could be a URL or local path
-        allowNull: false
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     },
-    author: {
+    description: {
         type: DataTypes.STRING,
         allowNull: true
     },
     uploadDate: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW 
+        defaultValue: DataTypes.NOW
     },
     publishedYear: {
         type: DataTypes.INTEGER,
-        allowNull: false 
-    }    
+        allowNull: false
+    }
 }, {
-    timestamps: false 
+    timestamps: false
 });
 
 module.exports = Music;
