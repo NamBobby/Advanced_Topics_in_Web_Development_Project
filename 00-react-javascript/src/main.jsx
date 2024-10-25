@@ -12,6 +12,7 @@ import UserPage from './pages/user.jsx';
 import HomePage from './pages/home.jsx';
 import LoginPage from './pages/login.jsx';
 import { AuthWrapper } from './components/layout/context/auth.context.jsx';
+import UploadMusicPage from './pages/uploadmusic.jsx';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
     path: "login", 
     element: <LoginPage />
   },
+  {
+    path: "upload", 
+    element: <UploadMusicPage />
+  },
+  
   
 ]);
 
