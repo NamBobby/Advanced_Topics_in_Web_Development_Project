@@ -1,59 +1,88 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
+const Account = require("./Account");
+const Album = require("./Album");
 
-const Music = sequelize.define('music', {
+const Music = sequelize.define(
+  "music",
+  {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: true
-        }
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     artist: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: true
-        }
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     genre: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: true
-        }
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     album: {
-        type: DataTypes.STRING,
-        allowNull: true
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     filePath: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: true
-        }
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     description: {
-        type: DataTypes.STRING,
-        allowNull: true
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    thumbnailPath: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     uploadDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
     publishedYear: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    }
-}, {
-    timestamps: false
-});
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    accountId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Account,
+        key: "id",
+      },
+      allowNull: false,
+    },
+    albumRef: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Album,
+        key: "id",
+      },
+      allowNull: true,
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+
+Account.hasMany(Music, { foreignKey: "accountId" });
+Music.belongsTo(Account, { foreignKey: "accountId" });
 
 module.exports = Music;
