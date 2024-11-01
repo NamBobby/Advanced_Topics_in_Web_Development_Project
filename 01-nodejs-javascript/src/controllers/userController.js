@@ -11,8 +11,9 @@ const {
   removeMusicFromPlaylistService,
   deletePlaylistService,
 } = require("../services/userService");
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const path = require("path");
+const Account = require("../models/Account");
 
 const UserRegister = async (req, res) => {
   const { name, email, password, dateOfBirth, gender } = req.body;
@@ -111,13 +112,20 @@ const createPlaylist = [
   upload.single("thumbnail"),
   async (req, res) => {
     try {
+      const account = await Account.findOne({
+        where: { email: req.user.email },
+      });
+      if (!account) {
+        return res.status(400).json({ message: "Account not found" });
+      }
+
       const { name } = req.body;
       const thumbnailPath = req.file ? req.file.path : null;
 
       const playlist = await createPlaylistService({
         name,
         thumbnailPath,
-        userId: req.user.id,
+        accountId: account.id,
         creationDate: new Date(),
       });
 

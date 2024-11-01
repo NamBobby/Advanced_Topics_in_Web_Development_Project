@@ -1,39 +1,50 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
-const Music = require('./Music');
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/database");
+const Music = require("./Music");
+const Account = require("./Account");
 
-const Playlist = sequelize.define('playlist', {
+const Playlist = sequelize.define(
+  "playlist",
+  {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: true
-        }
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     thumbnailPath: {
-        type: DataTypes.STRING,
-        allowNull: true
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     creationDate: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
-    userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    }
-}, {
-    timestamps: false
-});
+    accountId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Account,
+        key: "id",
+      },
+      allowNull: false,
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
 
-// Thiết lập quan hệ giữa Playlist và Music
-Playlist.belongsToMany(Music, { through: 'PlaylistMusic' });
-Music.belongsToMany(Playlist, { through: 'PlaylistMusic' });
+Account.hasMany(Playlist, { foreignKey: "accountId" });
+Playlist.belongsTo(Account, { foreignKey: "accountId" });
+
+Playlist.belongsToMany(Music, { through: "PlaylistMusic" });
+Music.belongsToMany(Playlist, { through: "PlaylistMusic" });
 
 module.exports = Playlist;
