@@ -1,6 +1,5 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
-const Music = require("./Music");
 const Account = require("./Account");
 
 const Playlist = sequelize.define(
@@ -43,8 +42,5 @@ const Playlist = sequelize.define(
 
 Account.hasMany(Playlist, { foreignKey: "accountId" });
 Playlist.belongsTo(Account, { foreignKey: "accountId" });
-
-Playlist.belongsToMany(Music, { through: "PlaylistMusic" });
-Music.belongsToMany(Playlist, { through: "PlaylistMusic" });
 
 module.exports = Playlist;

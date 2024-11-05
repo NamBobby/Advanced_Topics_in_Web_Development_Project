@@ -7,7 +7,7 @@ const { getHomepage } = require("./controllers/homeController");
 const cors = require("cors");
 
 // Import models with associations
-const { Account, Album, Music } = require('./models/associations');
+const { Account, Album, Music, Playlist, PlaylistMusic } = require('./models/associations');
 
 const app = express();
 const port = process.env.PORT || 8888;

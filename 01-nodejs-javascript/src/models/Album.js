@@ -47,8 +47,4 @@ const Album = sequelize.define("album", {
   timestamps: false,
 });
 
-// Associations
-Account.hasMany(Album, { foreignKey: "accountId" });
-Album.belongsTo(Account, { foreignKey: "accountId" });
-
 module.exports = Album;

@@ -1,5 +1,5 @@
 const express = require('express');
-const { UserRegister, handleLogin, updateUser, updatePassword, getAccount, sendOtp, verifyOtp, createPlaylist, addMusicToPlaylist, removeMusicFromPlaylist, deletePlaylist } = require('../controllers/userController');
+const { UserRegister, handleLogin, updateUser, updatePassword, getAccount, sendOtp, verifyOtp, createPlaylist, addMusicToPlaylist, removeMusicFromPlaylist, deletePlaylist, getPlaylists, getMusics } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delaymodule = require('../middleware/delay');
 const { createUser, deleteUser, getUser } = require('../controllers/AdminController');
@@ -36,6 +36,8 @@ routerAPI.post("/sendemail", SendEmail);
 routerAPI.patch("/profile/:id", delaymodule, updateUser);
 routerAPI.patch("/profile/:id/password", delaymodule, updatePassword);
 routerAPI.post("/create-playlist", createPlaylist);
+routerAPI.get('/playlists', getPlaylists);
+routerAPI.get('/musics', getMusics);
 routerAPI.post("/add-music-to-playlist", addMusicToPlaylist);
 routerAPI.post("/remove-music-from-playlist", removeMusicFromPlaylist);
 routerAPI.post("/delete-playlist", deletePlaylist);

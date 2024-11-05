@@ -49,7 +49,18 @@ const deleteUserService = async (email) => {
     }
   };
 
+// Get users service
+const getUserService = async () => {
+  try {
+    let result = await Admin.findAll({ attributes: { exclude: ["password"] } });
+    return result;
+  } catch (error) {
+    console.log(error);
+    return { EC: 5, EM: "Error fetching users" };
+  }
+};
+
 
 module.exports = {
-    createUserService, deleteUserService
+    createUserService, deleteUserService, getUserService
 }

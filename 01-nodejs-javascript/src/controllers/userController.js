@@ -1,7 +1,7 @@
 const {
   createUserService,
   loginService,
-  getUserService,
+  getProfileService,
   updateUserService,
   updatePasswordService,
   generateOtp,
@@ -10,9 +10,12 @@ const {
   addMusicToPlaylistService,
   removeMusicFromPlaylistService,
   deletePlaylistService,
+  getPlaylistService,
+  getMusicService,
 } = require("../services/userService");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const Account = require("../models/Account");
 
 const UserRegister = async (req, res) => {
@@ -34,11 +37,6 @@ const handleLogin = async (req, res) => {
   const { email, password } = req.body;
   const data = await loginService(email, password);
 
-  return res.status(200).json(data);
-};
-
-const getUser = async (req, res) => {
-  const data = await getUserService();
   return res.status(200).json(data);
 };
 
@@ -91,8 +89,8 @@ const verifyOtp = async (req, res) => {
 };
 
 const getAccount = async (req, res) => {
-  const data = await getUserService();
-  return res.status(200).json(req.user);
+  const data = await getProfileService(req.user.id);
+  return res.status(200).json(data);
 };
 
 // Set up multer for file uploads
@@ -129,8 +127,17 @@ const createPlaylist = [
         creationDate: new Date(),
       });
 
+      // Detele file after stored to mySQL
+      if (thumbnailPath) {
+        fs.unlink(thumbnailPath, (err) => {
+          if (err) {
+            console.error("Error deleting file:", err);
+          }
+        });
+      }
+
       res
-        .status(201)
+        .status(200)
         .json({ message: "Playlist created successfully", playlist });
     } catch (error) {
       console.error("Error in createPlaylist:", error);
@@ -154,12 +161,23 @@ const addMusicToPlaylist = async (req, res) => {
   }
 };
 
+// Controller function to get playlists for a user
+const getPlaylists = async (req, res) => {
+  const playlists = await getPlaylistService(req.user.id);
+  res.status(200).json(playlists);
+};
+
+// Controller function to get all musics
+const getMusics = async (req, res) => {
+  const musics = await getMusicService();
+  res.status(200).json(musics);
+};
+
 // Remove music from playlist function
 const removeMusicFromPlaylist = async (req, res) => {
   try {
-    const { musicId } = req.body;
-
-    const music = await removeMusicFromPlaylistService(musicId);
+    const { playlistId, musicId } = req.body;
+    const music = await removeMusicFromPlaylistService(playlistId, musicId);
     res
       .status(200)
       .json({ message: "Music removed from playlist successfully", music });
@@ -185,14 +203,15 @@ const deletePlaylist = async (req, res) => {
 module.exports = {
   UserRegister,
   handleLogin,
-  getUser,
   getAccount,
   updateUser,
   updatePassword,
   sendOtp,
   verifyOtp,
   createPlaylist,
+  getPlaylists,
   addMusicToPlaylist,
   removeMusicFromPlaylist,
   deletePlaylist,
+  getMusics,
 };

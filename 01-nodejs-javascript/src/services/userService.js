@@ -6,7 +6,9 @@ const jwt = require("jsonwebtoken");
 const mailService = require("../services/mailService");
 const UserOTPVerification = require("../models/UserOTPVerification");
 const Playlist = require("../models/Playlist");
+//const { Playlist } = require("../models/associations");
 const Music = require("../models/Music");
+const PlaylistMusic = require("../models/playlistMusic");
 
 // Create user service
 const createUserService = async (
@@ -58,8 +60,11 @@ const loginService = async (email, password) => {
       } else {
         // Create an access token
         const payload = {
+          id: user.id,
           email: user.email,
           name: user.name,
+          dateOfBirth: user.dateOfBirth,
+          gender: user.gender,
           role: user.role,
         };
 
@@ -70,8 +75,11 @@ const loginService = async (email, password) => {
           EC: 0,
           access_token,
           user: {
+            id: user.id,
             email: user.email,
             name: user.name,
+            dateOfBirth: user.dateOfBirth,
+            gender: user.gender,
             role: user.role,
           },
         };
@@ -89,9 +97,12 @@ const loginService = async (email, password) => {
 };
 
 // Get users service
-const getUserService = async () => {
+const getProfileService = async (id) => {
   try {
-    let result = await User.findAll({ attributes: { exclude: ["password"] } });
+    let result = await User.findAll({
+      where: { id },
+      attributes: { exclude: ["password"] },
+    });
     return result;
   } catch (error) {
     console.log(error);
@@ -259,6 +270,30 @@ const createPlaylistService = async (playlistData) => {
   }
 };
 
+// Service to get playlists for a user
+const getPlaylistService = async (accountId) => {
+  try {
+    const playlists = await Playlist.findAll({ where: { accountId } });
+    return playlists;
+  } catch (error) {
+    console.error("Error in getPlaylistService:", error);
+    throw new Error("Error fetching playlists");
+  }
+};
+
+// Service to get playlists for a user
+const getMusicService = async () => {
+  try {
+    const musics = await Music.findAll({
+      attributes: { exclude: ["uploadDate", "accountId", "albumRef"] },
+    });
+    return musics;
+  } catch (error) {
+    console.error("Error in getPlaylistService:", error);
+    throw new Error("Error fetching playlists");
+  }
+};
+
 // Add music to playlist
 const addMusicToPlaylistService = async (playlistId, musicId) => {
   try {
@@ -268,7 +303,10 @@ const addMusicToPlaylistService = async (playlistId, musicId) => {
     const playlist = await Playlist.findByPk(playlistId);
     if (!playlist) throw new Error("Playlist not found");
 
-    await playlist.addMusic(music);
+    await PlaylistMusic.create({
+      playlistId: playlistId,
+      musicId: musicId,
+    });
     return music;
   } catch (error) {
     console.error("Error in addMusicToPlaylistService:", error);
@@ -277,15 +315,13 @@ const addMusicToPlaylistService = async (playlistId, musicId) => {
 };
 
 // Remove music from playlist
-const removeMusicFromPlaylistService = async (musicId) => {
+const removeMusicFromPlaylistService = async (playlistId, musicId) => {
   try {
     const music = await Music.findByPk(musicId);
     if (!music) throw new Error("Music not found");
-
-    const playlists = await music.getPlaylists();
-    for (const playlist of playlists) {
-      await playlist.removeMusic(music);
-    }
+    await PlaylistMusic.destroy({
+      where: { playlistId: playlistId, musicId: musicId },
+    });
     return music;
   } catch (error) {
     console.error("Error in removeMusicFromPlaylistService:", error);
@@ -309,7 +345,7 @@ const deletePlaylistService = async (playlistId) => {
 module.exports = {
   createUserService,
   loginService,
-  getUserService,
+  getProfileService,
   updateUserService,
   updatePasswordService,
   generateOtp,
@@ -318,4 +354,6 @@ module.exports = {
   addMusicToPlaylistService,
   removeMusicFromPlaylistService,
   deletePlaylistService,
+  getPlaylistService,
+  getMusicService,
 };
