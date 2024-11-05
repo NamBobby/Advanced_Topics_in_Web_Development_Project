@@ -14,9 +14,9 @@ const Account = require("../models/Account");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "musicFile") {
-      cb(null, "uploads/music/");
+      cb(null, "../uploads/music/");
     } else if (file.fieldname === "thumbnail") {
-      cb(null, "uploads/music/thumbnails/");
+      cb(null, "../uploads/music/thumbnails/");
     }
   },
   filename: (req, file, cb) => {
