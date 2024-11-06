@@ -1,18 +1,44 @@
-const express = require('express');
-const { UserRegister, handleLogin, updateUser, updatePassword, getAccount, sendOtp, verifyOtp, createPlaylist, addMusicToPlaylist, removeMusicFromPlaylist, deletePlaylist, getPlaylists, getMusics, getMusicInPlaylist, getUserAlbums, getMusicInAlbum } = require('../controllers/userController');
-const auth = require('../middleware/auth');
-const delaymodule = require('../middleware/delay');
-const { createUser, deleteUser, getUser } = require('../controllers/AdminController');
-const { SendEmail } = require('../controllers/mailController');
-const { getHomepage } = require('../controllers/homeController');
-const { uploadMusical, createAlbum, addMusicToAlbum, removeMusicFromAlbum, deleteAlbum} = require('../controllers/artistController');
-
+const express = require("express");
+const {
+  UserRegister,
+  handleLogin,
+  updateUser,
+  updatePassword,
+  getAccount,
+  sendOtp,
+  verifyOtp,
+  createPlaylist,
+  addMusicToPlaylist,
+  removeMusicFromPlaylist,
+  deletePlaylist,
+  getPlaylists,
+  getMusics,
+  getMusicInPlaylist,
+  getUserAlbums,
+  getMusicInAlbum,
+  searchMusic,
+} = require("../controllers/userController");
+const auth = require("../middleware/auth");
+const delaymodule = require("../middleware/delay");
+const {
+  createUser,
+  deleteUser,
+  getUser,
+} = require("../controllers/AdminController");
+const { SendEmail } = require("../controllers/mailController");
+const { getHomepage } = require("../controllers/homeController");
+const {
+  uploadMusical,
+  createAlbum,
+  addMusicToAlbum,
+  removeMusicFromAlbum,
+  deleteAlbum,
+} = require("../controllers/artistController");
 
 const routerAPI = express.Router();
 
 routerAPI.all("*", auth);
 routerAPI.get("/", getHomepage);
-
 
 // Admin routes
 routerAPI.post("/createuser", createUser);
@@ -36,13 +62,14 @@ routerAPI.post("/sendemail", SendEmail);
 routerAPI.patch("/profile/:id", delaymodule, updateUser);
 routerAPI.patch("/profile/:id/password", delaymodule, updatePassword);
 routerAPI.post("/create-playlist", createPlaylist);
-routerAPI.get('/playlists', getPlaylists);
-routerAPI.get('/musics', getMusics);
+routerAPI.get("/playlists", getPlaylists);
+routerAPI.get("/musics", getMusics);
 routerAPI.post("/add-music-to-playlist", addMusicToPlaylist);
 routerAPI.post("/remove-music-from-playlist", removeMusicFromPlaylist);
 routerAPI.post("/delete-playlist", deletePlaylist);
-routerAPI.post('/playlists/music', getMusicInPlaylist);
-routerAPI.post('/albums/artist', getUserAlbums);
-routerAPI.post('/albums/music', getMusicInAlbum);
+routerAPI.post("/playlists/music", getMusicInPlaylist);
+routerAPI.post("/albums/artist", getUserAlbums);
+routerAPI.post("/albums/music", getMusicInAlbum);
+routerAPI.post("/search/music", searchMusic);
 
 module.exports = routerAPI; //export default

@@ -14,6 +14,8 @@ const {
   PlaylistMusic,
 } = require("../models/associations");
 
+const { Op } = require("sequelize");
+
 // Create user service
 const createUserService = async (
   name,
@@ -439,6 +441,45 @@ const getMusicInAlbumService = async (name, albumId) => {
   }
 };
 
+const searchMusicService = async (searchTerm) => {
+  try {
+    const results = await Music.findAll({
+      where: {
+        [Op.or]: [
+          { title: { [Op.like]: `%${searchTerm}%` } },
+          { artist: { [Op.like]: `%${searchTerm}%` } },
+          { genre: { [Op.like]: `%${searchTerm}%` } },
+          { album: { [Op.like]: `%${searchTerm}%` } },
+        ],
+      },
+      include: [
+        {
+          model: Album,
+          as: "AlbumDetails",
+          attributes: ["name"],
+          where: { name: { [Op.like]: `%${searchTerm}%` } },
+          required: false,
+        },
+      ],
+      attributes: ["title", "artist", "genre", "album"],
+      raw: true,
+    });
+
+    const processedResults = results.map((result) => {
+      if (result["AlbumDetails.name"]) {
+        result.albumName = result["AlbumDetails.name"];
+      }
+      delete result["AlbumDetails.name"];
+      return result;
+    });
+
+    return processedResults;
+  } catch (error) {
+    console.error("Error in searchMusicService:", error);
+    throw new Error("Error searching music");
+  }
+};
+
 module.exports = {
   createUserService,
   loginService,
@@ -456,4 +497,5 @@ module.exports = {
   getMusicInPlaylistService,
   getUserAlbumsService,
   getMusicInAlbumService,
+  searchMusicService,
 };

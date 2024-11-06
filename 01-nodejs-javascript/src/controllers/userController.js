@@ -15,6 +15,7 @@ const {
   getMusicInPlaylistService,
   getUserAlbumsService,
   getMusicInAlbumService,
+  searchMusicService,
 } = require("../services/userService");
 const multer = require("multer");
 const path = require("path");
@@ -250,6 +251,18 @@ const getMusicInAlbum = async (req, res) => {
   }
 };
 
+const searchMusic = async (req, res) => {
+  try {
+    const { searchTerm } = req.body;
+
+    const results = await searchMusicService(searchTerm);
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error in searchMusic:", error);
+    res.status(500).json({ message: "Error searching music" });
+  }
+};
+
 module.exports = {
   UserRegister,
   handleLogin,
@@ -267,4 +280,5 @@ module.exports = {
   getMusicInPlaylist,
   getUserAlbums,
   getMusicInAlbum,
+  searchMusic,
 };
