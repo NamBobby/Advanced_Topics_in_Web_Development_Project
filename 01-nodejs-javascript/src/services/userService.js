@@ -5,8 +5,14 @@ const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const mailService = require("../services/mailService");
 const UserOTPVerification = require("../models/UserOTPVerification");
-const { sequelize } = require('../config/database');
-const { Playlist, Music, PlaylistMusic } = require("../models/associations");
+const { sequelize } = require("../config/database");
+const {
+  Album,
+  Account,
+  Playlist,
+  Music,
+  PlaylistMusic,
+} = require("../models/associations");
 
 // Create user service
 const createUserService = async (
@@ -342,18 +348,16 @@ const deletePlaylistService = async (playlistId) => {
 
 const getMusicInPlaylistService = async (playlistId) => {
   try {
-    console.log("Fetching music for playlistId:", playlistId); // Log để kiểm tra playlistId
-
     const query = `
       SELECT m.title, m.artist, m.genre, m.album, m.filePath
       FROM playlistmusics pm
       INNER JOIN music m ON pm.musicId = m.id
       WHERE pm.playlistId = :playlistId
     `;
-    
+
     const musicList = await sequelize.query(query, {
       replacements: { playlistId },
-      type: sequelize.QueryTypes.SELECT
+      type: sequelize.QueryTypes.SELECT,
     });
 
     if (musicList.length === 0) {
@@ -365,6 +369,73 @@ const getMusicInPlaylistService = async (playlistId) => {
   } catch (error) {
     console.error("Error in getMusicInPlaylistService:", error);
     throw new Error("Error fetching music in playlist");
+  }
+};
+
+const getUserAlbumsService = async (name) => {
+  try {
+    const artist = await Account.findOne({
+      where: { name: name, role: "Artist" },
+      attributes: ["id"],
+    });
+
+    if (!artist) {
+      throw new Error("Artist not found");
+    }
+
+    const albums = await Album.findAll({
+      where: { accountId: artist.id },
+      attributes: ["name", "thumbnailPath", "publishedYear"],
+    });
+
+    return albums;
+  } catch (error) {
+    console.error("Error in getUserAlbumsService:", error);
+    throw new Error("Error fetching albums for user");
+  }
+};
+
+const getMusicInAlbumService = async (name, albumId) => {
+  try {
+    const artist = await Account.findOne({
+      where: { name: name, role: "Artist" },
+      attributes: ["id"],
+    });
+
+    if (!artist) {
+      throw new Error("Artist not found");
+    }
+
+    const album = await Album.findOne({
+      where: { id: albumId, accountId: artist.id },
+      attributes: ["id"],
+    });
+
+    if (!album) {
+      throw new Error("Album not found for the given artist");
+    }
+
+    const query = `
+      SELECT m.title, m.artist, m.genre, m.album, m.filePath
+      FROM albums a
+      INNER JOIN music m ON a.id = m.albumRef
+      WHERE a.id = :albumId
+    `;
+
+    const musicList = await sequelize.query(query, {
+      replacements: { albumId },
+      type: sequelize.QueryTypes.SELECT,
+    });
+
+    if (musicList.length === 0) {
+      console.log("No music found for albumId:", albumId);
+      throw new Error("No music found");
+    }
+
+    return musicList;
+  } catch (error) {
+    console.error("Error in getMusicInAlbumService:", error);
+    throw new Error("Error fetching music in album");
   }
 };
 
@@ -383,4 +454,6 @@ module.exports = {
   getPlaylistService,
   getMusicService,
   getMusicInPlaylistService,
+  getUserAlbumsService,
+  getMusicInAlbumService,
 };

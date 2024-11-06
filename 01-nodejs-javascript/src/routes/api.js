@@ -1,5 +1,5 @@
 const express = require('express');
-const { UserRegister, handleLogin, updateUser, updatePassword, getAccount, sendOtp, verifyOtp, createPlaylist, addMusicToPlaylist, removeMusicFromPlaylist, deletePlaylist, getPlaylists, getMusics, getMusicInPlaylist } = require('../controllers/userController');
+const { UserRegister, handleLogin, updateUser, updatePassword, getAccount, sendOtp, verifyOtp, createPlaylist, addMusicToPlaylist, removeMusicFromPlaylist, deletePlaylist, getPlaylists, getMusics, getMusicInPlaylist, getUserAlbums, getMusicInAlbum } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delaymodule = require('../middleware/delay');
 const { createUser, deleteUser, getUser } = require('../controllers/AdminController');
@@ -42,5 +42,7 @@ routerAPI.post("/add-music-to-playlist", addMusicToPlaylist);
 routerAPI.post("/remove-music-from-playlist", removeMusicFromPlaylist);
 routerAPI.post("/delete-playlist", deletePlaylist);
 routerAPI.post('/playlists/music', getMusicInPlaylist);
+routerAPI.post('/albums/artist', getUserAlbums);
+routerAPI.post('/albums/music', getMusicInAlbum);
 
 module.exports = routerAPI; //export default

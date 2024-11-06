@@ -13,6 +13,8 @@ const {
   getPlaylistService,
   getMusicService,
   getMusicInPlaylistService,
+  getUserAlbumsService,
+  getMusicInAlbumService,
 } = require("../services/userService");
 const multer = require("multer");
 const path = require("path");
@@ -214,6 +216,40 @@ const getMusicInPlaylist = async (req, res) => {
   }
 };
 
+const getUserAlbums = async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    const albums = await getUserAlbumsService(name);
+    res.status(200).json(albums);
+  } catch (error) {
+    if (error.message === "Artist not found") {
+      res.status(404).json({ message: error.message });
+    } else {
+      console.error("Error in getUserAlbums:", error);
+      res.status(500).json({ message: "Error fetching albums for user" });
+    }
+  }
+};
+
+const getMusicInAlbum = async (req, res) => {
+  try {
+    const { name, albumId } = req.body;
+
+    const musicList = await getMusicInAlbumService(name, albumId);
+    res.status(200).json(musicList);
+  } catch (error) {
+    if (error.message === "Artist not found" || error.message === "Album not found for the given artist") {
+      res.status(404).json({ message: error.message });
+    } else if (error.message === "No music found in the album") {
+      res.status(400).json({ message: error.message });
+    } else {
+      console.error("Error in getMusicInAlbum:", error);
+      res.status(500).json({ message: "Error fetching music in album" });
+    }
+  }
+};
+
 module.exports = {
   UserRegister,
   handleLogin,
@@ -229,4 +265,6 @@ module.exports = {
   deletePlaylist,
   getMusics,
   getMusicInPlaylist,
+  getUserAlbums,
+  getMusicInAlbum,
 };
