@@ -147,17 +147,21 @@ const addMusicToAlbum = async (req, res) => {
       .status(200)
       .json({ message: "Music added to album successfully", music });
   } catch (error) {
-    console.error("Error in addMusicToAlbum:", error);
-    res.status(500).json({ message: "Error adding music to album" });
+    if (error.message === "Music is already associated with an album") {
+      res.status(400).json({ message: error.message });
+    } else {
+      console.error("Error in addMusicToAlbum:", error);
+      res.status(500).json({ message: "Error adding music to album" });
+    }
   }
 };
 
 // Remove music from album function
 const removeMusicFromAlbum = async (req, res) => {
   try {
-    const { musicId } = req.body;
+    const { albumId, musicId } = req.body;
 
-    const music = await removeMusicFromAlbumService(musicId);
+    const music = await removeMusicFromAlbumService(albumId, musicId);
     res
       .status(200)
       .json({ message: "Music removed from album successfully", music });
