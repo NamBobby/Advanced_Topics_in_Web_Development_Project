@@ -12,6 +12,7 @@ const {
   deletePlaylistService,
   getPlaylistService,
   getMusicService,
+  getMusicInPlaylistService,
 } = require("../services/userService");
 const multer = require("multer");
 const path = require("path");
@@ -96,7 +97,7 @@ const getAccount = async (req, res) => {
 // Set up multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "../uploads/playlists/");
+    cb(null, "./src/uploads/playlists/");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -200,6 +201,19 @@ const deletePlaylist = async (req, res) => {
   }
 };
 
+const getMusicInPlaylist = async (req, res) => {
+  try {
+    const { playlistId } = req.body;
+    console.log("Playlist ID:", playlistId); 
+
+    const musicList = await getMusicInPlaylistService(playlistId);
+    res.status(200).json(musicList);
+  } catch (error) {
+    console.error("Error in getMusicInPlaylist:", error);
+    res.status(500).json({ message: "Error fetching music in playlist" });
+  }
+};
+
 module.exports = {
   UserRegister,
   handleLogin,
@@ -214,4 +228,5 @@ module.exports = {
   removeMusicFromPlaylist,
   deletePlaylist,
   getMusics,
+  getMusicInPlaylist,
 };

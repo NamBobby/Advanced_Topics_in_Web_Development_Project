@@ -3,7 +3,7 @@ const { sequelize } = require("../config/database");
 const Account = require("./Account");
 
 const Playlist = sequelize.define(
-  "playlist",
+  "playlists",
   {
     id: {
       type: DataTypes.INTEGER,

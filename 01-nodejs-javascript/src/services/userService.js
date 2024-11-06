@@ -5,10 +5,8 @@ const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const mailService = require("../services/mailService");
 const UserOTPVerification = require("../models/UserOTPVerification");
-const Playlist = require("../models/Playlist");
-//const { Playlist } = require("../models/associations");
-const Music = require("../models/Music");
-const PlaylistMusic = require("../models/playlistMusic");
+const { sequelize } = require('../config/database');
+const { Playlist, Music, PlaylistMusic } = require("../models/associations");
 
 // Create user service
 const createUserService = async (
@@ -342,6 +340,34 @@ const deletePlaylistService = async (playlistId) => {
   }
 };
 
+const getMusicInPlaylistService = async (playlistId) => {
+  try {
+    console.log("Fetching music for playlistId:", playlistId); // Log để kiểm tra playlistId
+
+    const query = `
+      SELECT m.title, m.artist, m.genre, m.album, m.filePath
+      FROM playlistmusics pm
+      INNER JOIN music m ON pm.musicId = m.id
+      WHERE pm.playlistId = :playlistId
+    `;
+    
+    const musicList = await sequelize.query(query, {
+      replacements: { playlistId },
+      type: sequelize.QueryTypes.SELECT
+    });
+
+    if (musicList.length === 0) {
+      console.log("No music found for playlistId:", playlistId);
+      throw new Error("No music found");
+    }
+
+    return musicList;
+  } catch (error) {
+    console.error("Error in getMusicInPlaylistService:", error);
+    throw new Error("Error fetching music in playlist");
+  }
+};
+
 module.exports = {
   createUserService,
   loginService,
@@ -356,4 +382,5 @@ module.exports = {
   deletePlaylistService,
   getPlaylistService,
   getMusicService,
+  getMusicInPlaylistService,
 };

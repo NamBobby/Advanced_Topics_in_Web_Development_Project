@@ -14,9 +14,9 @@ const Account = require("../models/Account");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "musicFile") {
-      cb(null, "../uploads/music/");
+      cb(null, "./src/uploads/music/");
     } else if (file.fieldname === "thumbnail") {
-      cb(null, "../uploads/music/thumbnails/");
+      cb(null, "./src/uploads/music/thumbnails/");
     }
   },
   filename: (req, file, cb) => {
@@ -120,6 +120,14 @@ const createAlbum = [
         accountId: account.id,
         creationDate: new Date(),
       });
+
+      if (thumbnailPath) {
+        fs.unlink(thumbnailPath, (err) => {
+          if (err) {
+            console.error("Error deleting file:", err);
+          }
+        });
+      }
 
       res.status(201).json({ message: "Album created successfully", album });
     } catch (error) {

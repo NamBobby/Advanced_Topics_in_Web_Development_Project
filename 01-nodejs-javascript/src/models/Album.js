@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
 const Account = require("./Account"); 
 
-const Album = sequelize.define("album", {
+const Album = sequelize.define("albums", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

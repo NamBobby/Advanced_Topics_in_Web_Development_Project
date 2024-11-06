@@ -17,7 +17,7 @@ Playlist.belongsTo(Account, { foreignKey: "accountId" });
 Album.hasMany(Music, { foreignKey: 'albumRef', as: 'MusicTracks' });
 Music.belongsTo(Album, { foreignKey: 'albumRef', as: 'AlbumDetails' });
 
-Playlist.belongsToMany(Music, { through: PlaylistMusic, foreignKey: 'playlistId', otherKey: 'musicId' }); 
-Music.belongsToMany(Playlist, { through: PlaylistMusic, foreignKey: 'musicId', otherKey: 'playlistId' }); 
+Playlist.belongsToMany(Music, { through: PlaylistMusic, foreignKey: 'playlistId'}); 
+Music.belongsToMany(Playlist, { through: PlaylistMusic, foreignKey: 'musicId'}); 
 
 module.exports = { Account, Album, Music, Playlist, PlaylistMusic };

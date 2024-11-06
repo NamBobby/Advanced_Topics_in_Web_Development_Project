@@ -1,6 +1,8 @@
 require("dotenv").config();
-const Music = require("../models/Music");
-const Album = require("../models/Album");
+// const Music = require("../models/Music");
+// const Album = require("../models/Album");
+
+const { Album, Music} = require("../models/associations");
 
 // Upload music
 const uploadMusicService = async (musicData) => {
@@ -64,6 +66,8 @@ const deleteAlbumService = async (albumId) => {
 
         await Music.update({ albumId: null }, { where: { albumId } });
         await Album.destroy({ where: { id: albumId } });
+
+        return { message: "Album deleted successfully" };
     } catch (error) {
         console.error("Error in deleteAlbumService:", error);
         throw new Error('Error deleting album');
