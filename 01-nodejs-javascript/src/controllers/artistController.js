@@ -73,22 +73,6 @@ const uploadMusical = [
         albumId: req.body.albumId,
       });
 
-      // Detele file after stored to mySQL
-      if (thumbnailPath) {
-        fs.unlink(thumbnailPath, (err) => {
-          if (err) {
-            console.error("Error deleting file:", err);
-          }
-        });
-      }
-      if (filePath) {
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.error("Error deleting file:", err);
-          }
-        });
-      }
-
       res.status(201).json({ message: "Music uploaded successfully", music });
     } catch (error) {
       console.error("Error in uploadMusical:", error);
