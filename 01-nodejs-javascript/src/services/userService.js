@@ -15,6 +15,7 @@ const {
 } = require("../models/associations");
 
 const { Op } = require("sequelize");
+const { uploadToGitHub, deleteFromGitHub, uuidv4 } = require("../utils/utils");
 
 // Create user service
 const createUserService = async (
@@ -265,15 +266,26 @@ const verifyOtpAndUpdatePassword = async (
 };
 
 // Create playlist
-const createPlaylistService = async (playlistData) => {
-  try {
-    const playlist = await Playlist.create(playlistData);
-    console.log("Playlist created:", playlist);
-    return playlist;
-  } catch (error) {
-    console.error("Error in createPlaylistService:", error);
-    throw new Error("Error creating playlist");
+const createPlaylistService = async (account, thumbnailFile, playlistData) => {
+  // Upload thumbnail file to GitHub
+  let thumbnailFileUrl = null;
+  if (thumbnailFile) {
+    const thumbnailFileName = `${uuidv4()}_${thumbnailFile.originalname}`;
+    const thumbnailFilePath = `uploads/playlists/${thumbnailFileName}`;
+    thumbnailFileUrl = await uploadToGitHub(
+      thumbnailFile.buffer,
+      thumbnailFilePath
+    );
   }
+
+  const playlist = await Playlist.create({
+    ...playlistData,
+    thumbnailPath: thumbnailFileUrl, // Save the GitHub URL for thumbnail file
+    accountId: account.id,
+    creationDate: new Date(),
+  });
+
+  return playlist;
 };
 
 // Service to get playlists for a user
@@ -313,7 +325,7 @@ const addMusicToPlaylistService = async (playlistId, musicId) => {
       playlistId: playlistId,
       musicId: musicId,
     });
-    return music;
+    return playlist;
   } catch (error) {
     console.error("Error in addMusicToPlaylistService:", error);
     throw new Error("Error adding music to playlist");
@@ -325,10 +337,12 @@ const removeMusicFromPlaylistService = async (playlistId, musicId) => {
   try {
     const music = await Music.findByPk(musicId);
     if (!music) throw new Error("Music not found");
+
     await PlaylistMusic.destroy({
       where: { playlistId: playlistId, musicId: musicId },
     });
-    return music;
+    
+    return { message: "Music removed from playlist successfully" };
   } catch (error) {
     console.error("Error in removeMusicFromPlaylistService:", error);
     throw new Error("Error removing music from playlist");
@@ -341,7 +355,16 @@ const deletePlaylistService = async (playlistId) => {
     const playlist = await Playlist.findByPk(playlistId);
     if (!playlist) throw new Error("Playlist not found");
 
+    //Delete playlist thumbnail file from GitHub
+    if (playlist.thumbnailPath) {
+      const thumbnailFileName = playlist.thumbnailPath.split("/").pop();
+      const thumbnailFilePath = `uploads/playlists/${thumbnailFileName}`;
+      await deleteFromGitHub(thumbnailFilePath);
+    }
+
     await Playlist.destroy({ where: { id: playlistId } });
+
+    return { message: "Playlist deleted successfully" };
   } catch (error) {
     console.error("Error in deletePlaylistService:", error);
     throw new Error("Error deleting playlist");

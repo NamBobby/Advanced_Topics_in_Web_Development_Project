@@ -4,29 +4,15 @@ const {
   addMusicToAlbumService,
   removeMusicFromAlbumService,
   deleteAlbumService,
+  deleteMusicService,
 } = require("../services/artistService");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+
 const Account = require("../models/Account");
 
-// Set up multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (file.fieldname === "musicFile") {
-      cb(null, "./src/uploads/music/");
-    } else if (file.fieldname === "thumbnail") {
-      cb(null, "./src/uploads/music/thumbnails/");
-    }
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
+const multer = require("multer");
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Upload music function
 const uploadMusical = [
   upload.fields([
     { name: "musicFile", maxCount: 1 },
@@ -52,42 +38,24 @@ const uploadMusical = [
       const account = await Account.findOne({
         where: { email: req.user.email },
       });
+
       if (!account) {
         return res.status(400).json({ message: "Account not found" });
       }
 
-      const filePath = musicFile.path;
-      const thumbnailPath = thumbnailFile ? thumbnailFile.path : null;
-
-      const music = await uploadMusicService({
-        title,
-        artist: account.name,
-        genre,
-        album,
-        filePath,
-        publishedYear,
-        description,
-        thumbnailPath,
-        uploadDate: new Date(),
-        accountId: account.id,
-        albumId: req.body.albumId,
-      });
-
-      // Detele file after stored to mySQL
-      if (thumbnailPath) {
-        fs.unlink(thumbnailPath, (err) => {
-          if (err) {
-            console.error("Error deleting file:", err);
-          }
-        });
-      }
-      if (filePath) {
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.error("Error deleting file:", err);
-          }
-        });
-      }
+      const music = await uploadMusicService(
+        account,
+        musicFile,
+        thumbnailFile,
+        {
+          title,
+          genre,
+          album,
+          publishedYear,
+          description,
+          albumId: req.body.albumId,
+        }
+      );
 
       res.status(201).json({ message: "Music uploaded successfully", music });
     } catch (error) {
@@ -103,7 +71,7 @@ const createAlbum = [
   async (req, res) => {
     try {
       const { name, publishedYear } = req.body;
-      const thumbnailPath = req.file ? req.file.path : null;
+      const thumbnailFile = req.file ? req.file : null;
 
       const account = await Account.findOne({
         where: { email: req.user.email },
@@ -112,22 +80,10 @@ const createAlbum = [
         return res.status(400).json({ message: "Account not found" });
       }
 
-      const album = await createAlbumService({
+      const album = await createAlbumService(account, thumbnailFile, {
         name,
-        artist: account.name,
-        thumbnailPath,
         publishedYear,
-        accountId: account.id,
-        creationDate: new Date(),
       });
-
-      if (thumbnailPath) {
-        fs.unlink(thumbnailPath, (err) => {
-          if (err) {
-            console.error("Error deleting file:", err);
-          }
-        });
-      }
 
       res.status(201).json({ message: "Album created successfully", album });
     } catch (error) {
@@ -174,18 +130,31 @@ const removeMusicFromAlbum = async (req, res) => {
 // Delete album function
 const deleteAlbum = async (req, res) => {
   try {
-    const { albumId } = req.body;
+    const { id } = req.params;
 
-    await deleteAlbumService(albumId);
-    res.status(200).json({ message: "Album deleted successfully" });
+    const response = await deleteAlbumService(id);
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error in deleteAlbum:", error);
     res.status(500).json({ message: "Error deleting album" });
   }
 };
 
+const deleteMusic = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const response = await deleteMusicService(id);
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error in deleteMusic:", error);
+    res.status(500).json({ message: "Error deleting music" });
+  }
+};
+
 module.exports = {
   uploadMusical,
+  deleteMusic,
   createAlbum,
   addMusicToAlbum,
   removeMusicFromAlbum,

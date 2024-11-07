@@ -33,6 +33,7 @@ const {
   addMusicToAlbum,
   removeMusicFromAlbum,
   deleteAlbum,
+  deleteMusic,
 } = require("../controllers/artistController");
 
 const routerAPI = express.Router();
@@ -47,10 +48,11 @@ routerAPI.get("/user", getUser);
 
 // Artist routes
 routerAPI.post("/upload-music", uploadMusical);
+routerAPI.delete('/music/:id', deleteMusic);
 routerAPI.post("/create-album", createAlbum);
 routerAPI.post("/add-music-to-album", addMusicToAlbum);
 routerAPI.post("/remove-music-from-album", removeMusicFromAlbum);
-routerAPI.post("/delete-album", deleteAlbum);
+routerAPI.delete("/delete-album/:id", deleteAlbum);
 
 // User routes
 routerAPI.post("/register", UserRegister);
@@ -66,7 +68,7 @@ routerAPI.get("/playlists", getPlaylists);
 routerAPI.get("/musics", getMusics);
 routerAPI.post("/add-music-to-playlist", addMusicToPlaylist);
 routerAPI.post("/remove-music-from-playlist", removeMusicFromPlaylist);
-routerAPI.post("/delete-playlist", deletePlaylist);
+routerAPI.delete("/delete-playlist/:id", deletePlaylist);
 routerAPI.post("/playlists/music", getMusicInPlaylist);
 routerAPI.post("/albums/artist", getUserAlbums);
 routerAPI.post("/albums/music", getMusicInAlbum);
