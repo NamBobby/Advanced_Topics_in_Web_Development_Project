@@ -17,10 +17,8 @@ const {
   getMusicInAlbumService,
   searchMusicService,
 } = require("../services/userService");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
 const Account = require("../models/Account");
+const { upload, checkThumbnailSize } = require("../config/multerConfig");
 
 const UserRegister = async (req, res) => {
   const { name, email, password, dateOfBirth, gender } = req.body;
@@ -97,21 +95,10 @@ const getAccount = async (req, res) => {
   return res.status(200).json(data);
 };
 
-// Set up multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./src/uploads/playlists/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({ storage });
-
 // Create playlist function
 const createPlaylist = [
-  upload.single("thumbnail"),
+  upload,
+  checkThumbnailSize,
   async (req, res) => {
     try {
       const account = await Account.findOne({
@@ -122,7 +109,7 @@ const createPlaylist = [
       }
 
       const { name } = req.body;
-      const thumbnailPath = req.file ? req.file.path : null;
+      const thumbnailPath = req.files.playlistThumbnail ? req.files.playlistThumbnail[0].path : null;
 
       const playlist = await createPlaylistService({
         name,
@@ -131,18 +118,7 @@ const createPlaylist = [
         creationDate: new Date(),
       });
 
-      // Detele file after stored to mySQL
-      if (thumbnailPath) {
-        fs.unlink(thumbnailPath, (err) => {
-          if (err) {
-            console.error("Error deleting file:", err);
-          }
-        });
-      }
-
-      res
-        .status(200)
-        .json({ message: "Playlist created successfully", playlist });
+      res.status(201).json({ message: "Playlist created successfully", playlist });
     } catch (error) {
       console.error("Error in createPlaylist:", error);
       res.status(500).json({ message: "Error creating playlist" });
@@ -181,10 +157,10 @@ const getMusics = async (req, res) => {
 const removeMusicFromPlaylist = async (req, res) => {
   try {
     const { playlistId, musicId } = req.body;
-    const music = await removeMusicFromPlaylistService(playlistId, musicId);
+    const response = await removeMusicFromPlaylistService(playlistId, musicId);
     res
       .status(200)
-      .json({ message: "Music removed from playlist successfully", music });
+      .json(response);
   } catch (error) {
     console.error("Error in removeMusicFromPlaylist:", error);
     res.status(500).json({ message: "Error removing music from playlist" });
@@ -194,10 +170,10 @@ const removeMusicFromPlaylist = async (req, res) => {
 // Delete playlist function
 const deletePlaylist = async (req, res) => {
   try {
-    const { playlistId } = req.body;
+    const { id } = req.params;
 
-    await deletePlaylistService(playlistId);
-    res.status(200).json({ message: "Playlist deleted successfully" });
+    const response = await deletePlaylistService(id);
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error in deletePlaylist:", error);
     res.status(500).json({ message: "Error deleting playlist" });

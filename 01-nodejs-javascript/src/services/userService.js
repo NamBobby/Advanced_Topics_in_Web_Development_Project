@@ -13,7 +13,7 @@ const {
   Music,
   PlaylistMusic,
 } = require("../models/associations");
-
+const fs = require("fs");
 const { Op } = require("sequelize");
 
 // Create user service
@@ -313,7 +313,7 @@ const addMusicToPlaylistService = async (playlistId, musicId) => {
       playlistId: playlistId,
       musicId: musicId,
     });
-    return music;
+    return playlist;
   } catch (error) {
     console.error("Error in addMusicToPlaylistService:", error);
     throw new Error("Error adding music to playlist");
@@ -328,7 +328,7 @@ const removeMusicFromPlaylistService = async (playlistId, musicId) => {
     await PlaylistMusic.destroy({
       where: { playlistId: playlistId, musicId: musicId },
     });
-    return music;
+    return { message: "Music deleted successfully" };
   } catch (error) {
     console.error("Error in removeMusicFromPlaylistService:", error);
     throw new Error("Error removing music from playlist");
@@ -341,7 +341,15 @@ const deletePlaylistService = async (playlistId) => {
     const playlist = await Playlist.findByPk(playlistId);
     if (!playlist) throw new Error("Playlist not found");
 
+    // Xóa tệp thumbnail của playlist nếu tồn tại
+    if (playlist.thumbnailPath && fs.existsSync(playlist.thumbnailPath)) {
+      fs.unlinkSync(playlist.thumbnailPath);
+    }
+
+    // Xóa playlist khỏi cơ sở dữ liệu
     await Playlist.destroy({ where: { id: playlistId } });
+
+    return { message: "Playlist deleted successfully" };
   } catch (error) {
     console.error("Error in deletePlaylistService:", error);
     throw new Error("Error deleting playlist");

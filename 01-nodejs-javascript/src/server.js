@@ -5,9 +5,17 @@ const apiRoutes = require("./routes/api");
 const { connectToDatabase, sequelize } = require("./config/database");
 const { getHomepage } = require("./controllers/homeController");
 const cors = require("cors");
+const path = require("path");
+const { deleteSpecificFiles } = require("./utils/cleanfileutils");
 
 // Import models with associations
-const { Account, Album, Music, Playlist, PlaylistMusic } = require('./models/associations');
+const {
+  Account,
+  Album,
+  Music,
+  Playlist,
+  PlaylistMusic,
+} = require("./models/associations");
 
 const app = express();
 const port = process.env.PORT || 8888;
@@ -62,9 +70,17 @@ const seedInitialUsers = async () => {
 (async () => {
   try {
     await connectToDatabase();
-    // Sync all Sequelize models with the database
-    await sequelize.sync();
-    //await sequelize.sync({ force: true }); // Drop existing tables and recreate
+
+    const shouldForceSync = false; //set your condition here
+    if (shouldForceSync) {
+      const uploadsPath = path.join(__dirname, "uploads"); 
+      const fileTypesToDelete = [".mp3", ".jpeg", ".mpeg", ".png", ".webp", ".aac", ".jpg"];
+      deleteSpecificFiles(uploadsPath, fileTypesToDelete);
+      // Tạo lại thư mục uploads
+      await sequelize.sync({ force: true }); // Drop existing tables and recreate
+    } else {
+      await sequelize.sync();
+    } // Sync all Sequelize models with the database
     // Seed initial users after tables are created
     await seedInitialUsers();
     app.listen(port, () => {
