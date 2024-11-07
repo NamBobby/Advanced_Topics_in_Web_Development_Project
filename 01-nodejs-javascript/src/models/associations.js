@@ -14,8 +14,8 @@ Music.belongsTo(Account, { foreignKey: "accountId" });
 Account.hasMany(Playlist, { foreignKey: "accountId" });
 Playlist.belongsTo(Account, { foreignKey: "accountId" });
 
-Album.hasMany(Music, { foreignKey: 'albumId', as: 'MusicTracks' });
-Music.belongsTo(Album, { foreignKey: 'albumId', as: 'AlbumDetails' });
+Album.hasMany(Music, { foreignKey: 'albumRef', as: 'MusicTracks' });
+Music.belongsTo(Album, { foreignKey: 'albumRef', as: 'AlbumDetails' });
 
 Playlist.belongsToMany(Music, { through: PlaylistMusic, foreignKey: 'playlistId'}); 
 Music.belongsToMany(Playlist, { through: PlaylistMusic, foreignKey: 'musicId'}); 

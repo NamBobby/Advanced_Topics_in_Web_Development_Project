@@ -65,7 +65,7 @@ const Music = sequelize.define("music", {
     },
     allowNull: false,
   },
-  albumId: {
+  albumRef: {
     type: DataTypes.INTEGER,
     references: {
       model: "albums",

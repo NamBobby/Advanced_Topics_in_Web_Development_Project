@@ -17,13 +17,10 @@ const {
   getMusicInAlbumService,
   searchMusicService,
 } = require("../services/userService");
-
-const Account = require("../models/Account");
-
-// Set up multer for file uploads
 const multer = require("multer");
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const path = require("path");
+const fs = require("fs");
+const Account = require("../models/Account");
 
 const UserRegister = async (req, res) => {
   const { name, email, password, dateOfBirth, gender } = req.body;
@@ -100,14 +97,23 @@ const getAccount = async (req, res) => {
   return res.status(200).json(data);
 };
 
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./src/uploads/playlists/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
 // Create playlist function
 const createPlaylist = [
   upload.single("thumbnail"),
   async (req, res) => {
     try {
-      const { name } = req.body;
-      const thumbnailFile = req.file ? req.file : null;
-
       const account = await Account.findOne({
         where: { email: req.user.email },
       });
@@ -115,9 +121,24 @@ const createPlaylist = [
         return res.status(400).json({ message: "Account not found" });
       }
 
-      const playlist = await createPlaylistService(account, thumbnailFile, {
+      const { name } = req.body;
+      const thumbnailPath = req.file ? req.file.path : null;
+
+      const playlist = await createPlaylistService({
         name,
+        thumbnailPath,
+        accountId: account.id,
+        creationDate: new Date(),
       });
+
+      // Detele file after stored to mySQL
+      if (thumbnailPath) {
+        fs.unlink(thumbnailPath, (err) => {
+          if (err) {
+            console.error("Error deleting file:", err);
+          }
+        });
+      }
 
       res
         .status(200)
@@ -160,8 +181,10 @@ const getMusics = async (req, res) => {
 const removeMusicFromPlaylist = async (req, res) => {
   try {
     const { playlistId, musicId } = req.body;
-    const response = await removeMusicFromPlaylistService(playlistId, musicId);
-    res.status(200).json(response);
+    const music = await removeMusicFromPlaylistService(playlistId, musicId);
+    res
+      .status(200)
+      .json({ message: "Music removed from playlist successfully", music });
   } catch (error) {
     console.error("Error in removeMusicFromPlaylist:", error);
     res.status(500).json({ message: "Error removing music from playlist" });
@@ -171,10 +194,10 @@ const removeMusicFromPlaylist = async (req, res) => {
 // Delete playlist function
 const deletePlaylist = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { playlistId } = req.body;
 
-    const response = await deletePlaylistService(id);
-    res.status(200).json(response);
+    await deletePlaylistService(playlistId);
+    res.status(200).json({ message: "Playlist deleted successfully" });
   } catch (error) {
     console.error("Error in deletePlaylist:", error);
     res.status(500).json({ message: "Error deleting playlist" });
@@ -184,7 +207,7 @@ const deletePlaylist = async (req, res) => {
 const getMusicInPlaylist = async (req, res) => {
   try {
     const { playlistId } = req.body;
-    console.log("Playlist ID:", playlistId);
+    console.log("Playlist ID:", playlistId); 
 
     const musicList = await getMusicInPlaylistService(playlistId);
     res.status(200).json(musicList);
@@ -217,10 +240,7 @@ const getMusicInAlbum = async (req, res) => {
     const musicList = await getMusicInAlbumService(name, albumId);
     res.status(200).json(musicList);
   } catch (error) {
-    if (
-      error.message === "Artist not found" ||
-      error.message === "Album not found for the given artist"
-    ) {
+    if (error.message === "Artist not found" || error.message === "Album not found for the given artist") {
       res.status(404).json({ message: error.message });
     } else if (error.message === "No music found in the album") {
       res.status(400).json({ message: error.message });
