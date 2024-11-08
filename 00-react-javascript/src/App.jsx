@@ -1,52 +1,29 @@
-import { useContext, useEffect } from 'react'
-import axios from './util/axios.customize';
-import Header from './components/layout/header';
-import { Outlet } from 'react-router-dom';
-import { AuthContext } from './components/layout/context/auth.context';
-import { Spin } from 'antd';
-
+import Header from './components/layout/header/header';
+import Footer from './components/layout/footer/footer';
+import SiderBar from './components/layout/sider/sider';
+import Content from './components/layout/content/content';
+import SongContent from './components/layout/content/songContent';
+import './styles/global.css';
 
 function App() {
 
-  const {setAuth, appLoading, setAppLoading} = useContext(AuthContext);
-  useEffect(() => {
-    const fetchAccount = async() => {
-      setAppLoading(true);
-      const res = await axios.get(`/v1/api/account`);
-      if(res && !res.message) {
-        setAuth({
-          isAuthenticated: true,
-          user: {
-          email: res.email,
-          name: res.name
-          }
-        })
-      }
-      setAppLoading(false);
-    }
-
-    fetchAccount()
-  }, [setAppLoading, setAuth])
-
   return (
     <div>
-      {appLoading === true ?
-        <div style={{
-          position: 'fixed',
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)"
-        }}>
-          <Spin></Spin>
+      <>
+        <Header />
+        <div className="app-container">
+          {/* Sidebar on the left */}
+          <SiderBar className="sider-bar" />
+
+          {/* Main content on the right */}
+          <div className="main-content">
+            <Content className="content" />
+            <Footer />
+          </div>
         </div>
-        :
-        <>
-          <Header/>
-          <Outlet/>
-        </>
-      }
+      </>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

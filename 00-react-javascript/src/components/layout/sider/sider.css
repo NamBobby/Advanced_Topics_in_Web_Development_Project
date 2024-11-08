@@ -1,0 +1,98 @@
+/* Sidebar Container */
+.slider-bar {
+  width: 240px;
+  height: 88vh;
+  background-color: #282c34; /* Dark background for the sidebar */
+  color: #ffffff; /* White text color */
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  border-radius: 20px;
+  margin: 0 10px;
+  resize: none;
+}
+
+/* Sidebar Header */
+.slider-bar-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.slider-bar-header h3 {
+  margin: 0;
+  font-size: 20px; /* Font size for the header */
+}
+
+.slider-bar-tabs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  color: #ffffff; /* White text color for tabs */
+  cursor: pointer;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.tab:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
+}
+
+/* Sidebar Navigation Buttons */
+.sidebar-navigation {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 10px;
+}
+
+.nav-button {
+  background-color: transparent;
+  color: #ffffff; /* White text color for navigation buttons */
+  font-size: 18px;
+  padding: 10px;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
+}
+
+/* Sidebar Content */
+.slider-bar-content {
+  flex-grow: 1; /* Allow content to grow and take up remaining space */
+  padding: 16px;
+}
+
+.playlists,
+.artists {
+  margin: 5px 0;
+}
+
+.playlist-item,
+.artist-item {
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  color: #bbb; /* Slightly lighter color for playlist items */
+}
+
+.playlist-item:hover,
+.artist-item:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
+  color: #ffffff;
+}
+
+/* Selected Item Display */
+.selected-item {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #aaa;
+}
