@@ -4,8 +4,9 @@ import {
   HomeOutlined,
   SettingOutlined,
   SearchOutlined,
+  ExportOutlined,
 } from "@ant-design/icons";
-import { Menu } from "antd";
+import { Button, Dropdown, Menu } from "antd";
 import "../assets/styles/header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth.context";
@@ -40,15 +41,50 @@ const Header = () => {
     navigate("/");
   };
 
+  const onClick = (e) => {
+    console.log("click", e);
+    setCurrent(e.key);
+  };
+
+  const menu = (
+    <Menu>
+      {auth.isAuthenticated ? (
+        <>
+          <Menu.Item key="username">
+            {auth?.user?.name ?? " "} 
+            <ExportOutlined className="export-icon"/>
+          </Menu.Item>
+          <Menu.Item key="logout">
+            <button className="logout-btn" onClick={handleLogout}>
+              Log out
+            </button>
+          </Menu.Item>
+        </>
+      ) : (
+        <>
+          <Menu.Item key="login">
+            <Link to="/login" className="login-btn">
+              Login
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="register">
+            <Link to="/register" className="signup-btn">
+              Sign Up
+            </Link>
+          </Menu.Item>
+        </>
+      )}
+    </Menu>
+  );
+
   return (
     <div className="header-container">
-      <div className="logo">
-        <Link to="/">
-          <HomeOutlined style={{ fontSize: "24px", color: "#fff" }} />
-        </Link>
-      </div>
-
       <div className="search-box">
+        <div className="logo">
+          <Link to="/">
+            <HomeOutlined className="home-icon"/>
+          </Link>
+        </div>
         <input
           type="text"
           className="search-input"
@@ -61,25 +97,9 @@ const Header = () => {
       </div>
 
       <div className="auth-buttons">
-        {auth.isAuthenticated ? (
-          <>
-            <span className="welcome-message">
-              Welcome, {auth?.user?.name ?? ""}
-            </span>
-            <button className="logout-btn" onClick={handleLogout}>
-              Log out
-            </button>
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="login-btn">
-              Login
-            </Link>
-            <Link to="/register" className="signup-btn">
-              Sign Up
-            </Link>
-          </>
-        )}
+        <Dropdown overlay={menu} trigger={['click']}>
+          <Button icon={<UserOutlined />} />
+        </Dropdown>
       </div>
     </div>
   );

@@ -1,28 +1,11 @@
 .header-container {
-  display: flex; /* Sử dụng flexbox để đặt logo và menu cạnh nhau */
-  align-items: center; /* Căn giữa logo và menu theo chiều dọc */
+  display: flex;
+  align-items: center;
   justify-content: space-between;
   width: 100%;
   background-color: black;
   top: 0;
-  margin: 5px 0;
-}
-
-.menu-header {
-  /* flex-grow: 1; */
-  background-color: #fff; /* Màu nền cho menu */
-  border-bottom: none;
-  position: relative;
-  box-sizing: border-box;
-  font-size: 18px;
-}
-
-.menu-header .ant-menu-item {
-  margin-right: 20px;
-}
-
-.menu-right {
-  margin-left: auto;
+  margin: 5px 0px;
 }
 
 .logo {
@@ -32,81 +15,94 @@
 
 .auth-buttons {
   display: flex;
-  gap: 10px; /* Khoảng cách giữa các nút */
-  margin-right: 12px;
-  position: relative;
+  align-items: center;
+  justify-content: center;
+  margin-right: 30px;
+}
+
+.auth-buttons .ant-btn {
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-buttons .ant-btn:hover,
+.auth-buttons .ant-btn:focus {
+  background-color: darkgrey;
+  color: black;
+}
+
+/* Menu */
+.ant-dropdown-menu{
+  background-color: #333;
+}
+
+.ant-dropdown-menu-item {
+  background-color: white;
+  color: white;
+}
+
+.ant-dropdown-menu-item a:hover,
+.ant-dropdown-menu-item a:focus,
+.ant-dropdown-menu-item button:hover,
+.ant-dropdown-menu-item button:focus {
+  background-color: transparent;
+}
+
+.ant-dropdown-menu-title-content {
+  font-size: 16px;
+  color: rgb(0, 0, 0)
+}
+
+.logout-btn {
+  border: none;
+  font-size: 16px;
+  background-color: transparent;
+  color: red;
 }
 
 /* Login and Sign Up */
 .signup-btn {
-  padding: 12px 24px;
-  background-color: white;
-  color: black;
-  border-radius: 28px;
-  text-decoration: none;
-  font-weight: bold;
-  max-width: fit-content;
-  box-sizing: border-box;
-  font-size: 20px;
+    border: none;
+    font-size: 16px;
+    background-color: transparent;
+    color: #1f1f1f;
 }
 
 .login-btn {
-  padding: 12px 24px;
-  color: var(--text-subdued, #656565);
-  border-radius: 28px;
-  text-decoration: none;
-  font-weight: bold;
-  max-width: fit-content;
-  box-sizing: border-box;
-  font-size: 20px;
-}
-
-.login-btn:hover {
-  color: white;
-}
-
-.signup-btn:hover {
-  background-color: #b3b3b3;
-  color: black;
-}
-
-/* Log out */
-.logout-btn {
-  padding: 12px;
-  background-color: #ff4d4f;
-  color: white;
   border: none;
-  border-radius: 24px;
-  cursor: pointer;
-}
-
-.logout-btn:hover {
-  background-color: #ff7875;
+    font-size: 16px;
+    background-color: transparent;
+    color: #1f1f1f;
 }
 
 /* search box */
 .search-box {
   display: flex;
+  padding-left: 100px;
   align-items: center;
-  padding: 5px 10px;
   margin: 0 auto;
   flex-shrink: 0;
-  width: 400px;
+  width: 500px;
 }
 
 .search-icon {
   color: #919191;
   font-size: 28px;
-  cursor: pointer;
-  margin-left: 8px; /* Khoảng cách giữa ô tìm kiếm và icon */
-  margin-right: 8px;
+  margin-left: 20px;
 }
 
 .search-input {
   max-width: 500px;
-  padding: 12px; /* Padding cho ô tìm kiếm */
-  border: 1px solid #ccc; /* Viền cho ô tìm kiếm */
-  background-color: #1F1F1F;
+  padding: 12px;
+  border: 1px solid #ccc;
+  background-color: #1f1f1f;
   color: white;
   border-radius: 16px;
   width: 100%;
@@ -116,4 +112,18 @@
 
 .search-icon:hover {
   color: white;
+}
+
+.home-icon {
+  color: #919191;
+  font-size: 28px;
+}
+
+.home-icon:hover {
+  color: white;
+}
+
+.export-icon{
+  margin-left: 5px;
+  font-size: 10px;
 }
