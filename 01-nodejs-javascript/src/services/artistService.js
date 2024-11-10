@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { sequelize } = require("../config/database");
-const { Album, Music } = require("../models/sociations");
+const { Album, Music } = require("../models/associations");
 const fs = require("fs");
 
 // Upload music service

@@ -1,5 +1,5 @@
 require("dotenv").config();
-const Account = require("../models/count");
+const Account = require("../models/account");
 const bcrypt = require("bcryptjs");
 const saltRounds = 10;
 

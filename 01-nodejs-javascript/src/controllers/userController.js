@@ -17,7 +17,7 @@ const {
   getMusicInAlbumService,
   searchMusicService,
 } = require("../services/userService");
-const Account = require("../models/count");
+const Account = require("../models/account");
 const { upload, checkThumbnailSize } = require("../config/multerConfig");
 
 const UserRegister = async (req, res) => {

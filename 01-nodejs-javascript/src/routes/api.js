@@ -31,7 +31,7 @@ const {
   deleteAlbum,
   deleteMusic,
 } = require("../controllers/artistController");
-const { createUser, deleteUser, getUser } = require("../controllers/ainController");
+const { createUser, deleteUser, getUser } = require("../controllers/adminController");
 
 
 const routerAPI = express.Router();

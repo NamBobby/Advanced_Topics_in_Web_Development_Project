@@ -1,10 +1,10 @@
 require("dotenv").config();
-const User = require("../models/count");
+const User = require("../models/account");
 const bcrypt = require("bcryptjs");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const mailService = require("../services/mailService");
-const UserOTPVerification = require("../models/erOTPVerification");
+const UserOTPVerification = require("../models/userOTPVerification");
 const { sequelize } = require("../config/database");
 const {
   Album,
@@ -12,7 +12,7 @@ const {
   Playlist,
   Music,
   PlaylistMusic,
-} = require("../models/sociations");
+} = require("../models/associations");
 const fs = require("fs");
 const { Op } = require("sequelize");
 

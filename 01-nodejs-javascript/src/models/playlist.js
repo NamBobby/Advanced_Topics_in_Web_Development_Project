@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
-const Account = require("./count");
+const Account = require("./account");
 
 const Playlist = sequelize.define(
   "playlists",
