@@ -1,6 +1,6 @@
 import { notification, Table } from "antd";
 import { useEffect, useState } from "react";
-import { getUserApi } from "../util/api";
+import { getUserApi } from "../services/apiService";
 
 const UserPage = () => {
     const [dataSource, setDatasource] = useState([]);

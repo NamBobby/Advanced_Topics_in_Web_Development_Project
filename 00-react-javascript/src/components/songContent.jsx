@@ -1,5 +1,5 @@
 import React from 'react';
-import './content.css';
+import '../assets/styles/content.css';
 
 const SongContent = () => {
   const handleTitleClick = (title) => {

@@ -1,9 +1,9 @@
-import Header from './components/layout/header/header';
-import Footer from './components/layout/footer/footer';
-import SiderBar from './components/layout/sider/sider';
-import Content from './components/layout/content/content';
-import SongContent from './components/layout/content/songContent';
-import './styles/global.css';
+import Header from './components/header';
+import Footer from './components/footer';
+import SiderBar from './components/sider';
+import Content from './components/content';
+import SongContent from './components/songContent';
+import './global.css';
 
 function App() {
 

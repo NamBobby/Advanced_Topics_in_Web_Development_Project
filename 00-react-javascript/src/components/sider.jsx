@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import './sider.css';
+import '../assets/styles/sider.css';
 
 const SiderBar = () => {
   const [selectedItem, setSelectedItem] = useState(null);

@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './app.jsx';
-import './styles/main.css';
+import App from './App.jsx';
+import './main.css';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import RegisterPage from './pages/register.jsx';
-import HomePage from './pages/home.jsx';
-import LoginPage from './pages/login.jsx';
-import AdminPage from './pages/admin.jsx';
-import { AuthWrapper } from './components/layout/context/auth.context.jsx';
-import UserInfo from './pages/userInfo.jsx';
+import RegisterPage from './containers/register.jsx';
+import HomePage from './containers/home.jsx';
+import LoginPage from './containers/login.jsx';
+import AdminPage from './containers/admin.jsx';
+import { AuthWrapper } from './components/auth.context.jsx';
+import UserInfo from './containers/userInfo.jsx';
 
 const router = createBrowserRouter([
   {

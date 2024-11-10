@@ -1,4 +1,4 @@
-import './header.css';
+import '../assets/styles//header.css';
 import React, { useContext, useState } from 'react';
 import {
   UsergroupAddOutlined,
@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/auth.context';
+import { AuthContext } from './auth.context';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -55,9 +55,9 @@ const Header = () => {
         <div className="logo">
           <Link to="/">
             <img
-              src="./src/assets/img/spotify-white-icon.svg" // Thay bằng đường dẫn logo của bạn
+              src="./src/assets/img/spotify-white-icon.svg" 
               alt="logo"
-              style={{ width: '100px', height: '40px' }} // Điều chỉnh kích thước logo
+              style={{ width: '100px', height: '40px' }} 
             />
           </Link>
         </div>

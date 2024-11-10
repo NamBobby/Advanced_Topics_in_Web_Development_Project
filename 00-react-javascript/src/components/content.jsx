@@ -1,5 +1,5 @@
 import React from 'react';
-import './content.css';
+import '../assets/styles/content.css';
 
 const Content = () => {
   const songs = [
@@ -19,7 +19,7 @@ const Content = () => {
 
   return (
     <div>
-      <h2 className="welcome-message">Welcome! Select a song you'd like to play.</h2>
+      <h2 className="welcome-message">Welcome! Select a song you would like to play.</h2>
       <div className="content-wrapper">
         {songs.map((song, index) => (
           <div key={index} className="song" onClick={() => handleTitleClick(song.title)}>

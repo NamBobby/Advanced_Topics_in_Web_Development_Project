@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Button, Col, Divider, Form, Input, notification, Row } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, ArrowLeftOutlined } from '@ant-design/icons';
-import { LoginApi } from '../util/api';
+import { LoginApi } from '../services/apiService';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../components/layout/context/auth.context';
+import { AuthContext } from '../components/auth.context';
 
 const LoginPage = () => {
   const navigate = useNavigate();
