@@ -4,6 +4,7 @@ import SiderBar from './components/sider';
 import Content from './components/content';
 import SongContent from './components/songContent';
 import './global.css';
+import HomePage from './containers/home';
 
 function App() {
 
@@ -17,7 +18,8 @@ function App() {
 
           {/* Main content on the right */}
           <div className="main-content">
-            <Content className="content" />
+            {/* <Content className="content" /> */}
+            <HomePage />
             <Footer />
           </div>
         </div>
