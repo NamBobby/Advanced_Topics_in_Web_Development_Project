@@ -20,11 +20,7 @@ const {
 } = require("../controllers/userController");
 const auth = require("../middleware/auth");
 const delaymodule = require("../middleware/delay");
-const {
-  createUser,
-  deleteUser,
-  getUser,
-} = require("../controllers/AdminController");
+
 const { SendEmail } = require("../controllers/mailController");
 const { getHomepage } = require("../controllers/homeController");
 const {
@@ -35,6 +31,7 @@ const {
   deleteAlbum,
   deleteMusic,
 } = require("../controllers/artistController");
+const { createUser, deleteUser, getUser } = require("../controllers/adminController");
 
 const routerAPI = express.Router();
 

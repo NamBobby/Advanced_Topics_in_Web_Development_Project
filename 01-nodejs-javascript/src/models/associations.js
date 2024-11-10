@@ -1,7 +1,7 @@
-const Account = require('./Account');
-const Album = require('./Album');
-const Music = require('./Music');
-const Playlist = require('./Playlist'); 
+const Account = require('./account');
+const Album = require('./album');
+const Music = require('./music');
+const Playlist = require('./playlist'); 
 const PlaylistMusic = require('./playlistMusic');
 
 // Setup dynamic associations
