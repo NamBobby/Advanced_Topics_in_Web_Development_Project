@@ -3,7 +3,7 @@ import { UserOutlined, HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import '../assets/styles/header.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from './context/auth.context';
+import { AuthContext } from './auth.context';
 
 const Header = () => {
 

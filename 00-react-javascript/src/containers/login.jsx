@@ -10,7 +10,8 @@ const LoginPage = () => {
   const { setAuth } = useContext(AuthContext);
 
   const onFinish = async (values) => {
-    const { name, email, password } = values;
+    console.log('Form submitted:', values);
+    const { email, password } = values;
 
     const res = await LoginApi(email, password);
 
