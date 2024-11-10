@@ -7,7 +7,7 @@ const {
   deleteMusicService,
 } = require("../services/artistService");
 const { upload, checkThumbnailSize } = require("../config/multerConfig");
-const Account = require("../models/account");
+const Account = require("../models/count");
 
 // Upload music function
 const uploadMusical = [
