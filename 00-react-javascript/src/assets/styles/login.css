@@ -1,0 +1,169 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+p {
+  color: #888888;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 600px;
+  height: 50%;
+  max-height: 500px;
+  display: flex;
+  padding: 20px;
+  background-color: #121212;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  width: 80%;
+}
+
+.login-title {
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Các quy tắc chung cho Input (Email) và Input.Password */
+.ant-input-outlined,
+.ant-input-outlined:not(:focus) {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  font-size: 18px;
+  padding: 10px;
+  transition: border 0.3s ease; /* Smooth border transition */
+}
+
+/* Focus hiệu ứng cho Input và Input.Password */
+.ant-input-outlined:focus {
+  background-color: transparent;
+  border: 3px solid rgba(30, 215, 96, 0.5); 
+}
+
+/* Hover hiệu ứng cho cả hai loại Input */
+.ant-input-outlined:hover {
+  background-color: transparent;
+  border: 3px solid rgba(30, 215, 96, 0.5); 
+}
+
+/* Hover hiệu ứng cho cả hai loại Input */
+.ant-input-outlined:hover:not(:focus){
+  background-color: transparent;
+  border: 1px solid rgba(30, 215, 96, 0.5); 
+}
+
+/* Placeholder styling */
+.ant-input-outlined::placeholder,
+.ant-input-affix-wrapper > input.ant-input::placeholder {
+  color: #888888;
+  font-weight: 500;
+}
+
+.anticon svg {
+  color: #ffffff;
+}
+
+/* Quy tắc lỗi cho các Input */
+.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
+.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
+.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus),
+.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus) {
+  background: transparent;
+  border: 1px solid #e22222;
+}
+
+/* Focus hiệu ứng cho Input có lỗi */
+.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus,
+.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus {
+  background: transparent;
+  border: 3px solid #e22222 !important;
+}
+
+/* Focus hiệu ứng cho Input và Input.Password */
+.ant-input-affix-wrapper.ant-input-password.ant-input-outlined:focus{
+  background-color: transparent;
+  border: 3px solid rgba(30, 215, 96, 0.5)  !important; 
+}
+
+/* Hover hiệu ứng cho Input và Input.Password */
+.ant-input-affix-wrapper.ant-input-password.ant-input-outlined:hover {
+  background-color: transparent;
+  border: 3px solid rgba(30, 215, 96, 0.5)  !important; 
+}
+
+/* Hover hiệu ứng cho Input không focus */
+.ant-input-affix-wrapper.ant-input-password.ant-input-outlined:hover:not(:focus) {
+  background-color: transparent;
+  border: 1px solid rgba(30, 215, 96, 0.5)  !important; 
+}
+
+
+/* Giải thích lỗi */
+.ant-form-item-explain-error {
+  color: #e22222;
+  font-size: 16px;
+}
+
+.custom-form .ant-form-item-label > label {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  content: "";
+  display: block;
+}
+
+
+.login-button {
+  width: 100%;
+  height: auto;
+  padding: 12px 0;
+  background-color: #1db954;
+  color: #000000;
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button::after {
+  width: 100%;
+  height: auto;
+}
+
+.forgot-password-link,
+.signup-link {
+  color: #ffffff;
+  font-size: 18px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.forgot-password-link:hover,
+.signup-link:hover {
+  color: #1db954;
+}
+
+.login-links {
+  text-align: center;
+  margin-top: 10px;
+}

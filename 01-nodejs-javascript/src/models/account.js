@@ -25,7 +25,7 @@ const Account = sequelize.define('users', {
         allowNull: false
     },
     gender: {
-        type: DataTypes.ENUM('Man', 'Woman', 'Non-binary', 'Somthing else', 'Prefer not to say'),
+        type: DataTypes.ENUM('Man', 'Woman', 'Somthing else', 'Prefer not to say'),
         allowNull: false
     },
     role: {

@@ -1,0 +1,118 @@
+/* General Styling */
+body {
+    background-color: #000000;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Register Container */
+  .register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000000; /* Matches Spotify's theme */
+  }
+  
+  .register-box {
+    width: 100%;
+    max-width: 450px;
+    padding: 30px;
+    background-color: #121212; /* Slightly lighter black for contrast */
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Title Styling */
+  .register-title {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Input Styling */
+  .register-input {
+    background-color: #000000;
+    border: 1px solid #333333;
+    color: #ffffff;
+    border-radius: 5px;
+  }
+  
+  .register-input::placeholder {
+    color: #888888;
+  }
+  
+  /* Button Styling */
+  .register-button {
+    width: 100%;
+    padding: 10px 0;
+    background-color: #1db954; /* Spotify green */
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .register-button:hover {
+    background-color: #1aa34a; /* Slightly darker green for hover effect */
+  }
+  
+  /* Links Styling */
+  .back-home-link {
+    color: #ffffff;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+    transition: color 0.3s ease;
+  }
+  
+  .back-home-link:hover {
+    color: #1db954;
+  }
+  
+  .already-have-account {
+    text-align: center;
+    color: #ffffff;
+  }
+  
+  .already-have-account a {
+    color: #1db954;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .already-have-account a:hover {
+    color: #1aa34a;
+  }
+  
+
+  /* Styling for Radio Group and Radio Buttons */
+.ant-radio-group {
+    color: #ffffff; /* Set text color to white */
+  }
+  
+  .ant-radio-wrapper {
+    color: #ffffff; /* Ensure radio labels are white */
+  }
+  
+  .ant-radio-inner {
+    border-color: #ffffff; /* Set the radio button's border to white */
+  }
+  
+  .ant-radio-inner::after {
+    background-color: #ffffff; /* Set the inner circle color when selected */
+  }
+  
+  .ant-radio-checked .ant-radio-inner {
+    border-color: #1db954; /* Spotify green for the selected radio button */
+  }
+  
+  .ant-radio-wrapper:hover .ant-radio-inner {
+    border-color: #1aa34a; /* Slightly darker green on hover */
+  }
+  

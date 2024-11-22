@@ -4,7 +4,7 @@ import SiderBar from './components/sider';
 import Content from './components/content';
 import SongContent from './components/songContent';
 import './global.css';
-import HomePage from './containers/home';
+import HomePage from './containers/homePage/home';
 
 function App() {
 

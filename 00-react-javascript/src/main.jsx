@@ -4,12 +4,12 @@ import App from './App.jsx';
 import './main.css';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import RegisterPage from './containers/register.jsx';
-import HomePage from './containers/home.jsx';
-import LoginPage from './containers/login.jsx';
-import AdminPage from './containers/admin.jsx';
+import RegisterPage from './containers/auth/register.jsx';
+import HomePage from './containers/homePage/home.jsx';
+import LoginPage from './containers/auth/login.jsx';
+import AdminPage from './containers/homePage/admin.jsx';
 import { AuthWrapper } from './components/auth.context.jsx';
-import UserInfo from './containers/userInfo.jsx';
+import UserInfo from './containers/profileInfoPage/userInfo.jsx';
 
 const router = createBrowserRouter([
   {

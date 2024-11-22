@@ -1,124 +1,122 @@
-import React, { useContext } from 'react';
-import { Button, Col, Divider, Form, Input, notification, Row } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone, ArrowLeftOutlined } from '@ant-design/icons';
-import { LoginApi } from '../services/apiService';
-import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../components/auth.context';
+import React, { useContext } from "react";
+import { Button, Form, Input, notification } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { LoginApi } from "../../services/apiService";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../components/auth.context";
+import "../../assets/styles/login.css";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { setAuth } = useContext(AuthContext);
 
   const onFinish = async (values) => {
-    console.log('Form submitted:', values);
     const { email, password } = values;
 
-    const res = await LoginApi(email, password);
+    try {
+      const res = await LoginApi(email, password);
 
-    if (res && res.EC === 0) {
-      localStorage.setItem('access_token', res.access_token);
-      notification.success({
-        message: 'LOGIN USER',
-        description: 'Success',
-      });
+      if (res && res.EC === 0) {
+        localStorage.setItem("access_token", res.access_token);
 
-      setAuth({
-        isAuthenticated: true,
-        user: {
-          email: res?.user?.email ?? '',
-          name: res?.user?.name ?? '',
-        },
-      });
-      navigate('/');
-    } else {
+        notification.success({
+          message: "Login Successful",
+          description: "Welcome back!",
+        });
+
+        setAuth({
+          isAuthenticated: true,
+          user: {
+            email: res?.user?.email ?? "",
+            name: res?.user?.name ?? "",
+          },
+        });
+
+        navigate("/");
+      } else {
+        notification.error({
+          message: "Login Failed",
+          description: res?.EM ?? "An unexpected error occurred.",
+        });
+      }
+    } catch (error) {
       notification.error({
-        message: 'LOGIN USER',
-        description: res?.EM ?? 'error',
+        message: "Login Error",
+        description: "Unable to log in. Please try again later.",
       });
+      console.error("Error during login:", error);
     }
-
-    console.log('>> Success:', res);
   };
 
   return (
-    <Row justify={'center'} style={{ marginTop: '30px', fontFamily: 'Arial, sans-serif' }}>
-      <Col xs={24} md={16} lg={8}>
-        <fieldset
-          style={{
-            padding: '15px',
-            margin: '5px',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            color: 'white',
-            fontFamily: 'Arial, sans-serif',
-          }}
-        >
-          <legend style={{ color: 'white', fontFamily: 'Arial, sans-serif' }}>Login</legend>
-          <Form
-            name="basic"
-            onFinish={onFinish}
-            autoComplete="off"
-            layout="vertical"
-            style={{ fontFamily: 'Arial, sans-serif' }}
-          >
+    <div className="login-container">
+      <div className="login-box">
+        <div className="login-form">
+        <Link to="/" className="back-home-link">
+          <h1 className="login-title">Log In</h1>
+        </Link>
+        <Form
+          name="loginForm"
+          className="custom-form"
+          onFinish={onFinish}
+          layout="vertical"
+          autoComplete="off">
             <Form.Item
-              label={<span style={{ color: 'white', fontFamily: 'Arial, sans-serif' }}>Email</span>}
+              label="Email"
               name="email"
-              required={false}
               rules={[
                 {
                   required: true,
-                  message: 'Please input your email!',
+                  message: "Please input your email!",
                 },
-              ]}
-            >
-              <Input style={{ backgroundColor: 'black', border: '1px solid grey', color: 'white' }} />
+              ]}>
+              <Input placeholder="Email" />
             </Form.Item>
+
             <Form.Item
-              label={<span style={{ color: 'white', fontFamily: 'Arial, sans-serif' }}>Password</span>}
+              label="Password"
               name="password"
-              required={false}
               rules={[
                 {
                   required: true,
-                  message: 'Please input your password!',
+                  message: "Please input your password!",
                 },
-              ]}
-            >
+              ]}>
               <Input.Password
-                style={{ backgroundColor: 'black', border: '1px solid grey', color: 'white' }}
+                className="custom-password-input"
+                placeholder="Password"
                 iconRender={(visible) =>
-                  visible ? <EyeTwoTone twoToneColor="#ffffff" /> : <EyeInvisibleOutlined style={{ color: 'white' }} />
+                  visible ? (
+                    <EyeTwoTone twoToneColor="#ffffff" />
+                  ) : (
+                    <EyeInvisibleOutlined />
+                  )
                 }
               />
             </Form.Item>
 
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{
-                  width: '100%', // Makes the button width match the text fields
-                  borderRadius: '5px',
-                  backgroundColor: 'white',
-                  color: 'black',
-                  border: '1px solid black', // Adds a black border for consistency
-                }}
-              >
-                Login
-              </Button>
-            </Form.Item>
-          </Form>
-          <Link to={'/'} style={{ color: 'white', fontFamily: 'Arial, sans-serif' }}>
-            <ArrowLeftOutlined /> Back to Homepage
+          <Form.Item>
+            <Button 
+                htmlType="submit" 
+                className="login-button">
+              Log In
+            </Button>
+          </Form.Item>
+        </Form>
+        <div className="login-links">
+          <Link to="/forgot-password" className="forgot-password-link">
+            Forgot your password?
           </Link>
-          <Divider style={{ borderColor: 'white' }} />
-          <div style={{ textAlign: 'center', color: 'white', fontFamily: 'Arial, sans-serif' }}>
-            Not have an account? <Link to={'/register'} style={{ color: 'white', fontFamily: 'Arial, sans-serif' }}>Register here</Link>
+          <p>
+            Don’t have an account?{" "}
+            <Link to="/register" className="signup-link">
+              Register here
+            </Link>
+          </p>
           </div>
-        </fieldset>
-      </Col>
-    </Row>
+        </div>
+      </div>
+    </div>
   );
 };
 
