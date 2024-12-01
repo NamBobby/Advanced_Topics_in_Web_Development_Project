@@ -69,7 +69,8 @@ const LoginPage = () => {
                   required: true,
                   message: "Please input your email!",
                 },
-              ]}>
+              ]}
+              >
               <Input placeholder="Email" />
             </Form.Item>
 
@@ -81,7 +82,8 @@ const LoginPage = () => {
                   required: true,
                   message: "Please input your password!",
                 },
-              ]}>
+              ]}
+              >
               <Input.Password
                 className="custom-password-input"
                 placeholder="Password"

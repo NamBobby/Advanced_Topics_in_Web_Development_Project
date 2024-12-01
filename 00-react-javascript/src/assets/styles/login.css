@@ -52,20 +52,14 @@ p {
 /* Focus hiệu ứng cho Input và Input.Password */
 .ant-input-outlined:focus {
   background-color: transparent;
-  border: 3px solid rgba(30, 215, 96, 0.5); 
-}
-
-/* Hover hiệu ứng cho cả hai loại Input */
-.ant-input-outlined:hover {
-  background-color: transparent;
-  border: 3px solid rgba(30, 215, 96, 0.5); 
+  border: 1px solid rgba(30, 215, 96, 0.5); 
 }
 
 /* Hover hiệu ứng cho cả hai loại Input */
 .ant-input-outlined:hover:not(:focus){
   background-color: transparent;
   border: 1px solid rgba(30, 215, 96, 0.5); 
-}
+} 
 
 /* Placeholder styling */
 .ant-input-outlined::placeholder,
@@ -93,25 +87,17 @@ p {
 .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus,
 .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus {
   background: transparent;
-  border: 3px solid #e22222 !important;
+  border: 1px solid #e22222 !important;
 }
 
 /* Focus hiệu ứng cho Input và Input.Password */
 .ant-input-affix-wrapper.ant-input-password.ant-input-outlined:focus{
   background-color: transparent;
-  border: 3px solid rgba(30, 215, 96, 0.5)  !important; 
-}
-
-/* Hover hiệu ứng cho Input và Input.Password */
-.ant-input-affix-wrapper.ant-input-password.ant-input-outlined:hover {
-  background-color: transparent;
-  border: 3px solid rgba(30, 215, 96, 0.5)  !important; 
-}
-
-/* Hover hiệu ứng cho Input không focus */
-.ant-input-affix-wrapper.ant-input-password.ant-input-outlined:hover:not(:focus) {
-  background-color: transparent;
   border: 1px solid rgba(30, 215, 96, 0.5)  !important; 
+}
+
+.ant-form-item .ant-form-item-label >label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  content: ""
 }
 
 
@@ -128,7 +114,6 @@ p {
   content: "";
   display: block;
 }
-
 
 .login-button {
   width: 100%;
