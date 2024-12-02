@@ -189,7 +189,7 @@ const RegisterPage = () => {
                 type="primary"
                 htmlType="submit"
                 className="register-button">
-                Submit
+                Sign Up
               </Button>
             </Form.Item>
           </Form>

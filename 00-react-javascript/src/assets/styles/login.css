@@ -13,7 +13,7 @@ p {
 
 .login-box {
   width: 100%;
-  max-width: 600px;
+  max-width: 650px;
   height: 50%;
   max-height: 500px;
   display: flex;
@@ -119,10 +119,10 @@ p {
   width: 100%;
   height: auto;
   padding: 12px 0;
-  background-color: #1db954;
-  color: #000000;
+  background-color: #1db954 !important;
+  color: #000000 !important;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 700;
   margin-top: 20px;
   border: none;
   border-radius: 25px;
@@ -130,9 +130,8 @@ p {
   transition: background-color 0.3s ease;
 }
 
-.login-button::after {
-  width: 100%;
-  height: auto;
+.login-button:hover {
+  font-size: 19px;
 }
 
 .forgot-password-link,

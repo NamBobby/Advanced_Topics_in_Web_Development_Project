@@ -13,9 +13,9 @@ p {
 
 .register-box {
   width: 100%;
-  max-width: 600px;
+  max-width: 650px;
   height: 75%;
-  max-height: 750px;
+  max-height: 800px;
   display: flex;
   padding: 20px;
   background-color: #121212;
@@ -116,27 +116,20 @@ p {
   height: auto;
 }
 
-/* Hiệu ứng Hover cho Select */
-.ant-select:hover .ant-select-selector {
-  border-color: rgba(30, 215, 96, 0.5); /* Viền màu xanh khi hover */
-}
-
-/* Hiệu ứng Focus cho Select */
-.ant-select-focused:not(.ant-select-disabled) .ant-select-selector {
-  border-color: rgba(30, 215, 96, 0.8); /* Viền đậm hơn khi focus */
-  box-shadow: 0 0 5px rgba(30, 215, 96, 0.5); /* Hiệu ứng ánh sáng focus */
-}
-
 /* Giao diện Selector */
 .ant-select-selector {
-  background-color: transparent !important; /* Xóa màu nền mặc định */
-  border: none !important; /* Xóa viền mặc định */
-  box-shadow: none !important; /* Xóa bóng mặc định */
-  height: auto !important; /* Điều chỉnh chiều cao */
-  color: #ffffff !important; /* Chữ màu trắng */
+  background-color: transparent !important; 
+  border: none !important; 
+  box-shadow: none !important; 
+  height: auto !important;
+  color: #ffffff !important; 
   display: flex;
-  align-items: center; /* Căn giữa chữ theo chiều dọc */
-  padding: 0 10px; /* Cách lề ngang */
+  align-items: center; 
+  padding: 0 10px; 
+}
+
+.ant-select-selection-item{
+  font-size: 18px;
 }
 
 .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
@@ -145,27 +138,32 @@ p {
   font-weight: 500;
 }
 
+/* Dropdown nền và màu chữ */
 .ant-select-dropdown {
-  background-color: #121212; 
+  background-color: #121212 !important; 
 }
 
-/* Các tùy chọn trong dropdown */
-.ant-select:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-search-input {
-  font-size: 18px;
-  font-weight: 500;
-  color: #ffffff; /* Màu chữ */
-  transition: background-color 0.3s ease; /* Hiệu ứng hover mượt */
+.ant-select-item-option{
+  color: #ffffff !important; 
+  font-size: 16px !important; 
 }
 
-/* Hover vào tùy chọn */
+/* Hiệu ứng hover cho các tùy chọn */
 .ant-select-item-option-active {
-  background-color: rgba(30, 215, 96, 0.1); /* Nền xanh nhạt khi hover */
+  background-color: rgba(30, 215, 96, 0.2) !important; /* Nền xanh khi hover */
 }
 
-/* Styling cho tùy chọn được chọn */
+/* Hiệu ứng cho tùy chọn được chọn */
 .ant-select-item-option-selected {
-  background-color: rgba(30, 215, 96, 0.2);
-  font-weight: bold;
+  background-color: rgba(30, 215, 96, 0.3) !important; /* Nền xanh đậm */
+}
+
+.ant-select-focused:not(.ant-select-disabled) {
+  border-color: rgba(30, 215, 96, 0.8) !important; 
+}
+
+.ant-select:hover {
+  border-color: rgba(30, 215, 96, 0.5) !important; 
 }
 
 /* Đảm bảo chiều dài Select giống với Input */
@@ -176,22 +174,21 @@ p {
 
 /* Đảm bảo các thành phần nằm cân đối */
 .register-form .ant-row .ant-col {
-  padding: 0; /* Xóa khoảng cách giữa các cột */
+  padding: 0;
 }
 
 /* Hiệu ứng focus cho các thành phần */
 .ant-select-focused:not(.ant-select-disabled) .ant-select-selector,
 .ant-input:focus {
   outline: none;
-  border-color: rgba(30, 215, 96, 0.8); /* Viền đậm hơn khi focus */
-  box-shadow: 0 0 5px rgba(30, 215, 96, 0.5); /* Ánh sáng nhẹ khi focus */
+  border-color: rgba(30, 215, 96, 0.8); 
+  box-shadow: 0 0 5px rgba(30, 215, 96, 0.5); 
 }
 
 
 /* Styling Radio Group */
 .ant-radio-wrapper {
   font-size: 18px; /* Tăng kích thước chữ */
-  font-weight: 200;
   color: #ffffff; /* Màu chữ trắng */
 }
 
@@ -231,10 +228,10 @@ p {
   width: 100%;
   height: auto;
   padding: 12px 0;
-  background-color: #1db954;
-  color: #000000;
+  background-color: #1db954 !important;
+  color: #000000 !important;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 700;
   margin-top: 20px;
   border: none;
   border-radius: 25px;
@@ -242,9 +239,8 @@ p {
   transition: background-color 0.3s ease;
 }
 
-.register-button::after {
-  width: 100%;
-  height: auto;
+.register-button:hover {
+  font-size: 19px;
 }
 
 .login-link {
