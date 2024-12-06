@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './main.css';
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import MainLayout from './App.jsx'; // Layout chính với Sidebar
 import RegisterPage from './containers/auth/register.jsx';
 import HomePage from './containers/homePage/home.jsx';
 import LoginPage from './containers/auth/login.jsx';
@@ -13,30 +13,24 @@ import UserInfo from './containers/profileInfoPage/userInfo.jsx';
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <App />,
+    path: '/', // Layout chính có Sidebar
+    element: <MainLayout />,
     children: [
-      {
-        index: true,
-        element: <HomePage />,
-      },
+      { index: true, element: <HomePage /> }, // Trang chủ
+      { path: 'userInfo', element: <UserInfo /> }, 
     ],
   },
   {
-    path: 'register',
+    path: '/register', // Không có Sidebar
     element: <RegisterPage />,
   },
   {
-    path: 'login',
+    path: '/login', // Không có Sidebar
     element: <LoginPage />,
   },
   {
-    path: 'admin',
+    path: '/admin', // Không có Sidebar
     element: <AdminPage />,
-  },
-  {
-    path: 'userInfo',
-    element: <UserInfo />,
   },
 ]);
 

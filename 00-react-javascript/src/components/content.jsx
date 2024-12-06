@@ -19,7 +19,6 @@ const Content = () => {
 
   return (
     <div>
-      <h2 className="welcome-message">Welcome! Select a song you would like to play.</h2>
       <div className="content-wrapper">
         {songs.map((song, index) => (
           <div key={index} className="song" onClick={() => handleTitleClick(song.title)}>

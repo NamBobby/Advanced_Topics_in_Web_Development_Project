@@ -1,13 +1,17 @@
-import { CrownOutlined } from '@ant-design/icons';
-import { Result } from 'antd';
+import Content from '../../components/content';
+import Artist from '../../components/artist';
+import '../../assets/styles/home.css'
+import Album from '../../components/album';
 
 const HomePage = () => {
   return (
     <div>
-      <Result
-        icon={<CrownOutlined />}
-        title="JSON Web Token (React/Node.JS) - createdBy @Bobby"
-      />
+      <h2 className="title">Popular Music</h2>
+      <Content />
+      <h2 className="title">Popular artists</h2>
+      <Artist />
+      <h2 className="title">Popular Album</h2>
+      <Album />
     </div>
   );
 };

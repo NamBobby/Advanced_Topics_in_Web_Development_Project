@@ -1,0 +1,32 @@
+.artist-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+    padding: 20px;
+    margin: 0 auto;
+  }
+  
+  .artist {
+    text-align: center;
+    color: white;
+  }
+  
+  .artist-image {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%; /* Bo tròn ảnh */
+    object-fit: cover;
+  }
+  
+  .artist-name {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .artist-role {
+    font-size: 14px;
+    color: #b3b3b3;
+  }
+  
