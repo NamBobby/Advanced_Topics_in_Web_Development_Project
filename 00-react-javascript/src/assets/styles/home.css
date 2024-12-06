@@ -1,5 +1,89 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #121212; /* Dark background for contrast */
+    color: #ffffff; /* White text for readability */
+}
+
+a {
+    color: #1db954; /* Spotify-like green for links */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Title Header Styling */
+.title-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 25px;
+    border-bottom: 1px solid #333; /* Subtle divider line */
+    margin-bottom: 20px;
+}
+
 .title {
     color: white;
     font-size: 24px;
-    margin-left: 25px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Content Section Styling */
+.content-section {
+    padding: 0 25px;
+    margin-bottom: 30px;
+}
+
+/* Artist Section Styling */
+.artist-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 0 25px;
+    margin-bottom: 30px;
+}
+
+/* Album Section Styling */
+.album-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 0 25px;
+    margin-bottom: 30px;
+}
+
+/* Cards or Items Styling (Optional) */
+.card {
+    background-color: #1e1e1e;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .title {
+        font-size: 20px;
+    }
+
+    .title-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .content-section,
+    .artist-container,
+    .album-container {
+        padding: 0 15px;
+    }
 }

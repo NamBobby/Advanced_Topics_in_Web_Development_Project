@@ -65,15 +65,20 @@
   /* Hover Icon */
   .hover-icon {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    background-color: green;
+    border-radius: 100%;
+    top: 65%;
+    left: 90%;
     transform: translate(-50%, -50%);
-    font-size: 30px;
-    color: white;
-    display: none; /* Hidden by default */
+    font-size: 36px;
+    padding-left: 5px;
+  }
+
+  .anticon svg {
+    color: #000000 !important;
   }
   
   .album:hover .hover-icon {
-    display: block; /* Show icon when hovering */
+    display: block; 
   }
   
