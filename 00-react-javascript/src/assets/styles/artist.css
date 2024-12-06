@@ -1,15 +1,26 @@
 .artist-wrapper {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 50px;
-    padding: 20px;
-    margin: 0 auto;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 50px;
   }
   
   .artist {
+    position: relative;
+    overflow: hidden;
     text-align: center;
     color: white;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .artist:hover {
+    transform: scale(1.05);
+  }
+
+  .artist-info {
+    padding: 10px;
   }
   
   .artist-image {
@@ -29,4 +40,48 @@
     font-size: 14px;
     color: #b3b3b3;
   }
+
+  /* Placeholder when no image is provided */
+  .artist-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background-color: #282828;
+    color: white;
+    font-size: 40px;
+  }
+  
+  .artist-placeholder-icon {
+    font-size: 200px;
+    padding-left: 25px;
+  }
+
+   /* Hover Icon */
+   .artist-icon {
+    position: absolute;
+    background-color: green;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    top: 42.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .artist-hover-icon {
+    font-size: 36px;
+    margin: 10px 15px auto;
+  }
+
+  .artist-wrapper .anticon svg {
+    color: #000000 !important; 
+  }
+  
+  .artist:hover .artist-hover-icon {
+    display: block; 
+  }
+  
   

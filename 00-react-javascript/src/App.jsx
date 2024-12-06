@@ -6,13 +6,10 @@ import './global.css';
 
 const MainLayout = () => {
   return (
-    <div>
+    <div className="main-layout">
       <Header />
       <div className="app-container">
-        {/* Sidebar luôn ở bên trái */}
-        <SiderBar className="sider-bar" />
-
-        {/* Main content on the right */}
+        <SiderBar />
         <div className="main-content">
           <Outlet />
         </div>

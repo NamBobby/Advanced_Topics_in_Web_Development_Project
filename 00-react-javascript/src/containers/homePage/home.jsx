@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Content from '../../components/content';
+import Song from '../../components/song';
 import Artist from '../../components/artist';
 import Album from '../../components/album';
 import '../../assets/styles/home.css';
@@ -12,7 +12,7 @@ const HomePage = () => {
         <h2 className="title">Popular Music</h2>
         <Link to="/">See more</Link>
       </div>
-      <Content />
+      <Song />
 
       <div className="title-header">
         <h2 className="title">Popular Artists</h2>

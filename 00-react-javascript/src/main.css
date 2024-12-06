@@ -2,22 +2,25 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: black;
-}
-
-.app-container {
+  }
+  
+  .app-container {
     display: flex;
     width: 100%;
-    height: 100%;
-}
-
-.main-content {
-    flex: 1;
+  }
+  
+  .main-layout {
+    min-height: 120vh; /* Chiều dài tối thiểu */
     display: flex;
     flex-direction: column;
+  }
+  
+  .main-content {
+    flex: 1;
     background-color: #282c34;
-    box-sizing: border-box;
-    height: 88vh;
     border-radius: 20px;
     margin-right: 10px;
     padding: 20px;
-}
+    box-sizing: border-box;
+  }
+  

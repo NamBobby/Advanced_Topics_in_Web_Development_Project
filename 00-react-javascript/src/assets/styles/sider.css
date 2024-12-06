@@ -1,98 +1,207 @@
 /* Sidebar Container */
 .slider-bar {
-  width: 240px;
-  height: 88vh;
   background-color: #282c34; /* Dark background for the sidebar */
   color: #ffffff; /* White text color */
   flex-direction: column;
-  overflow: hidden;
-  position: relative;
   border-radius: 20px;
   margin: 0 10px;
-  resize: none;
+  transition: width 0.2s ease, height 0.2s ease; /* Smooth resizing */
 }
 
-/* Sidebar Header */
-.slider-bar-header {
+.library {
   display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-}
-
-.slider-bar-header h3 {
-  margin: 0;
-  font-size: 20px; /* Font size for the header */
-}
-
-.slider-bar-tabs {
-  display: flex;
+  height: 50px;
+  margin: 30px 25px auto;
+  cursor: pointer;
   justify-content: space-between;
+  align-items: center;
 }
 
-.tab {
-  background: transparent;
-  border: none;
-  color: #ffffff; /* White text color for tabs */
-  cursor: pointer;
-  padding: 10px;
-  font-weight: bold;
+.library-content {
+  font-size: 28px;
 }
 
-.tab:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
-}
-
-/* Sidebar Navigation Buttons */
-.sidebar-navigation {
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  gap: 10px;
-}
-
-.nav-button {
+/* Expand/Collapse Buttons */
+.slider-bar-toggle-button {
   background-color: transparent;
-  color: #ffffff; /* White text color for navigation buttons */
-  font-size: 18px;
-  padding: 10px;
-  text-align: left;
-  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
+  border-radius: 5px;
   transition: background-color 0.2s ease;
 }
 
-.nav-button:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
+.slider-bar-toggle-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
+.slider-bar-toggle-icon {
+  font-size: 20px;
+  margin: 5px 5px auto;
+}
+
+
 /* Sidebar Content */
+
+
 .slider-bar-content {
-  flex-grow: 1; /* Allow content to grow and take up remaining space */
+  flex-grow: 1;
   padding: 16px;
 }
 
-.playlists,
-.artists {
-  margin: 5px 0;
+.slider-bar-lists {
+  display: flex;
+  gap: 10px;
+  flex-direction: column
 }
 
-.playlist-item,
-.artist-item {
-  padding: 8px;
+.slider-bar-list {
+  position: relative;
+  display: flex;
+  width: 270px;
+  height: 70px;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.1); /* Nền mờ mặc định */
   cursor: pointer;
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
-  color: #bbb; /* Slightly lighter color for playlist items */
+  transition: transform 0.3s ease;
 }
 
-.playlist-item:hover,
-.artist-item:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
-  color: #ffffff;
+.slider-bar-list:hover {
+  background-color: rgba(255, 255, 255, 0.3); /* Sáng hơn khi hover */
+}
+.slider-bar-image {
+  width: 70px;
+  height: 70px;
+}
+.slider-bar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background-color: #282828;
+  color: white;
+  font-size: 40px;
+  border-bottom: 1px solid #282828;
 }
 
-/* Selected Item Display */
-.selected-item {
-  margin-top: 10px;
+.slider-bar-placeholder-icon {
+  font-size: 50px;
+  padding-left: 5px;
+}
+.slider-bar-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-left: 15px;
+}
+.slider-bar-name {
   font-weight: bold;
-  color: #aaa;
+  color: white;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+.slider-bar-role {
+  font-size: 12px;
+  color: #aaa;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slider-bar-icon {
+  position: absolute;
+  background-color: green;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  top: 50%;
+  left: 90%;
+  transform: translate(-50%, -50%);
+}
+
+.slider-bar-hover-icon {
+  font-size: 36px;
+  margin: 10px 15px auto;
+}
+
+.slider-bar-lists .anticon svg {
+  color: #000000 !important; 
+}
+
+.slider-bar:hover .slider-bar-hover-icon {
+  display: block; 
+}
+
+/* Sidebar Artists */
+
+.slider-bar-artist-image {
+  width: 70px;
+  height: 70px;
+}
+
+/* Placeholder when no image is provided */
+.slider-bar-artist-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background-color: #282828;
+  color: white;
+  font-size: 40px;
+  border-bottom: 1px solid #282828;
+}
+
+.slider-bar-artist-placeholder-icon {
+  font-size: 50px;
+  padding-left: 5px;
+}
+
+/* Song info */
+.slider-bar-artist-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-left: 15px;
+}
+
+.slider-bar-artist-name {
+  font-weight: bold;
+  color: white;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slider-bar-artist-role {
+  font-size: 12px;
+  color: #aaa;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Hover Icon */
+.slider-bar-artist-icon {
+  position: absolute;
+  background-color: green;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  top: 50%;
+  left: 90%;
+  transform: translate(-50%, -50%);
+}
+
+.slider-bar-artist-hover-icon {
+  font-size: 36px;
+  margin: 10px 15px auto;
+}
+

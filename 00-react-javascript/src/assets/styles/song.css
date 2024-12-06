@@ -1,0 +1,95 @@
+.song-wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 400px);
+  gap: 15px;
+  padding: 50px;
+}
+
+.song {
+  position: relative;
+  display: flex;
+  width: 400px;
+  height: 70px;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1); /* Nền mờ mặc định */
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.song:hover {
+  background-color: rgba(255, 255, 255, 0.3); /* Sáng hơn khi hover */
+}
+.song-image {
+  width: 70px;
+  height: 70px;
+}
+
+/* Placeholder when no image is provided */
+.song-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background-color: #282828;
+  color: white;
+  font-size: 40px;
+  border-bottom: 1px solid #282828;
+}
+
+.song-placeholder-icon {
+  font-size: 50px;
+  padding-left: 5px;
+}
+
+/* Song info */
+.song-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-left: 15px;
+}
+
+.song-name {
+  font-weight: bold;
+  color: white;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.song-artist {
+  font-size: 12px;
+  color: #aaa;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Hover Icon */
+.song-icon {
+  position: absolute;
+  background-color: green;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  top: 50%;
+  left: 90%;
+  transform: translate(-50%, -50%);
+}
+
+.song-hover-icon {
+  font-size: 36px;
+  margin: 10px 15px auto;
+}
+
+.song-wrapper .anticon svg {
+  color: #000000 !important; 
+}
+
+.song:hover .song-hover-icon {
+  display: block; 
+}

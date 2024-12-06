@@ -22,8 +22,6 @@ a:hover {
     justify-content: space-between;
     align-items: center;
     padding: 10px 25px;
-    border-bottom: 1px solid #333; /* Subtle divider line */
-    margin-bottom: 20px;
 }
 
 .title {
