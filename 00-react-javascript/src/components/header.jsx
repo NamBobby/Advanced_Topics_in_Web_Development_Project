@@ -51,7 +51,7 @@ const Header = () => {
       {auth.isAuthenticated ? (
         <>
           <Menu.Item key="username">
-            {auth?.user?.name ?? " "} 
+            {auth?.user?.name ?? ""} 
             <ExportOutlined className="export-icon"/>
           </Menu.Item>
           <Menu.Item key="logout">
@@ -93,7 +93,9 @@ const Header = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <SearchOutlined className="search-icon" onClick={handleSearch} />
+        <div className="logo">
+          <SearchOutlined className="search-icon" onClick={handleSearch} />
+        </div>
       </div>
 
       <div className="auth-buttons">

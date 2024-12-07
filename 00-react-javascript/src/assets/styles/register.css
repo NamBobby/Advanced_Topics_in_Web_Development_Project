@@ -11,6 +11,10 @@ p {
   margin-top: 20px;
 }
 
+.back-home-link{
+  text-decoration: none !important;
+}
+
 .register-box {
   width: 100%;
   max-width: 650px;
