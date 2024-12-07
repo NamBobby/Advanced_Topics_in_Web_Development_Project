@@ -9,13 +9,14 @@ import "../assets/styles/sider.css";
 
 const SiderBar = () => {
   const [isExpanded, setIsExpanded] = useState(true); // Trạng thái mở rộng/thu nhỏ
-  const sidebarWidth = isExpanded ? 300 : 100; // Độ rộng cố định
+  const sidebarWidth = isExpanded ? 300 : 110; // Độ rộng cố định
 
   const handleToggle = () => {
     setIsExpanded(!isExpanded); // Đổi trạng thái
   };
 
   const [hoveredItem, setHoveredItem] = useState({ list: null, index: null });
+  
 
   const handleMouseEnter = (listName, index) => {
     setHoveredItem({ list: listName, index });
@@ -27,6 +28,8 @@ const SiderBar = () => {
 
   const isHovered = (listName, index) =>
     hoveredItem.list === listName && hoveredItem.index === index;
+
+  
 
   const albums = [
     {
@@ -87,8 +90,7 @@ const SiderBar = () => {
                   key={playlistid}
                   className="slider-bar-list"
                   onMouseEnter={() => handleMouseEnter("playlists", playlistid)}
-                  onMouseLeave={handleMouseLeave}
-                >
+                  onMouseLeave={handleMouseLeave}>
                   {playlist.img ? (
                     <img
                       src={playlist.img}
@@ -120,8 +122,7 @@ const SiderBar = () => {
                   key={albumid}
                   className="slider-bar-list"
                   onMouseEnter={() => handleMouseEnter("albums", albumid)}
-                  onMouseLeave={handleMouseLeave}
-                >
+                  onMouseLeave={handleMouseLeave}>
                   {album.img ? (
                     <img
                       src={album.img}
@@ -153,9 +154,7 @@ const SiderBar = () => {
                   key={artistid}
                   className="slider-bar-list"
                   onMouseEnter={() => handleMouseEnter("artists", artistid)}
-                  onMouseLeave={handleMouseLeave}
-
-                >
+                  onMouseLeave={handleMouseLeave}>
                   {artist.img ? (
                     <img
                       src={artist.img}
@@ -185,10 +184,34 @@ const SiderBar = () => {
         </div>
       ) : (
         <div className="slider-bar-wrapper">
-          <div className="library" onClick={handleToggle}>
+          <div 
+            className="library"
+            onClick={handleToggle}
+          >
             {/* Nút Toggle */}
-            <div className="slider-bar-toggle-button" onClick={handleToggle}>
-              <div className="slider-bar-toggle-icon">
+            <div
+              className="slider-bar-toggle-button"
+              onClick={handleToggle}
+              onMouseEnter={() => setHoveredItem({ list: "toggle", index: 0 })}
+              onMouseLeave={handleMouseLeave}
+              style={{
+                width: "60px",
+                height: "60px",
+                backgroundColor: isHovered("toggle", 0)
+                ? "rgba(255, 255, 255, 0.3)"
+                : "rgba(74, 74, 74, 0.3)",
+                transform: "translate(-50%, -50%)",
+                borderRadius: "10px",
+                transition: "background-color 0.3s ease",
+                marginLeft: "30px",
+                marginTop: "45px"
+              }}>
+              <div
+                className="slider-bar-toggle-icon"
+                style={{
+                  fontSize: "36px",
+                  margin: "12px 12px auto",
+                }}>
                 <UnorderedListOutlined />
               </div>
             </div>
@@ -200,9 +223,9 @@ const SiderBar = () => {
                 <div
                   key={playlistid}
                   className="slider-bar-list"
+                  style={{ width: "70px" }}
                   onMouseEnter={() => handleMouseEnter("playlists", playlistid)}
-                  onMouseLeave={handleMouseLeave}
-                >
+                  onMouseLeave={handleMouseLeave}>
                   {playlist.img ? (
                     <img
                       src={playlist.img}
@@ -215,7 +238,7 @@ const SiderBar = () => {
                     </div>
                   )}
                   {isHovered("playlists", playlistid) && (
-                    <div className="slider-bar-icon">
+                    <div className="slider-bar-icon" style={{ left: "50%" }}>
                       <div className="slider-bar-hover-icon">
                         <CaretRightOutlined />
                       </div>
@@ -229,9 +252,9 @@ const SiderBar = () => {
                 <div
                   key={albumid}
                   className="slider-bar-list"
+                  style={{ width: "70px" }}
                   onMouseEnter={() => handleMouseEnter("albums", albumid)}
-                  onMouseLeave={handleMouseLeave}
-                >
+                  onMouseLeave={handleMouseLeave}>
                   {album.img ? (
                     <img
                       src={album.img}
@@ -244,7 +267,7 @@ const SiderBar = () => {
                     </div>
                   )}
                   {isHovered("albums", albumid) && (
-                    <div className="slider-bar-icon">
+                    <div className="slider-bar-icon" style={{ left: "50%" }}>
                       <div className="slider-bar-hover-icon">
                         <CaretRightOutlined />
                       </div>
@@ -258,10 +281,9 @@ const SiderBar = () => {
                 <div
                   key={artistid}
                   className="slider-bar-list"
+                  style={{ width: "70px" }}
                   onMouseEnter={() => handleMouseEnter("artists", artistid)}
-                  onMouseLeave={handleMouseLeave}
-
-                >
+                  onMouseLeave={handleMouseLeave}>
                   {artist.img ? (
                     <img
                       src={artist.img}
@@ -274,7 +296,9 @@ const SiderBar = () => {
                     </div>
                   )}
                   {isHovered("artists", artistid) && (
-                    <div className="slider-bar-artist-icon">
+                    <div
+                      className="slider-bar-artist-icon"
+                      style={{ left: "50%" }}>
                       <div className="slider-bar-artist-hover-icon">
                         <CaretRightOutlined />
                       </div>

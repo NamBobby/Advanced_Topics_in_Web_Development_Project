@@ -150,7 +150,6 @@
   padding: 5px;
 }
 
-/* Placeholder when no image is provided */
 .slider-bar-artist-placeholder {
   display: flex;
   align-items: center;
@@ -162,7 +161,6 @@
   margin-left: 5px;
   background-color: #282828;
   font-size: 40px;
-  border-bottom: 1px solid #282828;
 }
 
 .slider-bar-artist-placeholder-icon {
@@ -170,7 +168,6 @@
   padding-left: 5px;
 }
 
-/* Song info */
 .slider-bar-artist-info {
   display: flex;
   flex-direction: column;
