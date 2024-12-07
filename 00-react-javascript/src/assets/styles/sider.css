@@ -47,13 +47,12 @@
 
 .slider-bar-content {
   flex-grow: 1;
-  padding: 16px;
+  padding: 20px;
 }
 
 .slider-bar-lists {
   display: flex;
-  gap: 10px;
-  flex-direction: column
+  flex-direction: column;
 }
 
 .slider-bar-list {
@@ -64,28 +63,29 @@
   align-items: center;
   overflow: hidden;
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.1); /* Nền mờ mặc định */
+  background-color: transparent;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
 
 .slider-bar-list:hover {
-  background-color: rgba(255, 255, 255, 0.3); /* Sáng hơn khi hover */
+  background-color: rgba(255, 255, 255, 0.3); 
 }
 .slider-bar-image {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
+  padding: 5px;
 }
 .slider-bar-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   background-color: #282828;
-  color: white;
+  padding: 5px;
+  margin-left: 5px;
   font-size: 40px;
-  border-bottom: 1px solid #282828;
 }
 
 .slider-bar-placeholder-icon {
@@ -116,12 +116,11 @@
 }
 .slider-bar-icon {
   position: absolute;
-  background-color: green;
-  border-radius: 50%;
   width: 60px;
   height: 60px;
+  background-color: rgba(74, 74, 74, 0.3); 
   top: 50%;
-  left: 90%;
+  left: 12.9%;
   transform: translate(-50%, -50%);
 }
 
@@ -134,6 +133,10 @@
   color: #000000 !important; 
 }
 
+.slider-bar-icon .anticon svg {
+  color: #ffffff !important; 
+}
+
 .slider-bar:hover .slider-bar-hover-icon {
   display: block; 
 }
@@ -141,8 +144,10 @@
 /* Sidebar Artists */
 
 .slider-bar-artist-image {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  padding: 5px;
 }
 
 /* Placeholder when no image is provided */
@@ -150,10 +155,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 5px;
+  margin-left: 5px;
   background-color: #282828;
-  color: white;
   font-size: 40px;
   border-bottom: 1px solid #282828;
 }
@@ -191,17 +198,21 @@
 /* Hover Icon */
 .slider-bar-artist-icon {
   position: absolute;
-  background-color: green;
   border-radius: 50%;
+  background-color: rgba(74, 74, 74, 0.3); 
   width: 60px;
   height: 60px;
   top: 50%;
-  left: 90%;
+  left: 12.9%;
   transform: translate(-50%, -50%);
 }
 
 .slider-bar-artist-hover-icon {
   font-size: 36px;
   margin: 10px 15px auto;
+}
+
+.slider-bar-artist-icon .anticon svg {
+  color: #ffffff !important; 
 }
 

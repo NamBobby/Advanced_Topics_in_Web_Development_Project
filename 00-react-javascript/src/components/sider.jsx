@@ -15,11 +15,22 @@ const SiderBar = () => {
     setIsExpanded(!isExpanded); // Đổi trạng thái
   };
 
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [hoveredItem, setHoveredItem] = useState({ list: null, index: null });
+
+  const handleMouseEnter = (listName, index) => {
+    setHoveredItem({ list: listName, index });
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredItem({ list: null, index: null });
+  };
+
+  const isHovered = (listName, index) =>
+    hoveredItem.list === listName && hoveredItem.index === index;
 
   const albums = [
     {
-      img: "https://i1.sndcdn.com/artworks-JriKS1DyZJ5jOzOn-1NCPkg-t500x500.jpg",
+      img: "",
       title: "B Ray Mix",
     },
     {
@@ -41,7 +52,7 @@ const SiderBar = () => {
 
   const artists = [
     {
-      img: "https://media.viez.vn/prod/2023/9/19/large_378119537_859159752234997_8765221549239438092_n_0873281264.jpg",
+      img: "",
       name: "Vũ Cát Tường",
     },
     {
@@ -75,8 +86,9 @@ const SiderBar = () => {
                 <div
                   key={playlistid}
                   className="slider-bar-list"
-                  onMouseEnter={() => setHoveredIndex(playlistid)}
-                  onMouseLeave={() => setHoveredIndex(null)}>
+                  onMouseEnter={() => handleMouseEnter("playlists", playlistid)}
+                  onMouseLeave={handleMouseLeave}
+                >
                   {playlist.img ? (
                     <img
                       src={playlist.img}
@@ -92,7 +104,7 @@ const SiderBar = () => {
                     <div className="slider-bar-name">{playlist.title}</div>
                     <div className="slider-bar-role">Playlist</div>
                   </div>
-                  {hoveredIndex === playlistid && (
+                  {isHovered("playlists", playlistid) && (
                     <div className="slider-bar-icon">
                       <div className="slider-bar-hover-icon">
                         <CaretRightOutlined />
@@ -107,8 +119,9 @@ const SiderBar = () => {
                 <div
                   key={albumid}
                   className="slider-bar-list"
-                  onMouseEnter={() => setHoveredIndex(albumid)}
-                  onMouseLeave={() => setHoveredIndex(null)}>
+                  onMouseEnter={() => handleMouseEnter("albums", albumid)}
+                  onMouseLeave={handleMouseLeave}
+                >
                   {album.img ? (
                     <img
                       src={album.img}
@@ -124,7 +137,7 @@ const SiderBar = () => {
                     <div className="slider-bar-name">{album.title}</div>
                     <div className="slider-bar-role">Album</div>
                   </div>
-                  {hoveredIndex === albumid && (
+                  {isHovered("albums", albumid) && (
                     <div className="slider-bar-icon">
                       <div className="slider-bar-hover-icon">
                         <CaretRightOutlined />
@@ -139,8 +152,10 @@ const SiderBar = () => {
                 <div
                   key={artistid}
                   className="slider-bar-list"
-                  onMouseEnter={() => setHoveredIndex(artistid)}
-                  onMouseLeave={() => setHoveredIndex(null)}>
+                  onMouseEnter={() => handleMouseEnter("artists", artistid)}
+                  onMouseLeave={handleMouseLeave}
+
+                >
                   {artist.img ? (
                     <img
                       src={artist.img}
@@ -156,7 +171,7 @@ const SiderBar = () => {
                     <div className="slider-bar-artist-name">{artist.name}</div>
                     <div className="slider-bar-artist-role">Artist</div>
                   </div>
-                  {hoveredIndex === artistid && (
+                  {isHovered("artists", artistid) && (
                     <div className="slider-bar-artist-icon">
                       <div className="slider-bar-artist-hover-icon">
                         <CaretRightOutlined />
@@ -170,7 +185,105 @@ const SiderBar = () => {
         </div>
       ) : (
         <div className="slider-bar-wrapper">
-          
+          <div className="library" onClick={handleToggle}>
+            {/* Nút Toggle */}
+            <div className="slider-bar-toggle-button" onClick={handleToggle}>
+              <div className="slider-bar-toggle-icon">
+                <UnorderedListOutlined />
+              </div>
+            </div>
+          </div>
+          {/* Nội dung Sidebar */}
+          <div className="slider-bar-content">
+            <div className="slider-bar-lists">
+              {playlists.map((playlist, playlistid) => (
+                <div
+                  key={playlistid}
+                  className="slider-bar-list"
+                  onMouseEnter={() => handleMouseEnter("playlists", playlistid)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  {playlist.img ? (
+                    <img
+                      src={playlist.img}
+                      alt={playlist.title}
+                      className="slider-bar-image"
+                    />
+                  ) : (
+                    <div className="slider-bar-placeholder">
+                      <CaretRightOutlined className="slider-bar-placeholder-icon" />
+                    </div>
+                  )}
+                  {isHovered("playlists", playlistid) && (
+                    <div className="slider-bar-icon">
+                      <div className="slider-bar-hover-icon">
+                        <CaretRightOutlined />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="slider-bar-lists">
+              {albums.map((album, albumid) => (
+                <div
+                  key={albumid}
+                  className="slider-bar-list"
+                  onMouseEnter={() => handleMouseEnter("albums", albumid)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  {album.img ? (
+                    <img
+                      src={album.img}
+                      alt={album.title}
+                      className="slider-bar-image"
+                    />
+                  ) : (
+                    <div className="slider-bar-placeholder">
+                      <CaretRightOutlined className="slider-bar-placeholder-icon" />
+                    </div>
+                  )}
+                  {isHovered("albums", albumid) && (
+                    <div className="slider-bar-icon">
+                      <div className="slider-bar-hover-icon">
+                        <CaretRightOutlined />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="slider-bar-lists">
+              {artists.map((artist, artistid) => (
+                <div
+                  key={artistid}
+                  className="slider-bar-list"
+                  onMouseEnter={() => handleMouseEnter("artists", artistid)}
+                  onMouseLeave={handleMouseLeave}
+
+                >
+                  {artist.img ? (
+                    <img
+                      src={artist.img}
+                      alt={artist.title}
+                      className="slider-bar-artist-image"
+                    />
+                  ) : (
+                    <div className="slider-bar-artist-placeholder">
+                      <CaretRightOutlined className="slider-bar-artist-placeholder-icon" />
+                    </div>
+                  )}
+                  {isHovered("artists", artistid) && (
+                    <div className="slider-bar-artist-icon">
+                      <div className="slider-bar-artist-hover-icon">
+                        <CaretRightOutlined />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>
