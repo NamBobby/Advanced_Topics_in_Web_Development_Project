@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import '../assets/styles/footer.css';
+import React, { useState } from "react";
+import "../assets/styles/footer.css";
+import {
+  StepBackwardOutlined,
+  PlayCircleOutlined,
+  PauseOutlined,
+  StepForwardOutlined,
+  ReloadOutlined,
+  SoundOutlined,
+} from "@ant-design/icons";
 
 const Footer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -27,21 +35,25 @@ const Footer = () => {
           alt="Album cover"
           className="album-cover"
         />
-        <div className="song-info">
-          <h4 className="song-title">Ngày Mai Em Đi</h4>
-          <p className="song-artist">Lê Hiếu, SOOBIN, Touliver</p>
+        <div className="song-info-play">
+          <h4 className="song-title-play">Ngày Mai Em Đi</h4>
+          <p className="song-artist-play">Lê Hiếu, SOOBIN, Touliver</p>
         </div>
       </div>
 
       {/* Phần chính giữa */}
       <div className="footer-center">
-        <button className="control-btn shuffle">🔀</button>
-        <button className="control-btn prev">⏮️</button>
-        <button className="control-btn play-pause" onClick={togglePlayPause}>
-          {isPlaying ? '⏸️' : '▶️'}
-        </button>
-        <button className="control-btn next">⏭️</button>
-        <button className="control-btn repeat">🔁</button>
+        <div className="footer-control">
+          <button className="control-btn prev">
+            <StepBackwardOutlined />
+          </button>
+          <button className="control-btn play-pause" onClick={togglePlayPause}>
+            {isPlaying ? <PauseOutlined /> : <PlayCircleOutlined />}
+          </button>
+          <button className="control-btn next">
+            <StepForwardOutlined />
+          </button>
+        </div>
         <div className="progress-bar">
           <span className="current-time">0:08</span>
           <input
@@ -58,9 +70,9 @@ const Footer = () => {
 
       {/* Phần bên phải */}
       <div className="footer-right">
-        <button className="control-btn queue">📋</button>
-        <button className="control-btn devices">🖥️</button>
-        <button className="control-btn volume">🔊</button>
+        <button className="control-btn volume">
+          <SoundOutlined />
+        </button>
         <input
           type="range"
           min="0"
@@ -69,7 +81,6 @@ const Footer = () => {
           className="volume-slider"
           onChange={handleVolumeChange}
         />
-        <button className="control-btn fullscreen">⛶</button>
       </div>
     </footer>
   );

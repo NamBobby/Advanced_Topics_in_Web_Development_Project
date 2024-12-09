@@ -33,12 +33,8 @@ header {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 60px; /* Adjust as needed */
+  background-color: #000;
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   z-index: 1000;
 }
 
@@ -46,19 +42,14 @@ footer {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
-  height: 100px; /* Adjust as needed */
   background-color: #000;
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 1000;
 }
 
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -71,5 +62,5 @@ footer {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: transparent;
 }

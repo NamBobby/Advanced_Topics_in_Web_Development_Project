@@ -79,6 +79,9 @@ const Header = () => {
 
   return (
     <div className="header-container">
+      <div className="logo">
+      </div>
+
       <div className="search-box">
         <div className="logo">
           <Link to="/">

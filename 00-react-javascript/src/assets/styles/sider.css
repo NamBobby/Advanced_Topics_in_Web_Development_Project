@@ -73,16 +73,16 @@
   background-color: rgba(255, 255, 255, 0.3); 
 }
 .slider-bar-image {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   padding: 5px;
 }
 .slider-bar-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   background-color: #282828;
   padding: 5px;
   margin-left: 5px;
@@ -145,8 +145,8 @@
 /* Sidebar Artists */
 
 .slider-bar-artist-image {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   padding: 5px;
 }
@@ -155,8 +155,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   padding: 5px;
   margin-left: 5px;
