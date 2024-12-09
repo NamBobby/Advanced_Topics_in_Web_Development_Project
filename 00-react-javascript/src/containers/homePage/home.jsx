@@ -7,7 +7,7 @@ import '../../assets/styles/home.css';
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="home-content">
       <div className="title-header">
         <h2 className="title">Popular Music</h2>
         <Link to="/">See more</Link>

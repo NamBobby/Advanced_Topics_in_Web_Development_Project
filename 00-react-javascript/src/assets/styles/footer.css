@@ -1,21 +1,92 @@
-footer {
+/* Định dạng tổng quát cho Footer */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #121212; /* Màu nền đen */
+  color: white;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #b3b3b3;
-  text-align: center;
-  padding-top: 50px;
-  left: 0;
-  bottom: 0;
-  width: 100%;
+  padding: 10px 20px;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
 }
 
-footer a {
-  color: #b3b3b3;
-  text-decoration: none;
+/* Phần bên trái */
+.footer-left {
+  display: flex;
+  align-items: center;
+}
+
+.album-cover {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.song-info {
+  color: white;
+}
+
+.song-title {
+  font-size: 14px;
+  margin: 0;
+}
+
+.song-artist {
+  font-size: 12px;
+  color: gray;
+  margin: 0;
+}
+
+/* Phần chính giữa */
+.footer-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
   margin: 0 10px;
+  cursor: pointer;
 }
 
-footer a:hover {
-  text-decoration: underline;
+.progress-bar {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.current-time,
+.total-time {
+  color: gray;
+  font-size: 12px;
+  margin: 0 5px;
+}
+
+.progress-slider {
+  width: 200px;
+  margin: 0 5px;
+}
+
+/* Phần bên phải */
+.footer-right {
+  display: flex;
+  align-items: center;
+}
+
+.volume-slider {
+  width: 100px;
+  margin-left: 10px;
+}
+
+.control-btn.fullscreen {
+  margin-left: 10px;
 }

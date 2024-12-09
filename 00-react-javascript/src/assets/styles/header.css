@@ -6,7 +6,8 @@
   height: 75px;
   background-color: black;
   top: 0;
-  margin-top: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .auth-buttons {
@@ -78,7 +79,6 @@
 /* search box */
 .search-box {
   display: flex;
-  padding-left: 100px;
   align-items: center;
   margin: 0 auto;
   flex-shrink: 0;
@@ -127,9 +127,10 @@
   box-sizing: border-box;
   font-size: 20px;
   transition: border 0.3s ease;
+  box-sizing: border-box;
 }
 
-.search-input:hover, .search-input:focus {
+.search-input:hover {
   border: 1px solid rgba(30, 215, 96, 0.5); 
 }
 
