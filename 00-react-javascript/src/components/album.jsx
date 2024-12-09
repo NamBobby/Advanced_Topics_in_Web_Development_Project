@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CaretRightOutlined } from "@ant-design/icons";
 import "../assets/styles/album.css";
 
-const Album = () => {
+const Album = ({ itemsToShow }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const albums = [
@@ -40,11 +40,11 @@ const Album = () => {
 
   return (
     <div className="album-wrapper">
-      {albums.map((album, index) => (
+      {albums.slice(0, itemsToShow).map((album, albumid) => (
         <div
-          key={index}
+          key={albumid}
           className="album"
-          onMouseEnter={() => setHoveredIndex(index)}
+          onMouseEnter={() => setHoveredIndex(albumid)}
           onMouseLeave={() => setHoveredIndex(null)}>
           {album.img ? (
             <img src={album.img} alt={album.title} className="album-image" />
@@ -57,7 +57,7 @@ const Album = () => {
             <div className="album-title">{album.title}</div>
             <div className="album-description">{album.description}</div>
           </div>
-          {hoveredIndex === index && (
+          {hoveredIndex === albumid && (
             <div className="album-icon">
               <div className="album-hover-icon">
                 <CaretRightOutlined />

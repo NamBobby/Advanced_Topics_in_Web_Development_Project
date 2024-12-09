@@ -66,20 +66,5 @@ a:hover {
     transform: scale(1.05);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .title {
-        font-size: 20px;
-    }
 
-    .title-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
 
-    .content-section,
-    .artist-container,
-    .album-container {
-        padding: 0 15px;
-    }
-}

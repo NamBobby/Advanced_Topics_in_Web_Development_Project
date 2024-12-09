@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CaretRightOutlined } from "@ant-design/icons";
 import '../assets/styles/song.css';
 
-const Song = () => {
+const Song = ({ itemsToShow }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const songs = [
@@ -14,6 +14,8 @@ const Song = () => {
     { img: "https://upload.wikimedia.org/wikipedia/en/9/91/WDKYSingleCover.jpg", title: "Stronger", artist: "Kelly Clarkson" },
     { img: "https://upload.wikimedia.org/wikipedia/en/f/fc/Mockingbird_%28Eminem_song%29_cover.jpg", title: "Mockingbird", artist: "Eminem" },
     { img: "https://upload.wikimedia.org/wikipedia/en/b/b9/Taylor_Swift_-_Anti-Hero.png", title: "Anti-Hero", artist: "Taylor Swift" },
+    { img: "https://upload.wikimedia.org/wikipedia/en/b/b9/Taylor_Swift_-_Anti-Hero.png", title: "Anti-Hero", artist: "Taylor Swift" },
+    { img: "https://upload.wikimedia.org/wikipedia/en/b/b9/Taylor_Swift_-_Anti-Hero.png", title: "Anti-Hero", artist: "Taylor Swift" },
   ];
 
   const handleTitleClick = () => {
@@ -22,11 +24,11 @@ const Song = () => {
 
   return (
     <div className="song-wrapper">
-      {songs.map((song, index) => (
+      {songs.slice(0, itemsToShow).map((song,  songid) => (
         <div
-          key={index}
+          key={songid}
           className="song"
-          onMouseEnter={() => setHoveredIndex(index)}
+          onMouseEnter={() => setHoveredIndex(songid)}
           onMouseLeave={() => setHoveredIndex(null)}
           onClick={() => handleTitleClick(song.title)}>
           {song.img ? (
@@ -40,7 +42,7 @@ const Song = () => {
             <div className="song-name">{song.title}</div>
             <div className="song-artist">{song.artist}</div>
           </div>
-          {hoveredIndex === index && (
+          {hoveredIndex === songid && (
             <div className="song-icon">
               <div className="song-hover-icon">
                 <CaretRightOutlined />

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CaretRightOutlined } from "@ant-design/icons";
 import "../assets/styles/artist.css"; // Tạo file CSS riêng để định dạng
 
-const Artist = () => {
+const Artist = ({ itemsToShow }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const artists = [
@@ -34,11 +34,11 @@ const Artist = () => {
 
   return (
     <div className="artist-wrapper">
-      {artists.map((artist, index) => (
+      {artists.slice(0, itemsToShow).map((artist, artistid) => (
         <div
-          key={index}
+          key={artistid}
           className="artist"
-          onMouseEnter={() => setHoveredIndex(index)}
+          onMouseEnter={() => setHoveredIndex(artistid)}
           onMouseLeave={() => setHoveredIndex(null)}>
           {artist.img ? (
             <img src={artist.img} alt={artist.title} className="artist-image" />
@@ -51,7 +51,7 @@ const Artist = () => {
             <div className="artist-name">{artist.name}</div>
             <div className="artist-role">Artist</div>
           </div>
-          {hoveredIndex === index && (
+          {hoveredIndex === artistid && (
             <div className="artist-icon">
             <div className="artist-hover-icon">
               <CaretRightOutlined />

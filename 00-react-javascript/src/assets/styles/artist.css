@@ -1,7 +1,6 @@
 .artist-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     padding: 50px;
   }
@@ -52,6 +51,8 @@
     background-color: #282828;
     color: white;
     font-size: 40px;
+    margin: auto;
+    object-fit: cover;
   }
   
   .artist-placeholder-icon {

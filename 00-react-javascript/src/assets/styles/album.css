@@ -1,7 +1,6 @@
 .album-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     padding: 50px;
   }
@@ -13,7 +12,7 @@
     overflow: hidden;
     text-align: left;
     color: white;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease;
     cursor: pointer;
   }
   
