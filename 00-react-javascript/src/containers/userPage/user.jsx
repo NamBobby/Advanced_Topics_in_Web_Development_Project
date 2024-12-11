@@ -3,54 +3,54 @@ import { useEffect, useState } from "react";
 import { getUserApi } from "../services/apiService";
 
 const UserPage = () => {
-    const [dataSource, setDatasource] = useState([]);
+  const [dataSource, setDatasource] = useState([]);
 
-    useEffect(()=> {
-        const fetchUser = async() => {
-            const res = await getUserApi();
-            console.log(">>> chech res:", res)
-            if (!res?.message){
-                setDatasource(res)
-            }else {
-                notification.error({
-                    message: "Unauthorized",
-                    description: res.message
-                })
-            }
-        }
-        fetchUser();
-    }, [])
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await getUserApi();
+      console.log(">>> chech res:", res);
+      if (!res?.message) {
+        setDatasource(res);
+      } else {
+        notification.error({
+          message: "Unauthorized",
+          description: res.message,
+        });
+      }
+    };
+    fetchUser();
+  }, []);
 
-      
-      const columns = [
-        {
-            title: 'Id',
-            dataIndex: '_id',
-          },
-        {
-          title: 'Email',
-          dataIndex: 'email',
-        },
-        {
-          title: 'Name',
-          dataIndex: 'name',
-        },
-        {
-            title: 'Role',
-            dataIndex: 'role',
-          },
-      ];
-      
+  const columns = [
+    {
+      title: "Id",
+      dataIndex: "_id",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+    },
+  ];
 
-    return (
-        <div style={{padding: 30}}>
-            <Table
-            bordered
-            dataSource={dataSource} columns={columns}
-            rowKey={"_id"}
-            />;
-        </div>
-    )
-}
+  return (
+    <div style={{ padding: 30 }}>
+      <Table
+        bordered
+        dataSource={dataSource}
+        columns={columns}
+        rowKey={"_id"}
+      />
+      ;
+    </div>
+  );
+};
 
 export default UserPage;

@@ -1,6 +1,8 @@
 import React from "react";
-import Song from "../../components/song";
-import Album from "../../components/album";
+import { Link } from 'react-router-dom';
+import SongUser from "../../components/songuser";
+import AlbumUser from "../../components/albumuser";
+import PlaylistUser from "../../components/playlistuser";
 import "../../assets/styles/userInfo.css";
 
 const UserInfo = () => {
@@ -16,11 +18,17 @@ const UserInfo = () => {
           <div className="title-header">
             <h2 className="title">Music</h2>
           </div>
-          <Song />
+          <SongUser />
           <div className="title-header">
             <h2 className="title">Albums</h2>
+            <Link to="/userAlbum">See more</Link>
           </div>
-          <Album />
+          <AlbumUser />
+          <div className="title-header">
+            <h2 className="title">Playlists</h2>
+            <Link to="/userPlaylist">See more</Link>
+          </div>
+          <PlaylistUser />
         </div>
       </div>
     </div>
