@@ -10,6 +10,8 @@ import LoginPage from './containers/auth/login.jsx';
 import AdminPage from './containers/homePage/admin.jsx';
 import { AuthWrapper } from './components/auth.context.jsx';
 import UserInfo from './containers/profileInfoPage/userInfo.jsx';
+import AlbumUserList from './containers/profileInfoPage/albumuserlist.jsx';
+import PlayListUserList from './containers/profileInfoPage/playlistuserlist.jsx';
 
 const router = createBrowserRouter([
   {
@@ -17,7 +19,9 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { index: true, element: <HomePage /> }, // Trang chủ
-      { path: 'userInfo', element: <UserInfo /> }, 
+      { path: 'userInfo', element: <UserInfo /> },
+      { path: 'userAlbum', element: <AlbumUserList /> }, 
+      { path: 'userPlaylist', element: <PlayListUserList /> },   
     ],
   },
   {
