@@ -30,12 +30,7 @@ const AlbumUser = ({ itemsToShow }) => {
       img: "https://cdn-images.dzcdn.net/images/cover/7947fa2b4981370977e39f0fd645d4b0/0x1900-000000-80-0-0.jpg",
       title: "Chill Mix",
       description: "RAP VIỆT, SOOBIN, ANH TRAI 'SAY HI' and more",
-    },
-    {
-      img: "https://images2.thanhnien.vn/528068263637045248/2024/9/18/edit-457047072900098568810546446218-17266692101441990737648.jpeg",
-      title: "Chill Mix",
-      description: "RAP VIỆT",
-    },
+    }
   ];
 
   return (

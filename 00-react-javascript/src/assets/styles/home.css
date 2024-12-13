@@ -3,6 +3,7 @@
   overflow-y: auto;  /* Enable vertical scrolling */
   max-height: calc(90vh - 60px);  /* Adjust for header height */
   box-sizing: border-box;
+  padding: 20px;
 }
 
 a {

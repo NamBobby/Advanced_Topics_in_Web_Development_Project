@@ -93,9 +93,11 @@ const SongUser = () => {
         </div>
       ))}
 
-      <div className="songuser-see-more" onClick={handleSeeMore}>
-        {expanded ? "See Less" : "See More"}
-      </div>
+      {songs.length > 5 && (
+        <div className="songuser-see-more" onClick={handleSeeMore}>
+          {expanded ? "See Less" : "See More"}
+        </div>
+      )}
     </div>
   );
 };
