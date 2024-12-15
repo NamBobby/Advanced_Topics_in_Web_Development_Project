@@ -70,6 +70,7 @@ const loginService = async (email, password) => {
           email: user.email,
           name: user.name,
           dateOfBirth: user.dateOfBirth,
+          avatarPath:user.avatarPath,
           gender: user.gender,
           role: user.role,
         };
@@ -84,6 +85,7 @@ const loginService = async (email, password) => {
             id: user.id,
             email: user.email,
             name: user.name,
+            avatarPath:user.avatarPath,
             dateOfBirth: user.dateOfBirth,
             gender: user.gender,
             role: user.role,
@@ -99,6 +101,16 @@ const loginService = async (email, password) => {
   } catch (error) {
     console.log(error);
     return { EC: 4, EM: "Error logging in" };
+  }
+};
+
+const getUserService = async () => {
+  try {
+    let result = await Account.findAll({ attributes: { exclude: ["password"] } });
+    return result;
+  } catch (error) {
+    console.log(error);
+    return { EC: 5, EM: "Error fetching users" };
   }
 };
 
@@ -502,6 +514,7 @@ module.exports = {
   deletePlaylistService,
   getPlaylistService,
   getMusicService,
+  getUserService,
   getMusicInPlaylistService,
   getUserAlbumsService,
   getMusicInAlbumService,

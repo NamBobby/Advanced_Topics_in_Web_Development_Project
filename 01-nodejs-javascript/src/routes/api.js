@@ -17,6 +17,7 @@ const {
   getUserAlbums,
   getMusicInAlbum,
   searchMusic,
+  getUser,
 } = require("../controllers/userController");
 const auth = require("../middleware/auth");
 const delaymodule = require("../middleware/delay");
@@ -31,7 +32,7 @@ const {
   deleteAlbum,
   deleteMusic,
 } = require("../controllers/artistController");
-const { createUser, deleteUser, getUser } = require("../controllers/adminController");
+const { createUser, deleteUser } = require("../controllers/adminController");
 
 
 const routerAPI = express.Router();
@@ -42,7 +43,7 @@ routerAPI.get("/", getHomepage);
 // Admin routes
 routerAPI.post("/createuser", createUser);
 routerAPI.post("/deleteaccount", deleteUser);
-routerAPI.get("/user", getUser);
+
 
 // Artist routes
 routerAPI.post("/upload-music", uploadMusical);
@@ -71,5 +72,6 @@ routerAPI.post("/playlists/music", getMusicInPlaylist);
 routerAPI.post("/albums/artist", getUserAlbums);
 routerAPI.post("/albums/music", getMusicInAlbum);
 routerAPI.post("/search/music", searchMusic);
+routerAPI.get("/user", getUser);
 
 module.exports = routerAPI; //export default

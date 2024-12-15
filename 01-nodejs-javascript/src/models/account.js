@@ -16,6 +16,10 @@ const Account = sequelize.define('users', {
         allowNull: false,
         unique: true
     },
+    avatarPath: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     password: {
         type: DataTypes.STRING,
         allowNull: false

@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken")
 
 const auth = (req, res, next) => {
     
-    const allow_lists = ["/", "/register", "/login", "/sendemail", "/sendotp", "/verifyotp", "/musics", "/albums/artist", "/albums/music", "/search/music"];
+    const allow_lists = ["/", "/register", "/user", "/login", "/sendemail", "/sendotp", "/verifyotp", "/musics", "/albums/artist", "/albums/music", "/search/music"];
 
     if(allow_lists.find(item => '/v1/api' + item === req.originalUrl)){
         next();
@@ -20,6 +20,7 @@ const auth = (req, res, next) => {
                     email: decoded.email,
                     name: decoded.name,
                     dateOfBirth: decoded.dateOfBirth,
+                    avatarPath:decoded.avatarPath,
                     gender: decoded.gender,
                     role: decoded.role
                 }

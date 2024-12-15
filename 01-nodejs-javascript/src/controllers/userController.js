@@ -1,6 +1,7 @@
 const {
   createUserService,
   loginService,
+  getUserService,
   getProfileService,
   updateUserService,
   updatePasswordService,
@@ -239,6 +240,11 @@ const searchMusic = async (req, res) => {
   }
 };
 
+const getUser = async(req, res) => {
+  const data = await getUserService();
+  return res.status(200).json(data)
+}
+
 module.exports = {
   UserRegister,
   handleLogin,
@@ -253,6 +259,7 @@ module.exports = {
   removeMusicFromPlaylist,
   deletePlaylist,
   getMusics,
+  getUser,
   getMusicInPlaylist,
   getUserAlbums,
   getMusicInAlbum,

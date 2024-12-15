@@ -29,14 +29,6 @@
   padding: 30px 500px ;
   overflow: hidden;
 }
-.title-header{
-  display: flex;
-  justify-content: center;
-}
-
-.title{
-  font-size: 36px;
-}
 
 .custom-upload-form .ant-form-item-label > label {
   color: #ffffff;
