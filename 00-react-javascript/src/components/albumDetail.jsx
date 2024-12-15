@@ -16,7 +16,7 @@ const AlbumDetail = () => {
 
   const backgroundStyle = {
     backgroundImage: album.img ? `url(${album.img})` : "",
-    backgroundColor: album.img ? "transparent" : "#1e1e1e", 
+    backgroundColor: album.img ? "transparent" : "#1e1e1e",
   };
 
   const handleSeeMore = () => {
@@ -30,51 +30,51 @@ const AlbumDetail = () => {
   };
 
   return (
-      <div className="album-detail">
-        <div className="album-header" style={backgroundStyle}>
-        <div className="album-detail-info">
+    <div className="albumdetail-overlay">
+      <div className="albumdetail-background" style={backgroundStyle}>
+        <div className="albumdetail-header">
           <h1>{album.title}</h1>
           <p>{album.description}</p>
           <h2>
             <Link to="/userInfo">Sơn Tùng M-TP</Link>
           </h2>
         </div>
-      </div>
-      <div className="albumsong-wrapper">
-        <h2>Album List</h2>
-        {album.songs.slice(0, itemsToShow).map((song, index) => (
-          <div
-            key={index}
-            className="albumsong"
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}>
-            <div className="albumsong-number">
-              {hoveredIndex === index ? <CaretRightOutlined /> : index + 1}
+        <div className="albumdetail-content">
+          <h2>Album List</h2>
+          {album.songs.slice(0, itemsToShow).map((song, songid) => (
+            <div
+              key={songid}
+              className="albumsong"
+              onMouseEnter={() => setHoveredIndex(songid)}
+              onMouseLeave={() => setHoveredIndex(null)}>
+              <div className="albumsong-number">
+                {hoveredIndex === songid ? <CaretRightOutlined /> : songid + 1}
+              </div>
+              <div className="albumsong-image-container">
+                {song.img ? (
+                  <img
+                    src={song.img}
+                    alt={song.title}
+                    className="albumsong-image"
+                  />
+                ) : (
+                  <div className="albumsong-placeholder">
+                    <CaretRightOutlined className="albumsong-placeholder-icon" />
+                  </div>
+                )}
+              </div>
+              <div className="albumsong-info">
+                <div className="albumsong-name">{song.title}</div>
+              </div>
+              <div className="albumsong-duration">{song.duration}</div>
             </div>
-            <div className="albumsong-image-container">
-              {song.img ? (
-                <img
-                  src={song.img}
-                  alt={song.title}
-                  className="albumsong-image"
-                />
-              ) : (
-                <div className="albumsong-placeholder">
-                  <CaretRightOutlined className="albumsong-placeholder-icon" />
-                </div>
-              )}
+          ))}
+          {album.songs.length > 5 && (
+            <div className="albumsong-see-more" onClick={handleSeeMore}>
+              {expanded ? "See Less" : "See More"}
             </div>
-            <div className="albumsong-info">
-              <div className="albumsong-name">{song.title}</div>
-            </div>
-            <div className="albumsong-duration">{song.duration}</div>
-          </div>
-        ))}
-        {album.songs.length > 5 && (
-          <div className="albumsong-see-more" onClick={handleSeeMore}>
-            {expanded ? "See Less" : "See More"}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

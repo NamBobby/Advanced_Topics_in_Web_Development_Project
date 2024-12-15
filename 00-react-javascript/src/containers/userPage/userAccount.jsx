@@ -1,25 +1,25 @@
 import { notification, Table } from "antd";
 import { useEffect, useState } from "react";
-import { getUserApi } from "../services/apiService";
+//import { getUserApi } from "../services/apiService";
 
 const UserPage = () => {
   const [dataSource, setDatasource] = useState([]);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const res = await getUserApi();
-      console.log(">>> chech res:", res);
-      if (!res?.message) {
-        setDatasource(res);
-      } else {
-        notification.error({
-          message: "Unauthorized",
-          description: res.message,
-        });
-      }
-    };
-    fetchUser();
-  }, []);
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const res = await getUserApi();
+  //     console.log(">>> chech res:", res);
+  //     if (!res?.message) {
+  //       setDatasource(res);
+  //     } else {
+  //       notification.error({
+  //         message: "Unauthorized",
+  //         description: res.message,
+  //       });
+  //     }
+  //   };
+  //   fetchUser();
+  // }, []);
 
   const columns = [
     {

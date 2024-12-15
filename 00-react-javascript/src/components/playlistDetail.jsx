@@ -16,7 +16,7 @@ const PlaylistDetail = () => {
 
   const backgroundStyle = {
     backgroundImage: playlist.img ? `url(${playlist.img})` : "",
-    backgroundColor: playlist.img ? "transparent" : "#1e1e1e", 
+    backgroundColor: playlist.img ? "transparent" : "#1e1e1e",
   };
 
   const handleSeeMore = () => {
@@ -30,51 +30,51 @@ const PlaylistDetail = () => {
   };
 
   return (
-      <div className="playlist-detail">
-        <div className="playlist-header" style={backgroundStyle}>
-        <div className="playlist-detail-info">
+    <div className="playlistdetail-overlay">
+      <div className="playlistdetail-background" style={backgroundStyle}>
+        <div className="playlistdetail-header">
           <h1>{playlist.title}</h1>
           <p>{playlist.description}</p>
           <h2>
             <Link to="/userInfo">Sơn Tùng M-TP</Link>
           </h2>
         </div>
-      </div>
-      <div className="playlistsong-wrapper">
-        <h2>playlist List</h2>
-        {playlist.songs.slice(0, itemsToShow).map((song, index) => (
-          <div
-            key={index}
-            className="playlistsong"
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}>
-            <div className="playlistsong-number">
-              {hoveredIndex === index ? <CaretRightOutlined /> : index + 1}
+        <div className="playlistdetail-content">
+          <h2>playlist List</h2>
+          {playlist.songs.slice(0, itemsToShow).map((song, songid) => (
+            <div
+              key={songid}
+              className="playlistsong"
+              onMouseEnter={() => setHoveredIndex(songid)}
+              onMouseLeave={() => setHoveredIndex(null)}>
+              <div className="playlistsong-number">
+                {hoveredIndex === songid ? <CaretRightOutlined /> : songid + 1}
+              </div>
+              <div className="playlistsong-image-container">
+                {song.img ? (
+                  <img
+                    src={song.img}
+                    alt={song.title}
+                    className="playlistsong-image"
+                  />
+                ) : (
+                  <div className="playlistsong-placeholder">
+                    <CaretRightOutlined className="playlistsong-placeholder-icon" />
+                  </div>
+                )}
+              </div>
+              <div className="playlistsong-info">
+                <div className="playlistsong-name">{song.title}</div>
+              </div>
+              <div className="playlistsong-duration">{song.duration}</div>
             </div>
-            <div className="playlistsong-image-container">
-              {song.img ? (
-                <img
-                  src={song.img}
-                  alt={song.title}
-                  className="playlistsong-image"
-                />
-              ) : (
-                <div className="playlistsong-placeholder">
-                  <CaretRightOutlined className="playlistsong-placeholder-icon" />
-                </div>
-              )}
+          ))}
+          {playlist.songs.length > 5 && (
+            <div className="playlistsong-see-more" onClick={handleSeeMore}>
+              {expanded ? "See Less" : "See More"}
             </div>
-            <div className="playlistsong-info">
-              <div className="playlistsong-name">{song.title}</div>
-            </div>
-            <div className="playlistsong-duration">{song.duration}</div>
-          </div>
-        ))}
-        {playlist.songs.length > 5 && (
-          <div className="playlistsong-see-more" onClick={handleSeeMore}>
-            {expanded ? "See Less" : "See More"}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

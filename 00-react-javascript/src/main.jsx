@@ -14,6 +14,7 @@ import AlbumUserList from './containers/profileInfoPage/albumuserlist.jsx';
 import PlayListUserList from './containers/profileInfoPage/playlistuserlist.jsx';
 import AlbumDetail from './components/albumDetail.jsx';
 import PlaylistDetail from './components/playlistDetail.jsx';
+import UploadMusicPage from './containers/userPage/uploadmusic.jsx';
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,8 @@ const router = createBrowserRouter([
       { path: 'userAlbum', element: <AlbumUserList /> }, 
       { path: 'userPlaylist', element: <PlayListUserList /> },
       { path: 'album/:title', element: <AlbumDetail /> },  
-      { path: 'playlist/:title', element: <PlaylistDetail /> },    
+      { path: 'playlist/:title', element: <PlaylistDetail /> },
+      { path: 'uploadmusic', element: <UploadMusicPage /> },    
     ],
   },
   {

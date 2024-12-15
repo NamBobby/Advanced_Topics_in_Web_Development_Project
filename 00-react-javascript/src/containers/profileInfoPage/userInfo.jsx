@@ -8,9 +8,9 @@ import "../../assets/styles/userInfo.css";
 const UserInfo = () => {
   return (
     
-      <div className="user-info-overlay">
-        <div className="background-container">
-          <div className="user-detail">
+      <div className="userinfo-overlay">
+        <div className="userinfo-background">
+          <div className="userinfo-header">
             <p className="user-role">Artist</p>
             <h3 className="user-name">John Doe</h3>
           </div>
