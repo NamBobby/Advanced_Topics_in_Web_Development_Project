@@ -74,16 +74,26 @@ const updateUser = async (req, res) => {
 const updatePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;
-
     const userId = req.user.id;
 
-    const updateResult = await updatePasswordService(userId, currentPassword, newPassword, confirmPassword);
-    return res.status(updateResult.EC === 0 ? 200 : 400).json(updateResult);
+    const updateResult = await updatePasswordService(
+      userId,
+      currentPassword,
+      newPassword,
+      confirmPassword
+    );
+
+    if (updateResult.EC === 0) {
+      return res.status(200).json({ message: "Password updated successfully!" });
+    } else {
+      return res.status(400).json({ message: updateResult.EM });
+    }
   } catch (error) {
     console.error("Error in updatePassword:", error);
-    return res.status(500).json({ EC: 7, EM: "Error updating password" });
+    return res.status(500).json({ message: "Error updating password." });
   }
 };
+
 
 
 const sendOtp = async (req, res) => {

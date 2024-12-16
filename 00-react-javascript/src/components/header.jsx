@@ -2,11 +2,10 @@ import React, { useContext, useState } from "react";
 import {
   UserOutlined,
   HomeOutlined,
-  SettingOutlined,
   SearchOutlined,
   ExportOutlined,
 } from "@ant-design/icons";
-import { Button, Dropdown, Menu } from "antd";
+import { Button, Dropdown, notification } from "antd";
 import "../assets/styles/header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth.context";
@@ -30,13 +29,10 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    localStorage.clear(); // Xóa toàn bộ dữ liệu trong localStorage
-    setAuth({
-      isAuthenticated: false,
-      user: {
-        email: "",
-        name: "",
-      },
+    localStorage.removeItem("access_token");
+    setAuth({ isAuthenticated: false, user: {} });
+    notification.success({
+      message: "Logout Successful",
     });
     navigate("/");
   };
@@ -54,9 +50,10 @@ const Header = () => {
           label: (
             <div
               style={{ cursor: "pointer" }}
-              onClick={() => navigate("/profile")}
-            >
-              {auth?.user?.name ?? ""}{" "}
+              onClick={() =>
+                navigate("/profile", { state: { user: auth.user } })
+              }>
+              {auth.user.name}
               <ExportOutlined className="export-icon" />
             </div>
           ),
@@ -114,8 +111,7 @@ const Header = () => {
 
       <div className="auth-buttons">
         <Dropdown menu={{ items }} trigger={["click"]}>
-          <Button icon={<UserOutlined />}>
-          </Button>
+          <Button icon={<UserOutlined />}></Button>
         </Dropdown>
       </div>
     </div>

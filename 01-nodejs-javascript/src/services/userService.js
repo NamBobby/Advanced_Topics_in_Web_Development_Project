@@ -197,6 +197,7 @@ const updatePasswordService = async (id, currentPassword, newPassword, confirmPa
   }
 };
 
+
 // Generate OTP service
 const generateOtp = async (email) => {
   try {
