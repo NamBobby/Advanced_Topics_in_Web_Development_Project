@@ -37,6 +37,9 @@ webAPI.get("/", getHomepage);
 app.use("/", webAPI);
 app.use("/v1/api/", apiRoutes);
 
+// Cấu hình phục vụ tệp tĩnh
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Seed initial data function
 const seedInitialUsers = async () => {
   const initialUsers = [

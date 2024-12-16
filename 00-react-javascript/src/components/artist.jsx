@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CaretRightOutlined } from "@ant-design/icons";
-import "../assets/styles/artist.css"; 
+import "../assets/styles/artist.css";
+import BASE_URL from "../utils/config"; 
 
 const Artist = ({ artists, itemsToShow }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -20,7 +21,12 @@ const Artist = ({ artists, itemsToShow }) => {
             onMouseLeave={() => setHoveredIndex(null)}
           >
             {artist.avatarPath ? (
-              <img src={artist.avatarPath} alt={artist.name} className="artist-image" />
+              // Sửa đường dẫn avatarPath để loại bỏ tiền tố 'src\\'
+              <img
+                src={`${BASE_URL}/${artist.avatarPath.replace(/^src[\\/]/, "")}`}
+                alt={artist.name}
+                className="artist-image"
+              />
             ) : (
               <div className="artist-placeholder">
                 <CaretRightOutlined className="artist-placeholder-icon" />
