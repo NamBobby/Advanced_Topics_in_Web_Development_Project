@@ -30,7 +30,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    localStorage.clear("access_token");
+    localStorage.clear(); // Xóa toàn bộ dữ liệu trong localStorage
     setAuth({
       isAuthenticated: false,
       user: {
@@ -46,46 +46,57 @@ const Header = () => {
     setCurrent(e.key);
   };
 
-  const menu = (
-    <Menu>
-      {auth.isAuthenticated ? (
-        <>
-          <Menu.Item key="username">
-            {auth?.user?.name ?? ""} 
-            <ExportOutlined className="export-icon"/>
-          </Menu.Item>
-          <Menu.Item key="logout">
+  // Menu items cho dropdown
+  const items = auth.isAuthenticated
+    ? [
+        {
+          key: "username",
+          label: (
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/profile")}
+            >
+              {auth?.user?.name ?? ""}{" "}
+              <ExportOutlined className="export-icon" />
+            </div>
+          ),
+        },
+        {
+          key: "logout",
+          label: (
             <button className="logout-btn" onClick={handleLogout}>
               Log out
             </button>
-          </Menu.Item>
-        </>
-      ) : (
-        <>
-          <Menu.Item key="login">
+          ),
+        },
+      ]
+    : [
+        {
+          key: "login",
+          label: (
             <Link to="/login" className="login-btn">
               Login
             </Link>
-          </Menu.Item>
-          <Menu.Item key="register">
+          ),
+        },
+        {
+          key: "register",
+          label: (
             <Link to="/register" className="signup-btn">
               Sign Up
             </Link>
-          </Menu.Item>
-        </>
-      )}
-    </Menu>
-  );
+          ),
+        },
+      ];
 
   return (
     <div className="header-container">
-      <div className="logo">
-      </div>
+      <div className="logo"></div>
 
       <div className="search-box">
         <div className="logo">
           <Link to="/">
-            <HomeOutlined className="home-icon"/>
+            <HomeOutlined className="home-icon" />
           </Link>
         </div>
         <input
@@ -102,8 +113,9 @@ const Header = () => {
       </div>
 
       <div className="auth-buttons">
-        <Dropdown overlay={menu} trigger={['click']}>
-          <Button icon={<UserOutlined />} />
+        <Dropdown menu={{ items }} trigger={["click"]}>
+          <Button icon={<UserOutlined />}>
+          </Button>
         </Dropdown>
       </div>
     </div>

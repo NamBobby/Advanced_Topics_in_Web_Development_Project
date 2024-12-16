@@ -7,7 +7,7 @@ const {
   deleteMusicService,
 } = require("../services/artistService");
 const { upload, checkThumbnailSize } = require("../config/multerConfig");
-const Account = require("../models/account");
+const User = require("../models/user");
 
 // Upload music function
 const uploadMusical = [
@@ -28,7 +28,7 @@ const uploadMusical = [
         return res.status(400).json({ message: "Please fill in all required fields" });
       }
 
-      const account = await Account.findOne({ where: { email: req.user.email } });
+      const account = await User.findOne({ where: { email: req.user.email } });
       if (!account) {
         return res.status(400).json({ message: "Account not found" });
       }
@@ -80,7 +80,7 @@ const createAlbum = [
       const { name, publishedYear } = req.body;
       const thumbnailFile = req.files.albumThumbnail ? req.files.albumThumbnail[0] : null;
 
-      const account = await Account.findOne({
+      const account = await User.findOne({
         where: { email: req.user.email },
       });
       if (!account) {

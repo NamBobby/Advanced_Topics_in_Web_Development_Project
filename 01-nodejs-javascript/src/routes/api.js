@@ -22,6 +22,8 @@ const {
 const auth = require("../middleware/auth");
 const delaymodule = require("../middleware/delay");
 
+const { upload } = require("../config/multerConfig");
+
 const { SendEmail } = require("../controllers/mailController");
 const { getHomepage } = require("../controllers/homeController");
 const {
@@ -60,7 +62,7 @@ routerAPI.get("/account", delaymodule, getAccount);
 routerAPI.post("/sendotp", sendOtp);
 routerAPI.post("/verifyotp", delaymodule, verifyOtp);
 routerAPI.post("/sendemail", SendEmail);
-routerAPI.patch("/profile/:id", delaymodule, updateUser);
+routerAPI.patch("/profile", upload, delaymodule, updateUser);
 routerAPI.patch("/profile/:id/password", delaymodule, updatePassword);
 routerAPI.post("/create-playlist", createPlaylist);
 routerAPI.get("/playlists", getPlaylists);

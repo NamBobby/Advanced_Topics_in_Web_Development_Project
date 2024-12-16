@@ -1,5 +1,4 @@
 require("dotenv").config();
-const User = require("../models/account");
 const bcrypt = require("bcryptjs");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
@@ -8,7 +7,7 @@ const UserOTPVerification = require("../models/userOTPVerification");
 const { sequelize } = require("../config/database");
 const {
   Album,
-  Account,
+  User,
   Playlist,
   Music,
   PlaylistMusic,
@@ -41,7 +40,7 @@ const createUserService = async (
       password: hashPassword,
       dateOfBirth,
       gender,
-      role: "User ",
+      role: "User",
     });
     return result;
   } catch (error) {
@@ -70,7 +69,7 @@ const loginService = async (email, password) => {
           email: user.email,
           name: user.name,
           dateOfBirth: user.dateOfBirth,
-          avatarPath:user.avatarPath,
+          avatarPath: user.avatarPath,
           gender: user.gender,
           role: user.role,
         };
@@ -85,7 +84,7 @@ const loginService = async (email, password) => {
             id: user.id,
             email: user.email,
             name: user.name,
-            avatarPath:user.avatarPath,
+            avatarPath: user.avatarPath,
             dateOfBirth: user.dateOfBirth,
             gender: user.gender,
             role: user.role,
@@ -106,7 +105,7 @@ const loginService = async (email, password) => {
 
 const getUserService = async () => {
   try {
-    let result = await Account.findAll({ attributes: { exclude: ["password"] } });
+    let result = await User.findAll({ attributes: { exclude: ["password"] } });
     return result;
   } catch (error) {
     console.log(error);
@@ -129,26 +128,43 @@ const getProfileService = async (id) => {
 };
 
 // Update user service
-const updateUserService = async (id, dateOfBirth, gender) => {
+const updateUserService = async (profileData) => {
   try {
-    // Fetch user by ID
-    const user = await User.findByPk(id);
-    if (!user) {
-      return { EC: 6, EM: "User   not found" };
+      const user = await User.findOne({ where: { email: profileData.email } });
+      if (!user) {
+          return { EC: 6, EM: "User not found" };
+      }
+
+      // Xác định các thay đổi
+      const hasDateOfBirthChanged = profileData.dateOfBirth && profileData.dateOfBirth !== user.dateOfBirth;
+      const hasGenderChanged = profileData.gender && profileData.gender !== user.gender;
+      const hasAvatarChanged = profileData.avatarPath && profileData.avatarPath !== user.avatarPath;
+
+      if (!hasDateOfBirthChanged && !hasGenderChanged && !hasAvatarChanged) {
+        console.log(">>> Không có thay đổi:", {
+            dateOfBirth: profileData.dateOfBirth,
+            gender: profileData.gender,
+            avatarPath: profileData.avatarPath,
+            currentDateOfBirth: user.dateOfBirth,
+            currentGender: user.gender,
+            currentAvatarPath: user.avatarPath
+        });
+        return { EC: 6, EM: "No changes made" };
     }
+    
 
-    // Update date of birth
-    user.dateOfBirth = dateOfBirth;
+      // Chỉ cập nhật các trường cần thiết
+      const updatedFields = {};
+      if (hasDateOfBirthChanged) updatedFields.dateOfBirth = profileData.dateOfBirth;
+      if (hasGenderChanged) updatedFields.gender = profileData.gender;
+      if (hasAvatarChanged) updatedFields.avatarPath = profileData.avatarPath;
 
-    // Update gender
-    user.gender = gender;
+      await User.update(updatedFields, { where: { email: profileData.email } });
 
-    await user.save();
-
-    return { EC: 0, EM: "Profile updated successfully" };
+      return { EC: 0, EM: "Profile updated successfully" };
   } catch (error) {
-    console.log(error);
-    return { EC: 7, EM: "Error updating profile" };
+      console.error("Error in updateUserService:", error);
+      throw new Error("Error updating profile in the database");
   }
 };
 
@@ -396,7 +412,7 @@ const getMusicInPlaylistService = async (playlistId) => {
 
 const getUserAlbumsService = async (name) => {
   try {
-    const artist = await Account.findOne({
+    const artist = await User.findOne({
       where: { name: name, role: "Artist" },
       attributes: ["id"],
     });
@@ -419,7 +435,7 @@ const getUserAlbumsService = async (name) => {
 
 const getMusicInAlbumService = async (name, albumId) => {
   try {
-    const artist = await Account.findOne({
+    const artist = await User.findOne({
       where: { name: name, role: "Artist" },
       attributes: ["id"],
     });

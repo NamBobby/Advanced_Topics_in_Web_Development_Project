@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CaretRightOutlined } from "@ant-design/icons";
 import "../assets/styles/artist.css"; 
 
 const Artist = ({ artists, itemsToShow }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  console.log("Artists received in Artist component:", artists); // Kiểm tra lại
+  useEffect(() => {
+    console.log("Artists received in Artist component:", artists);
+  }, [artists]);
 
   return (
     <div className="artist-wrapper">

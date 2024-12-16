@@ -15,6 +15,7 @@ import PlayListUserList from './containers/profileInfoPage/playlistuserlist.jsx'
 import AlbumDetail from './components/albumDetail.jsx';
 import PlaylistDetail from './components/playlistDetail.jsx';
 import UploadMusicPage from './containers/userPage/uploadmusic.jsx';
+import ProfilePage from './containers/userPage/userAccount.jsx';
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: '/register', // Không có Sidebar
     element: <RegisterPage />,
+  },
+  {
+    path: '/profile', // Không có Sidebar
+    element: <ProfilePage />,
   },
   {
     path: '/login', // Không có Sidebar

@@ -18,7 +18,7 @@ const {
   getMusicInAlbumService,
   searchMusicService,
 } = require("../services/userService");
-const Account = require("../models/account");
+const User = require("../models/user");
 const { upload, checkThumbnailSize } = require("../config/multerConfig");
 
 const UserRegister = async (req, res) => {
@@ -44,13 +44,31 @@ const handleLogin = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const { id } = req.params;
-  const { dateOfBirth, gender } = req.body;
-  const data = await updateUserService(id, dateOfBirth, gender);
-  if (data.EC !== 0) {
-    return res.status(400).json(data);
+  try {
+      const avatarFile = req.files && req.files.avatar ? req.files.avatar[0] : null;
+      const { dateOfBirth, gender } = req.body;
+
+      const account = await User.findOne({ where: { email: req.user.email } });
+      if (!account) {
+          return res.status(400).json({ message: "Account not found" });
+      }
+
+      const avatarPath = avatarFile ? avatarFile.path : account.avatarPath;
+
+      const profileData = {
+          email: req.user.email,
+          dateOfBirth,
+          gender,
+          avatarPath: avatarFile ? avatarPath : null // Chỉ gửi avatarPath khi có thay đổi
+      };
+
+      const updateResult = await updateUserService(profileData);
+
+      return res.status(200).json(updateResult);
+  } catch (error) {
+      console.error("Error in updateUser:", error);
+      return res.status(500).json({ EC: 7, EM: "Error updating profile" });
   }
-  return res.status(200).json(data);
 };
 
 const updatePassword = async (req, res) => {
@@ -102,7 +120,7 @@ const createPlaylist = [
   checkThumbnailSize,
   async (req, res) => {
     try {
-      const account = await Account.findOne({
+      const account = await User.findOne({
         where: { email: req.user.email },
       });
       if (!account) {

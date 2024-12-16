@@ -10,7 +10,7 @@ const { deleteSpecificFiles } = require("./utils/cleanfileutils");
 
 // Import models with associations
 const {
-  Account,
+  User,
   Album,
   Music,
   Playlist,
@@ -59,7 +59,7 @@ const seedInitialUsers = async () => {
     // Add more initial users as needed
   ];
   try {
-    await Account.bulkCreate(initialUsers, { ignoreDuplicates: true }); // Use ignoreDuplicates to skip existing entries
+    await User.bulkCreate(initialUsers, { ignoreDuplicates: true }); // Use ignoreDuplicates to skip existing entries
     console.log("Initial users seeded successfully.");
   } catch (error) {
     console.error("Error seeding initial users:", error);

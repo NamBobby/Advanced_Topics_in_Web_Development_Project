@@ -2,6 +2,7 @@ const multer = require("multer");
 const path = require("path");
 const crypto = require("crypto");
 
+// Storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "musicFile") {
@@ -12,6 +13,8 @@ const storage = multer.diskStorage({
       cb(null, "./src/uploads/albums");
     } else if (file.fieldname === "playlistThumbnail") {
       cb(null, "./src/uploads/playlists");
+    } else if (file.fieldname === "avatar") {
+      cb(null, "./src/uploads/avatars/");
     } else {
       cb(new Error("Unknown fieldname"), false);
     }
@@ -22,46 +25,58 @@ const storage = multer.diskStorage({
   },
 });
 
+// File filter to check for allowed MIME types
 const fileFilter = (req, file, cb) => {
   const allowedMusicTypes = ["audio/mp3", "audio/mpeg", "audio/aac"];
   const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
 
+  // Check if it's a valid music file
   if (file.fieldname === "musicFile" && !allowedMusicTypes.includes(file.mimetype)) {
     const error = new Error("Incorrect music file type");
     error.status = 400;
     return cb(error, false);
   }
 
-  if (["thumbnail", "albumThumbnail", "playlistThumbnail"].includes(file.fieldname) && !allowedImageTypes.includes(file.mimetype)) {
+  // Check if it's a valid image file
+  if (["avatar", "thumbnail", "albumThumbnail", "playlistThumbnail"].includes(file.fieldname) && !allowedImageTypes.includes(file.mimetype)) {
     const error = new Error("Incorrect image file type");
     error.status = 400;
     return cb(error, false);
   }
 
+  // All other files are valid
   cb(null, true);
 };
 
+// Middleware for handling file upload with file size restrictions
 const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 6 * 1024 * 1024, // 6MB cho tệp nhạc
+    fileSize: 6 * 1024 * 1024, // 6MB max for music file
   },
 }).fields([
   { name: "musicFile", maxCount: 1 },
   { name: "thumbnail", maxCount: 1 },
   { name: "albumThumbnail", maxCount: 1 },
-  { name: "playlistThumbnail", maxCount: 1 }
+  { name: "playlistThumbnail", maxCount: 1 },
+  { name: "avatar", maxCount: 1 },
 ]);
 
-// Thêm chức năng middleware để kiểm tra riêng giới hạn kích thước tệp thumbnail
+// Custom middleware for additional size checking for specific files (e.g., thumbnails)
 const checkThumbnailSize = (req, res, next) => {
   if (req.files) {
     if (req.files.albumThumbnail && req.files.albumThumbnail[0].size > 5 * 1024 * 1024) {
-      return res.status(400).json({ message: "Album thumbnail file size exceeds 5MB limit" });
+      return next(new Error("Album thumbnail file size exceeds 5MB limit"));
     }
     if (req.files.playlistThumbnail && req.files.playlistThumbnail[0].size > 5 * 1024 * 1024) {
-      return res.status(400).json({ message: "Playlist thumbnail file size exceeds 5MB limit" });
+      return next(new Error("Playlist thumbnail file size exceeds 5MB limit"));
+    }
+    if (req.files.musicFile && req.files.musicFile[0].size > 5 * 1024 * 1024) {
+      return next(new Error("Music file size exceeds 5MB limit"));
+    }
+    if (req.files.avatar && req.files.avatar[0].size > 5 * 1024 * 1024) {
+      return next(new Error("Avatar file size exceeds 5MB limit"));
     }
   }
   next();
