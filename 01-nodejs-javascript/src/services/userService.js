@@ -13,6 +13,7 @@ const {
   PlaylistMusic,
 } = require("../models/associations");
 const fs = require("fs");
+const {deleteOldAvatar} = require("../middleware/deleteavatar")
 const { Op } = require("sequelize");
 
 // Create user service
@@ -130,77 +131,68 @@ const getProfileService = async (id) => {
 // Update user service
 const updateUserService = async (profileData) => {
   try {
-      const user = await User.findOne({ where: { email: profileData.email } });
-      if (!user) {
-          return { EC: 6, EM: "User not found" };
-      }
-
-      // Xác định các thay đổi
-      const hasDateOfBirthChanged = profileData.dateOfBirth && profileData.dateOfBirth !== user.dateOfBirth;
-      const hasGenderChanged = profileData.gender && profileData.gender !== user.gender;
-      const hasAvatarChanged = profileData.avatarPath && profileData.avatarPath !== user.avatarPath;
-
-      if (!hasDateOfBirthChanged && !hasGenderChanged && !hasAvatarChanged) {
-        console.log(">>> Không có thay đổi:", {
-            dateOfBirth: profileData.dateOfBirth,
-            gender: profileData.gender,
-            avatarPath: profileData.avatarPath,
-            currentDateOfBirth: user.dateOfBirth,
-            currentGender: user.gender,
-            currentAvatarPath: user.avatarPath
-        });
-        return { EC: 6, EM: "No changes made" };
+    const user = await User.findOne({ where: { email: profileData.email } });
+    if (!user) {
+      return { EC: 6, EM: "User not found" };
     }
-    
 
-      // Chỉ cập nhật các trường cần thiết
-      const updatedFields = {};
-      if (hasDateOfBirthChanged) updatedFields.dateOfBirth = profileData.dateOfBirth;
-      if (hasGenderChanged) updatedFields.gender = profileData.gender;
-      if (hasAvatarChanged) updatedFields.avatarPath = profileData.avatarPath;
+    const hasChanges =
+      (profileData.dateOfBirth && profileData.dateOfBirth !== user.dateOfBirth) ||
+      (profileData.gender && profileData.gender !== user.gender) ||
+      (profileData.avatarPath && profileData.avatarPath !== user.avatarPath);
 
-      await User.update(updatedFields, { where: { email: profileData.email } });
+    if (!hasChanges) {
+      return { EC: 6, EM: "No changes made" };
+    }
 
-      return { EC: 0, EM: "Profile updated successfully" };
+    if (profileData.avatarPath && user.avatarPath) {
+      try {
+        await deleteOldAvatar(user.avatarPath);
+      } catch (error) {
+        console.warn(`Failed to delete old avatar: ${error.message}`);
+      }
+    }
+
+    const updatedFields = {
+      ...(profileData.dateOfBirth && { dateOfBirth: profileData.dateOfBirth }),
+      ...(profileData.gender && { gender: profileData.gender }),
+      ...(profileData.avatarPath && { avatarPath: profileData.avatarPath }),
+    };
+
+    await User.update(updatedFields, { where: { email: profileData.email } });
+    return { EC: 0, EM: "Profile updated successfully" };
   } catch (error) {
-      console.error("Error in updateUserService:", error);
-      throw new Error("Error updating profile in the database");
+    console.error("Error in updateUserService:", error);
+    throw new Error("Error updating profile in the database");
   }
 };
 
 // Update password service
-const updatePasswordService = async (
-  id,
-  password,
-  newPassword,
-  confirmPassword
-) => {
+const updatePasswordService = async (id, currentPassword, newPassword, confirmPassword) => {
   try {
-    // Fetch user by ID
     const user = await User.findByPk(id);
     if (!user) {
-      return { EC: 6, EM: "User  not found" };
+      return { EC: 6, EM: "User not found" };
     }
 
-    // Check if current password is correct
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    // Kiểm tra mật khẩu hiện tại
+    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
     if (!isValidPassword) {
       return { EC: 7, EM: "Invalid current password" };
     }
 
-    // Check if new password and confirmation match
+    // Kiểm tra mật khẩu mới và xác nhận mật khẩu
     if (newPassword !== confirmPassword) {
       return { EC: 8, EM: "New password and confirmation do not match" };
     }
 
-    // Update password
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(newPassword, salt);
-    await user.save();
+    // Hash mật khẩu mới và cập nhật
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await User.update({ password: hashedPassword }, { where: { id } });
 
     return { EC: 0, EM: "Password updated successfully" };
   } catch (error) {
-    console.log(error);
+    console.error("Error in updatePasswordService:", error);
     return { EC: 9, EM: "Error updating password" };
   }
 };

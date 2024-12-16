@@ -63,7 +63,7 @@ routerAPI.post("/sendotp", sendOtp);
 routerAPI.post("/verifyotp", delaymodule, verifyOtp);
 routerAPI.post("/sendemail", SendEmail);
 routerAPI.patch("/profile", upload, delaymodule, updateUser);
-routerAPI.patch("/profile/:id/password", delaymodule, updatePassword);
+routerAPI.patch("/password", delaymodule, updatePassword);
 routerAPI.post("/create-playlist", createPlaylist);
 routerAPI.get("/playlists", getPlaylists);
 routerAPI.get("/musics", getMusics);

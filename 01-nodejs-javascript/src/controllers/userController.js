@@ -45,46 +45,46 @@ const handleLogin = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-      const avatarFile = req.files && req.files.avatar ? req.files.avatar[0] : null;
-      const { dateOfBirth, gender } = req.body;
+    const avatarFile = req.files?.avatar?.[0] || null;
+    const { dateOfBirth, gender } = req.body;
 
-      const account = await User.findOne({ where: { email: req.user.email } });
-      if (!account) {
-          return res.status(400).json({ message: "Account not found" });
-      }
+    const account = await User.findOne({ where: { email: req.user.email } });
+    if (!account) {
+      return res.status(400).json({ message: "Account not found" });
+    }
 
-      const avatarPath = avatarFile ? avatarFile.path : account.avatarPath;
+    const avatarPath = avatarFile ? avatarFile.path : account.avatarPath;
 
-      const profileData = {
-          email: req.user.email,
-          dateOfBirth,
-          gender,
-          avatarPath: avatarFile ? avatarPath : null // Chỉ gửi avatarPath khi có thay đổi
-      };
+    const profileData = {
+      email: req.user.email,
+      dateOfBirth,
+      gender,
+      avatarPath: avatarFile ? avatarPath : null,
+    };
 
-      const updateResult = await updateUserService(profileData);
-
-      return res.status(200).json(updateResult);
+    const updateResult = await updateUserService(profileData);
+    return res.status(200).json(updateResult);
   } catch (error) {
-      console.error("Error in updateUser:", error);
-      return res.status(500).json({ EC: 7, EM: "Error updating profile" });
+    console.error("Error in updateUser:", error);
+    return res.status(500).json({ EC: 7, EM: "Error updating profile" });
   }
 };
+
 
 const updatePassword = async (req, res) => {
-  const { id } = req.params;
-  const { currentPassword, newPassword, confirmPassword } = req.body;
-  const data = await updatePasswordService(
-    id,
-    currentPassword,
-    newPassword,
-    confirmPassword
-  );
-  if (data.EC !== 0) {
-    return res.status(400).json(data);
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    const userId = req.user.id;
+
+    const updateResult = await updatePasswordService(userId, currentPassword, newPassword, confirmPassword);
+    return res.status(updateResult.EC === 0 ? 200 : 400).json(updateResult);
+  } catch (error) {
+    console.error("Error in updatePassword:", error);
+    return res.status(500).json({ EC: 7, EM: "Error updating password" });
   }
-  return res.status(200).json(data);
 };
+
 
 const sendOtp = async (req, res) => {
   const { email } = req.body;
