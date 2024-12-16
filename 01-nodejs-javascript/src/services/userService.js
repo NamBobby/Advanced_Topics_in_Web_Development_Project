@@ -13,8 +13,8 @@ const {
   PlaylistMusic,
 } = require("../models/associations");
 const fs = require("fs");
-const {deleteOldAvatar} = require("../middleware/deleteavatar")
 const { Op } = require("sequelize");
+const path = require("path");
 
 // Create user service
 const createUserService = async (
@@ -136,20 +136,16 @@ const updateUserService = async (profileData) => {
       return { EC: 6, EM: "User not found" };
     }
 
-    const hasChanges =
-      (profileData.dateOfBirth && profileData.dateOfBirth !== user.dateOfBirth) ||
-      (profileData.gender && profileData.gender !== user.gender) ||
-      (profileData.avatarPath && profileData.avatarPath !== user.avatarPath);
-
-    if (!hasChanges) {
-      return { EC: 6, EM: "No changes made" };
-    }
-
-    if (profileData.avatarPath && user.avatarPath) {
-      try {
-        await deleteOldAvatar(user.avatarPath);
-      } catch (error) {
-        console.warn(`Failed to delete old avatar: ${error.message}`);
+    // Kiểm tra thay đổi avatar và xóa avatar cũ nếu cần
+    if (profileData.avatarPath && user.avatarPath && profileData.avatarPath !== user.avatarPath) {
+      const oldAvatarPath = path.join(__dirname, "../uploads", user.avatarPath); // Không thêm 'src/uploads' nữa
+      console.log("Old Avatar Path:", oldAvatarPath); // Debug đường dẫn avatar cũ
+    
+      if (fs.existsSync(oldAvatarPath)) {
+        fs.unlinkSync(oldAvatarPath); // Xóa file avatar cũ
+        console.log("Old avatar deleted successfully.");
+      } else {
+        console.log("Old avatar does not exist.");
       }
     }
 
@@ -166,6 +162,7 @@ const updateUserService = async (profileData) => {
     throw new Error("Error updating profile in the database");
   }
 };
+
 
 // Update password service
 const updatePasswordService = async (id, currentPassword, newPassword, confirmPassword) => {

@@ -18,7 +18,7 @@ import {
   updatePasswordApi,
 } from "../../services/apiService";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "../../services/axios.customize";
 import "../../assets/styles/userAccount.css";
 
@@ -44,6 +44,7 @@ const UserAccount = () => {
   const [passwordForm] = Form.useForm();
   const [userData, setUserData] = useState({});
   const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
 
   // Fetch user data from API
   useEffect(() => {
@@ -67,6 +68,15 @@ const UserAccount = () => {
           } else {
             form.setFieldsValue(user);
           }
+
+          if (user.avatarPath) {
+            setAvatarPreview(
+              `${axios.defaults.baseURL}/uploads/${user.avatarPath.replace(
+                /^src[\\/]/,
+                ""
+              )}`
+            );
+          }
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -82,8 +92,28 @@ const UserAccount = () => {
 
   // Handle avatar upload
   const handleAvatarChange = (info) => {
-    if (info.file) {
-      setAvatarFile(info.file.originFileObj);
+    console.log("Avatar Info:", info); // Kiểm tra thông tin file
+    const file = info.file; // Sử dụng trực tiếp info.file
+
+    if (file) {
+      if (file.type.startsWith("image/")) {
+        // Kiểm tra tệp có phải là ảnh không
+        setAvatarFile(file); // Lưu tệp vào state
+
+        // Sử dụng FileReader để tạo preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setAvatarPreview(e.target.result); // Hiển thị preview tạm thời
+        };
+        reader.readAsDataURL(file);
+      } else {
+        notification.error({
+          message: "Invalid File",
+          description: "Please select a valid image file.",
+        });
+      }
+    } else {
+      console.error("File is not valid:", file);
     }
   };
 
@@ -108,6 +138,19 @@ const UserAccount = () => {
         message: "Success",
         description: "Profile updated successfully!",
       });
+
+      const updatedUser = await getAccountApi();
+      if (updatedUser && Array.isArray(updatedUser) && updatedUser.length > 0) {
+        setUserData(updatedUser[0]);
+        if (updatedUser[0].avatarPath) {
+          setAvatarPreview(
+            `${axios.defaults.baseURL}/${updatedUser[0].avatarPath.replace(
+              /^src[\\/]/,
+              ""
+            )}`
+          );
+        }
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
       notification.error({
@@ -142,7 +185,6 @@ const UserAccount = () => {
         newPassword: values.newPassword,
         confirmPassword: values.confirmPassword,
       });
-      
 
       notification.success({
         message: "Success",
@@ -171,10 +213,7 @@ const UserAccount = () => {
               <img
                 src={
                   userData.avatarPath
-                    ? `${axios.defaults.baseURL}/${userData.avatarPath.replace(
-                        /^src[\\/]/,
-                        ""
-                      )}`
+                    ? avatarPreview
                     : "https://via.placeholder.com/100"
                 }
                 alt="Avatar"
@@ -266,6 +305,12 @@ const UserAccount = () => {
             layout="vertical"
             className="useraccount-form">
             <Form.Item
+              name="username"
+              initialValue={userData.name} 
+              style={{ display: "none" }}>
+              <Input type="text" autoComplete="username" />
+            </Form.Item>
+            <Form.Item
               label="Current Password"
               name="currentPassword"
               rules={[
@@ -274,6 +319,7 @@ const UserAccount = () => {
               <Input.Password
                 className="currentpassword-input"
                 placeholder="Current Password"
+                autoComplete="current-password" 
                 iconRender={(visible) =>
                   visible ? (
                     <EyeTwoTone twoToneColor="#ffffff" />
@@ -290,6 +336,7 @@ const UserAccount = () => {
               <Input.Password
                 className="newpassword-input"
                 placeholder="New Password"
+                autoComplete="new-password" // Thêm thuộc tính này
                 iconRender={(visible) =>
                   visible ? (
                     <EyeTwoTone twoToneColor="#ffffff" />
@@ -308,6 +355,7 @@ const UserAccount = () => {
               <Input.Password
                 className="confirmpassword-input"
                 placeholder="Confirm Password"
+                autoComplete="new-password" // Thêm thuộc tính này
                 iconRender={(visible) =>
                   visible ? (
                     <EyeTwoTone twoToneColor="#ffffff" />

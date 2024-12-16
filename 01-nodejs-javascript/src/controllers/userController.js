@@ -20,6 +20,8 @@ const {
 } = require("../services/userService");
 const User = require("../models/user");
 const { upload, checkThumbnailSize } = require("../config/multerConfig");
+const fs = require("fs");
+const path = require("path");
 
 const UserRegister = async (req, res) => {
   const { name, email, password, dateOfBirth, gender } = req.body;
@@ -45,7 +47,7 @@ const handleLogin = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const avatarFile = req.files?.avatar?.[0] || null;
+    const avatarFile = req.files?.avatar?.[0] || null; // Tệp avatar mới
     const { dateOfBirth, gender } = req.body;
 
     const account = await User.findOne({ where: { email: req.user.email } });
@@ -53,13 +55,19 @@ const updateUser = async (req, res) => {
       return res.status(400).json({ message: "Account not found" });
     }
 
-    const avatarPath = avatarFile ? avatarFile.path : account.avatarPath;
+    let avatarPath = account.avatarPath;
 
+    // Nếu có avatar mới, chuẩn bị avatar mới
+    if (avatarFile) {
+      avatarPath = `avatars/${avatarFile.filename}`;
+    }
+
+    // Chuẩn bị dữ liệu cập nhật
     const profileData = {
       email: req.user.email,
       dateOfBirth,
       gender,
-      avatarPath: avatarFile ? avatarPath : null,
+      avatarPath,
     };
 
     const updateResult = await updateUserService(profileData);
@@ -69,6 +77,7 @@ const updateUser = async (req, res) => {
     return res.status(500).json({ EC: 7, EM: "Error updating profile" });
   }
 };
+
 
 
 const updatePassword = async (req, res) => {

@@ -23,7 +23,7 @@ const Artist = ({ artists, itemsToShow }) => {
             {artist.avatarPath ? (
               // Sửa đường dẫn avatarPath để loại bỏ tiền tố 'src\\'
               <img
-                src={`${axios.defaults.baseURL}/${artist.avatarPath.replace(/^src[\\/]/, "")}`}
+                src={`${axios.defaults.baseURL}/uploads/${artist.avatarPath.replace(/^src[\\/]/, "")}`}
                 alt={artist.name}
                 className="artist-image"
               />

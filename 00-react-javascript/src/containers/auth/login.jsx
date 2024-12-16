@@ -77,6 +77,7 @@ const LoginPage = () => {
             <Form.Item
               label="Password"
               name="password"
+              autoComplete="password" 
               rules={[
                 {
                   required: true,
