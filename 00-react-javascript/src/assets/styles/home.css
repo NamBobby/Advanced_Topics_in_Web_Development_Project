@@ -1,7 +1,7 @@
 .home-content{
   flex-grow: 1;
   overflow-y: auto;  /* Enable vertical scrolling */
-  max-height: calc(90vh - 60px);  /* Adjust for header height */
+  max-height: calc(90vh - 60px);  
   box-sizing: border-box;
   padding: 20px;
 }

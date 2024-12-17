@@ -3,39 +3,31 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const saltRounds = 10;
 
-const createUserService = async (
-  name,
-  email,
-  password,
-  dateOfBirth,
-  gender,
-  role
-) => {
+const createUserService = async (name, email, password, dateOfBirth, gender, role) => {
   try {
-    // Check admin existence
-    const admin = await User.findOne({ where: { email } });
-    if (admin) {
-      console.log(`>>> admin exists, use another email: "${email}"`);
-      return null;
+    // Kiểm tra email đã tồn tại
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return { EC: 1, EM: "Email already exists" }; // Trả về lỗi nếu email tồn tại
     }
 
-    // Hash admin password
-    const hashPassword = await bcrypt.hash(password, saltRounds);
-    // Save admin to database
-    let result = await User.create({
+    // Hash mật khẩu và tạo người dùng mới
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({
       name,
       email,
-      password: hashPassword,
+      password: hashedPassword,
       dateOfBirth,
       gender,
       role,
     });
-    return result;
+    return { EC: 0, EM: "User created successfully", data: newUser };
   } catch (error) {
-    console.log(error);
-    return { EC: 3, EM: "Error creating account" };
+    console.error("Error in createUserService:", error);
+    return { EC: 3, EM: "Error creating user" }; // Trả về lỗi tổng quát
   }
 };
+
 
 const deleteUserService = async (email) => {
   try {

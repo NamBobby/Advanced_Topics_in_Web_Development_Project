@@ -4,6 +4,7 @@
   align-items: center;
   height: 100vh;
   background-color: #121212;
+  flex-direction: column;
 }
 
 p {
@@ -12,8 +13,31 @@ p {
   margin-top: 20px;
 }
 
-.back-home-link{
-  text-decoration: none !important;
+.user-account-navigation{
+  width: 650px;
+  margin-bottom: 20px;
+}
+
+.user-account-logo{
+  display: flex;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #1f1f1f;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-left: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.user-account-logo:hover{
+  background-color: darkgrey !important;
+}
+
+.back-icon {
+  font-size: 28px;
+  margin-right: 12px;
 }
 
 .user-account-box {

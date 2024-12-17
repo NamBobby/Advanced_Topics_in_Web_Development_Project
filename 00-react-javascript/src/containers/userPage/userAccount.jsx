@@ -17,7 +17,11 @@ import {
   updateUserApi,
   updatePasswordApi,
 } from "../../services/apiService";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import axios from "../../services/axios.customize";
 import "../../assets/styles/userAccount.css";
@@ -202,6 +206,13 @@ const UserAccount = () => {
 
   return (
     <div className="user-account-container">
+      <div className="user-account-navigation">
+        <div className="user-account-logo">
+          <Link to="/">
+            <LeftOutlined className="back-icon" />
+          </Link>
+        </div>
+      </div>
       <div className="user-account-box">
         <div className="user-account-form">
           <Link to="/" className="back-home-link">

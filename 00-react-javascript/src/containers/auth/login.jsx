@@ -1,6 +1,10 @@
 import React, { useContext } from "react";
 import { Button, Form, Input, notification } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+} from "@ant-design/icons";
 import { LoginApi } from "../../services/apiService";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../components/auth.context";
@@ -58,11 +62,16 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
+      <div className="login-navigation">
+        <div className="login-logo">
+          <Link to="/">
+            <LeftOutlined className="back-icon" />
+          </Link>
+        </div>
+      </div>
       <div className="login-box">
         <div className="login-form">
-          <Link to="/" className="back-home-link">
-            <h1 className="login-title">Log In</h1>
-          </Link>
+          <h1 className="login-title">Log In</h1>
           <Form
             name="loginForm"
             className="custom-form"
@@ -79,7 +88,9 @@ const LoginPage = () => {
             <Form.Item
               label="Password"
               name="password"
-              rules={[{ required: true, message: "Please input your password!" }]}>
+              rules={[
+                { required: true, message: "Please input your password!" },
+              ]}>
               <Input.Password
                 placeholder="Password"
                 iconRender={(visible) =>

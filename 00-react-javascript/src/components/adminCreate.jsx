@@ -1,64 +1,87 @@
 import React from "react";
 import {
-    Button,
-    Col,
-    Divider,
-    Form,
-    Input,
-    notification,
-    Radio,
-    Row,
-    Select,
-  } from "antd";
+  Button,
+  Col,
+  Divider,
+  Form,
+  Input,
+  notification,
+  Radio,
+  Row,
+  Select,
+} from "antd";
 import { createUserByAdminApi } from "../services/apiService";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import "../assets/styles/adminCreate.css";
 
 const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
 const AdminCreatePage = () => {
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
-    const { name, email, password, confirmPassword, dateOfBirth, day, month, year, gender, role } = values;
-    
+    const {
+      name,
+      email,
+      password,
+      confirmPassword,
+      day,
+      month,
+      year,
+      gender,
+      role,
+    } = values;
+
     if (password !== confirmPassword) {
-          notification.error({
-            message: "Error",
-            description: "Passwords do not match!",
-          });
-          return;
+      notification.error({
+        message: "Error",
+        description: "Passwords do not match!",
+      });
+      return;
     }
 
-    const formattedDateOfBirth = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    
+    const formattedDateOfBirth = `${year}-${String(month).padStart(
+      2,
+      "0"
+    )}-${String(day).padStart(2, "0")}`;
+
     try {
-      const res = await createUserByAdminApi({ name, email, password, formattedDateOfBirth, gender, role });
+      const res = await createUserByAdminApi({
+        name,
+        email,
+        password,
+        dateOfBirth: formattedDateOfBirth,
+        gender,
+        role,
+      });
+
       notification.success({
         message: "Success",
         description: res.message || "User created successfully!",
       });
       navigate("/admin");
     } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to create user.";
       notification.error({
         message: "Error",
-        description: error.response?.data?.message || "Failed to create user.",
+        description: errorMessage,
       });
     }
   };
@@ -80,10 +103,30 @@ const AdminCreatePage = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your email!",
+                  message: "Please input this account email!",
+                },
+                {
+                  type: "email", 
+                  message: "The input is not a valid email!",
+                },
+                {
+                  pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: "Email must follow the format: example@domain.com",
                 },
               ]}>
               <Input placeholder="Email" />
+            </Form.Item>
+
+            <Form.Item
+              label="Username"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your username!",
+                },
+              ]}>
+              <Input placeholder="Username" />
             </Form.Item>
 
             <Form.Item
@@ -136,18 +179,6 @@ const AdminCreatePage = () => {
                   )
                 }
               />
-            </Form.Item>
-
-            <Form.Item
-              label="Username"
-              name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your username!",
-                },
-              ]}>
-              <Input placeholder="Username" />
             </Form.Item>
 
             <Form.Item label="Date of Birth" required>
@@ -216,12 +247,29 @@ const AdminCreatePage = () => {
                 <Radio value="Prefer not to say">Prefer not to say</Radio>
               </Radio.Group>
             </Form.Item>
+
+            <Form.Item
+              label="Role"
+              name="role"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select this account role!",
+                },
+              ]}>
+              <Radio.Group>
+                <Radio value="User">User</Radio>
+                <Radio value="Artist">Artist</Radio>
+                <Radio value="Administrator">Administrator</Radio>
+              </Radio.Group>
+            </Form.Item>
+
             <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
                 className="adminCreate-button">
-                Sign Up
+                Create Account
               </Button>
             </Form.Item>
           </Form>

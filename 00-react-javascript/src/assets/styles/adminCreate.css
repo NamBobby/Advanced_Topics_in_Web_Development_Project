@@ -3,6 +3,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin-top: 100px;
   }
   
   p {
@@ -21,9 +22,7 @@
     max-height: 900px;
     display: flex;
     padding: 20px;
-    background-color: #121212;
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
   }

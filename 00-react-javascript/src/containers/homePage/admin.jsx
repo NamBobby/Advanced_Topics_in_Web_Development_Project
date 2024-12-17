@@ -2,16 +2,16 @@ import React, { useEffect, useState, useMemo } from "react";
 import AdminHeader from "../../components/adminHeader";
 import { Table, Button, notification } from "antd";
 import { getUserApi, deleteAccountApi } from "../../services/apiService";
-import { PlusOutlined } from "@ant-design/icons";
-import { useNavigate, Outlet } from "react-router-dom";
+import { PlusCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { Link, useNavigate, Outlet } from "react-router-dom";
 import "../../assets/styles/admin.css";
-
 
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [displayedUsers, setDisplayedUsers] = useState([]);
   const [visibleCount, setVisibleCount] = useState(10);
   const navigate = useNavigate();
+  const [isPlusIcon, setIsPlusIcon] = useState(true);
 
   // Memo hóa currentUser để không gây re-render liên tục
   const currentUser = useMemo(() => {
@@ -26,7 +26,9 @@ const AdminPage = () => {
 
       try {
         const response = await getUserApi();
-        const filteredUsers = response.filter((user) => user.id !== currentUser.id);
+        const filteredUsers = response.filter(
+          (user) => user.id !== currentUser.id
+        );
         setUsers(filteredUsers);
         setDisplayedUsers(filteredUsers.slice(0, visibleCount));
       } catch (error) {
@@ -70,8 +72,8 @@ const AdminPage = () => {
     }
   };
 
-  const handleAddUser = () => {
-    navigate("/create");
+  const toggleIcon = () => {
+    setIsPlusIcon((prev) => !prev);
   };
 
   const columns = [
@@ -92,33 +94,47 @@ const AdminPage = () => {
   ];
 
   return (
-    <div>
+    <div className="admin-container">
       <AdminHeader />
-      <div style={{ padding: "20px" }}>
-        <h2>User Management</h2>
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAddUser}>
-            Add User
-        </Button>
-        <Table
-          dataSource={displayedUsers}
-          columns={columns}
-          rowKey="id"
-          pagination={false}
-        />
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          {visibleCount < users.length && (
-            <Button type="primary" onClick={handleSeeMore}>
-              See More
-            </Button>
-          )}
-          {visibleCount > 10 && (
-            <Button style={{ marginLeft: "10px" }} onClick={handleSeeLess}>
-              See Less
-            </Button>
-          )}
+      <div className="admin-layout">
+        <div className="admin-content">
+          <div className="admin-navigation">
+            <div className="admin-title">
+              <h2>User Management</h2>
+            </div>
+            <div className="admin-logo">
+              {isPlusIcon ? (
+                <Link to="/create" onClick={toggleIcon}>
+                  <PlusCircleOutlined className="admin-icon" />
+                </Link>
+              ) : (
+                <Link to="/" onClick={toggleIcon}>
+                  <MinusCircleOutlined className="admin-icon" />
+                </Link>
+              )}
+            </div>
+          </div>
+          <Table
+            dataSource={displayedUsers}
+            columns={columns}
+            rowKey="id"
+            pagination={false}
+          />
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            {visibleCount < users.length && (
+              <Button type="primary" onClick={handleSeeMore}>
+                See More
+              </Button>
+            )}
+            {visibleCount > 10 && (
+              <Button style={{ marginLeft: "10px" }} onClick={handleSeeLess}>
+                See Less
+              </Button>
+            )}
+          </div>
+          <Outlet />
         </div>
       </div>
-      <Outlet />
     </div>
   );
 };

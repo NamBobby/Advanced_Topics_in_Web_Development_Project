@@ -12,7 +12,11 @@ import {
 } from "antd";
 import { createUserApi } from "../../services/apiService";
 import { Link, useNavigate } from "react-router-dom";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+} from "@ant-design/icons";
 import "../../assets/styles/register.css";
 
 const months = [
@@ -36,8 +40,9 @@ const RegisterPage = () => {
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
-    const { name, email, password, confirmPassword, day, month, year, gender } = values;
-  
+    const { name, email, password, confirmPassword, day, month, year, gender } =
+      values;
+
     if (password !== confirmPassword) {
       notification.error({
         message: "Error",
@@ -45,12 +50,21 @@ const RegisterPage = () => {
       });
       return;
     }
-  
-    const formattedDateOfBirth = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-  
+
+    const formattedDateOfBirth = `${year}-${String(month).padStart(
+      2,
+      "0"
+    )}-${String(day).padStart(2, "0")}`;
+
     try {
-      const res = await createUserApi(name, email, password, formattedDateOfBirth, gender);
-  
+      const res = await createUserApi(
+        name,
+        email,
+        password,
+        formattedDateOfBirth,
+        gender
+      );
+
       notification.success({
         message: "Success",
         description: res.message || "Account created successfully!",
@@ -60,28 +74,32 @@ const RegisterPage = () => {
       console.error("Axios Error:", error);
       notification.error({
         message: "Error",
-        description: error.response?.data?.message || "Failed to register user. Please try again.",
+        description:
+          error.response?.data?.message ||
+          "Failed to register user. Please try again.",
       });
     }
   };
-  
-  
 
   return (
     <div className="register-container">
-      
+      <div className="register-navigation">
+        <div className="register-logo">
+          <Link to="/">
+            <LeftOutlined className="back-icon" />
+          </Link>
+        </div>
+      </div>
       <div className="register-box">
         <div className="register-form">
-          <Link to="/" className="back-home-link">
-            <h1 className="register-title">Register Account</h1>
-          </Link>
-
+          <h1 className="register-title">Register Account</h1>
           <Form
             name="registerForm"
             className="register-custom-form"
             onFinish={onFinish}
             autoComplete="off"
             layout="vertical">
+              
             <Form.Item
               label="Email"
               name="email"
@@ -89,6 +107,14 @@ const RegisterPage = () => {
                 {
                   required: true,
                   message: "Please input your email!",
+                },
+                {
+                  type: "email", // Ant Design đã có sẵn type=email để check định dạng
+                  message: "The input is not a valid email!",
+                },
+                {
+                  pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: "Email must follow the format: example@domain.com",
                 },
               ]}>
               <Input placeholder="Email" />

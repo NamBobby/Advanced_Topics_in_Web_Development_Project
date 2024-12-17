@@ -1,0 +1,113 @@
+.admin-container {
+    display: flex;
+    background-color: black;
+    width: 100%;
+    flex-direction: column;
+}
+
+.admin-layout {
+    height: 90vh; 
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-content {
+    background-color: #282c34;
+    border-radius: 20px;
+    box-sizing: border-box;
+    padding: 20px;
+    overflow-y: auto;  
+    max-height: calc(90vh - 60px); 
+}
+
+.admin-title {
+    color: #ffffff;
+    font-size: 21px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .admin-navigation{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .admin-logo{
+    display: flex;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #1f1f1f;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-left: 12px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .admin-logo:hover{
+    background-color: darkgrey !important;
+  }
+
+  .admin-icon {
+    font-size: 28px;
+    margin-right: 12px;
+  }
+
+  /* Table Container */
+.admin-content .ant-table {
+  background-color: #121212;
+  border-radius: 10px;
+  color: #ffffff;
+}
+
+/* Table Header */
+.ant-table-thead > tr > th {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid #333333;
+}
+
+/* Table Rows */
+.ant-table-tbody > tr > td {
+  background-color: #282c34;
+  color: #ffffff;
+  border: 1px solid #333333;
+  text-align: center;
+  padding: 12px 8px;
+  transition: background-color 0.3s ease;
+}
+
+/* Row Hover Effect */
+.ant-table-tbody > tr:hover > td {
+  background-color: rgba(30, 215, 96, 0.2) !important;
+}
+
+/* Action Button */
+.ant-btn-danger {
+  background-color: #e22222 !important;
+  color: #ffffff !important;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.ant-btn-danger:hover {
+  background-color: #b81d1d !important;
+}
+
+/* Pagination Styling */
+.ant-pagination .ant-pagination-item {
+  background-color: #1f1f1f;
+  border: none;
+  color: #ffffff;
+}
+
+.ant-pagination .ant-pagination-item-active {
+  background-color: #1db954;
+  color: #000000;
+}
