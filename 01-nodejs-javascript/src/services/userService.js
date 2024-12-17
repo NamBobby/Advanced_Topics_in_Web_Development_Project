@@ -17,25 +17,20 @@ const { Op } = require("sequelize");
 const path = require("path");
 
 // Create user service
-const createUserService = async (
-  name,
-  email,
-  password,
-  dateOfBirth,
-  gender
-) => {
+const createUserService = async (name, email, password, dateOfBirth, gender) => {
   try {
-    // Check user existence
+    // Kiểm tra xem email đã tồn tại hay chưa
     const user = await User.findOne({ where: { email } });
     if (user) {
       console.log(`>>> user exists, use another email: "${email}"`);
-      return null;
+      return { EC: 1, EM: "Email already exists" }; // Trả về lỗi cụ thể
     }
 
-    // Hash user password
+    // Hash mật khẩu
     const hashPassword = await bcrypt.hash(password, saltRounds);
-    // Save user to database
-    let result = await User.create({
+
+    // Lưu user vào database
+    const result = await User.create({
       name,
       email,
       password: hashPassword,
@@ -43,9 +38,10 @@ const createUserService = async (
       gender,
       role: "User",
     });
-    return result;
+
+    return { EC: 0, EM: "User created successfully", data: result };
   } catch (error) {
-    console.log(error);
+    console.error("Error in createUserService:", error);
     return { EC: 3, EM: "Error creating user" };
   }
 };

@@ -25,18 +25,16 @@ const path = require("path");
 
 const UserRegister = async (req, res) => {
   const { name, email, password, dateOfBirth, gender } = req.body;
-  const data = await createUserService(
-    name,
-    email,
-    password,
-    dateOfBirth,
-    gender
-  );
+
+  const data = await createUserService(name, email, password, dateOfBirth, gender);
+
   if (data.EC !== 0) {
-    return res.status(400).json(data);
+    return res.status(400).json({ message: data.EM }); 
   }
-  return res.status(200).json(data);
+
+  return res.status(201).json({ message: "User created successfully", user: data.data });
 };
+
 
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;

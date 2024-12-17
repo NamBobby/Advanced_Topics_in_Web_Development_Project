@@ -242,6 +242,9 @@ const UserAccount = () => {
             <Form.Item label="Email" name="email">
               <Input placeholder="Email" readOnly className="readonly-input" />
             </Form.Item>
+            <Form.Item label="Role" name="role">
+              <Input placeholder="Role" readOnly className="readonly-input" />
+            </Form.Item>
             <Form.Item
               label="Date of Birth"
               name="dateOfBirth"
@@ -276,7 +279,19 @@ const UserAccount = () => {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item name="year" noStyle>
+                  <Form.Item
+                    name="year"
+                    noStyle
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter a valid year!",
+                      },
+                      {
+                        pattern: /^(19\d{2}|20(0\d|1\d|2[0-4]))$/,
+                        message: "Year must be between 1900 and 2024!",
+                      },
+                    ]}>
                     <Input type="number" placeholder="Year" />
                   </Form.Item>
                 </Col>
@@ -306,7 +321,7 @@ const UserAccount = () => {
             className="useraccount-form">
             <Form.Item
               name="username"
-              initialValue={userData.name} 
+              initialValue={userData.name}
               style={{ display: "none" }}>
               <Input type="text" autoComplete="username" />
             </Form.Item>
@@ -319,7 +334,7 @@ const UserAccount = () => {
               <Input.Password
                 className="currentpassword-input"
                 placeholder="Current Password"
-                autoComplete="current-password" 
+                autoComplete="current-password"
                 iconRender={(visible) =>
                   visible ? (
                     <EyeTwoTone twoToneColor="#ffffff" />

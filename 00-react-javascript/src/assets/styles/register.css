@@ -18,8 +18,7 @@ p {
 .register-box {
   width: 100%;
   max-width: 650px;
-  height: 75%;
-  max-height: 800px;
+  max-height: 900px;
   display: flex;
   padding: 20px;
   background-color: #121212;

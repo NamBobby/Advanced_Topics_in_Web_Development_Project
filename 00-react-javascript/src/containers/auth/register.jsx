@@ -36,31 +36,36 @@ const RegisterPage = () => {
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
-    const { name, email, password } = values;
-
-    try {
-      const res = await createUserApi(name, email, password);
-
-      if (res) {
-        notification.success({
-          message: "CREATE USER",
-          description: "Success",
-        });
-        navigate("/login");
-      } else {
-        notification.error({
-          message: "CREATE USER",
-          description: "Error",
-        });
-      }
-    } catch (error) {
+    const { name, email, password, confirmPassword, day, month, year, gender } = values;
+  
+    if (password !== confirmPassword) {
       notification.error({
-        message: "CREATE USER",
-        description: "Unexpected error occurred!",
+        message: "Error",
+        description: "Passwords do not match!",
       });
-      console.error(error);
+      return;
+    }
+  
+    const formattedDateOfBirth = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  
+    try {
+      const res = await createUserApi(name, email, password, formattedDateOfBirth, gender);
+  
+      notification.success({
+        message: "Success",
+        description: res.message || "Account created successfully!",
+      });
+      navigate("/login");
+    } catch (error) {
+      console.error("Axios Error:", error);
+      notification.error({
+        message: "Error",
+        description: error.response?.data?.message || "Failed to register user. Please try again.",
+      });
     }
   };
+  
+  
 
   return (
     <div className="register-container">
@@ -87,6 +92,7 @@ const RegisterPage = () => {
               ]}>
               <Input placeholder="Email" />
             </Form.Item>
+
             <Form.Item
               label="Password"
               name="password"
@@ -108,6 +114,37 @@ const RegisterPage = () => {
                 }
               />
             </Form.Item>
+
+            <Form.Item
+              label="Confirm Password"
+              name="confirmPassword"
+              dependencies={["password"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please confirm your password!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Passwords do not match!"));
+                  },
+                }),
+              ]}>
+              <Input.Password
+                placeholder="Confirm Password"
+                iconRender={(visible) =>
+                  visible ? (
+                    <EyeTwoTone twoToneColor="#ffffff" />
+                  ) : (
+                    <EyeInvisibleOutlined />
+                  )
+                }
+              />
+            </Form.Item>
+
             <Form.Item
               label="Username"
               name="name"
@@ -119,33 +156,36 @@ const RegisterPage = () => {
               ]}>
               <Input placeholder="Username" />
             </Form.Item>
-            <Form.Item
-              label="Date of Birth"
-              name="dateOfBirth"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select your date of birth!",
-                },
-              ]}>
+
+            <Form.Item label="Date of Birth" required>
               <Row gutter={8}>
                 <Col span={8}>
-                  <Select placeholder="Day">
-                    {days.map((day, index) => (
-                      <Select.Option key={index} value={day}>
-                        {day}
-                      </Select.Option>
-                    ))}
-                  </Select>
+                  <Form.Item
+                    name="day"
+                    noStyle
+                    rules={[{ required: true, message: "Select day!" }]}>
+                    <Select placeholder="Day">
+                      {days.map((day) => (
+                        <Select.Option key={day} value={day}>
+                          {day}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Select placeholder="Month">
-                    {months.map((month, index) => (
-                      <Select.Option key={index} value={month}>
-                        {month}
-                      </Select.Option>
-                    ))}
-                  </Select>
+                  <Form.Item
+                    name="month"
+                    noStyle
+                    rules={[{ required: true, message: "Select month!" }]}>
+                    <Select placeholder="Month">
+                      {months.map((month, index) => (
+                        <Select.Option key={index + 1} value={index + 1}>
+                          {month}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
                 </Col>
                 <Col span={8}>
                   <Form.Item
@@ -153,14 +193,12 @@ const RegisterPage = () => {
                     noStyle
                     rules={[
                       {
-                        validator: (_, value) => {
-                          if (value < 1900 || value > 2024) {
-                            return Promise.reject(
-                              "Year must be between 1900 and 2024"
-                            );
-                          }
-                          return Promise.resolve();
-                        },
+                        required: true,
+                        message: "Please enter a valid year!",
+                      },
+                      {
+                        pattern: /^(19\d{2}|20(0\d|1\d|2[0-4]))$/,
+                        message: "Year must be between 1900 and 2024!",
                       },
                     ]}>
                     <Input type="number" placeholder="Year" />
@@ -168,6 +206,7 @@ const RegisterPage = () => {
                 </Col>
               </Row>
             </Form.Item>
+
             <Form.Item
               label="Gender"
               name="gender"
