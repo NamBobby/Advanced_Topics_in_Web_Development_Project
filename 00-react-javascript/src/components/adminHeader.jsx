@@ -10,7 +10,7 @@ import "../assets/styles/header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth.context";
 
-const Header = () => {
+const AdminHeader = () => {
   const navigate = useNavigate();
   const { auth, setAuth } = useContext(AuthContext);
   console.log(">>> Check auth", auth);
@@ -95,7 +95,7 @@ const Header = () => {
 
       <div className="search-box">
         <div className="logo">
-          <Link to="/">
+          <Link to="/admin">
             <HomeOutlined className="home-icon" />
           </Link>
         </div>
@@ -121,4 +121,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default AdminHeader;

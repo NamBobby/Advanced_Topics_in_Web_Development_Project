@@ -1,14 +1,11 @@
 //import React from 'react';
-import React, { useContext } from 'react';
-
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import AdminHeader from '../../components/adminHeader';
 
 const AdminPage = () => {
-  const navigate = useNavigate();
   return (
     <div>
-      <legend>ADMIN PAGE</legend>
-      <legend>Admin Active...</legend>
+      <AdminHeader />
     </div>
   );
 };

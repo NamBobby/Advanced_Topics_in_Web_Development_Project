@@ -11,40 +11,53 @@ const LoginPage = () => {
   const { setAuth } = useContext(AuthContext);
 
   const onFinish = async (values) => {
-    const { email, password } = values;
-
     try {
-      const res = await LoginApi(email, password);
+      const response = await LoginApi(values.email, values.password);
 
-      if (res && res.EC === 0) {
-        localStorage.setItem("access_token", res.access_token);
+      if (response.EC === 0) {
+        const { access_token, user } = response;
 
-        notification.success({
-          message: "Login Successful",
-          description: "Welcome back!",
-        });
+        // Lưu token và thông tin người dùng vào localStorage
+        localStorage.setItem("access_token", access_token);
+        localStorage.setItem("user", JSON.stringify(user)); // Lưu user
 
+        // Cập nhật context Auth
         setAuth({
           isAuthenticated: true,
           user: {
-            email: res?.user?.email ?? "",
-            name: res?.user?.name ?? "",
+            email: user.email,
+            name: user.name,
+            role: user.role,
           },
         });
 
-        navigate("/");
+        // Điều hướng dựa trên role
+        if (user.role === "Administrator") {
+          console.log("Navigating to /admin");
+          navigate("/admin");
+        } else {
+          console.log("Navigating to /");
+          navigate("/");
+        }
+
+        // Thông báo thành công
+        notification.success({
+          message: "Login Successful",
+          description: `Welcome back, ${user.name}!`,
+        });
       } else {
+        // Xử lý lỗi từ server
         notification.error({
           message: "Login Failed",
-          description: res?.EM ?? "An unexpected error occurred.",
+          description: response.EM || "Invalid credentials",
         });
       }
     } catch (error) {
+      console.error("Login Error:", error);
       notification.error({
-        message: "Login Error",
-        description: "Unable to log in. Please try again later.",
+        message: "Login Failed",
+        description: "Something went wrong. Please try again.",
       });
-      console.error("Error during login:", error);
     }
   };
 
@@ -52,41 +65,27 @@ const LoginPage = () => {
     <div className="login-container">
       <div className="login-box">
         <div className="login-form">
-        <Link to="/" className="back-home-link">
-          <h1 className="login-title">Log In</h1>
-        </Link>
-        <Form
-          name="loginForm"
-          className="custom-form"
-          onFinish={onFinish}
-          layout="vertical"
-          autoComplete="off">
+          <Link to="/" className="back-home-link">
+            <h1 className="login-title">Log In</h1>
+          </Link>
+          <Form
+            name="loginForm"
+            className="custom-form"
+            onFinish={onFinish}
+            layout="vertical"
+            autoComplete="off">
             <Form.Item
               label="Email"
               name="email"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your email!",
-                },
-              ]}
-              >
+              rules={[{ required: true, message: "Please input your email!" }]}>
               <Input placeholder="Email" />
             </Form.Item>
 
             <Form.Item
               label="Password"
               name="password"
-              autoComplete="password" 
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password!",
-                },
-              ]}
-              >
+              rules={[{ required: true, message: "Please input your password!" }]}>
               <Input.Password
-                className="custom-password-input"
                 placeholder="Password"
                 iconRender={(visible) =>
                   visible ? (
@@ -98,24 +97,22 @@ const LoginPage = () => {
               />
             </Form.Item>
 
-          <Form.Item>
-            <Button 
-                htmlType="submit" 
-                className="login-button">
-              Log In
-            </Button>
-          </Form.Item>
-        </Form>
-        <div className="login-links">
-          <Link to="/forgot-password" className="forgot-password-link">
-            Forgot your password?
-          </Link>
-          <p>
-            Don’t have an account?{" "}
-            <Link to="/register" className="signup-link">
-              Register here
+            <Form.Item>
+              <Button htmlType="submit" className="login-button">
+                Log In
+              </Button>
+            </Form.Item>
+          </Form>
+          <div className="login-links">
+            <Link to="/forgot-password" className="forgot-password-link">
+              Forgot your password?
             </Link>
-          </p>
+            <p>
+              Don’t have an account?{" "}
+              <Link to="/register" className="signup-link">
+                Register here
+              </Link>
+            </p>
           </div>
         </div>
       </div>
