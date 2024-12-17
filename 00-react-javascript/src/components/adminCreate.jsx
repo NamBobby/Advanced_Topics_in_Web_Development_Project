@@ -1,84 +1,76 @@
 import React from "react";
 import {
-  Button,
-  Col,
-  Divider,
-  Form,
-  Input,
-  notification,
-  Radio,
-  Row,
-  Select,
-} from "antd";
-import { createUserApi } from "../../services/apiService";
+    Button,
+    Col,
+    Divider,
+    Form,
+    Input,
+    notification,
+    Radio,
+    Row,
+    Select,
+  } from "antd";
+import { createUserByAdminApi } from "../services/apiService";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import "../../assets/styles/register.css";
+import "../assets/styles/adminCreate.css";
 
 const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  
+  const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
-const days = Array.from({ length: 31 }, (_, i) => i + 1);
-
-const RegisterPage = () => {
+const AdminCreatePage = () => {
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
-    const { name, email, password, confirmPassword, day, month, year, gender } = values;
-  
+    const { name, email, password, confirmPassword, dateOfBirth, day, month, year, gender, role } = values;
+    
     if (password !== confirmPassword) {
-      notification.error({
-        message: "Error",
-        description: "Passwords do not match!",
-      });
-      return;
+          notification.error({
+            message: "Error",
+            description: "Passwords do not match!",
+          });
+          return;
     }
-  
+
     const formattedDateOfBirth = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-  
+    
     try {
-      const res = await createUserApi(name, email, password, formattedDateOfBirth, gender);
-  
+      const res = await createUserByAdminApi({ name, email, password, formattedDateOfBirth, gender, role });
       notification.success({
         message: "Success",
-        description: res.message || "Account created successfully!",
+        description: res.message || "User created successfully!",
       });
-      navigate("/login");
+      navigate("/admin");
     } catch (error) {
-      console.error("Axios Error:", error);
       notification.error({
         message: "Error",
-        description: error.response?.data?.message || "Failed to register user. Please try again.",
+        description: error.response?.data?.message || "Failed to create user.",
       });
     }
   };
-  
-  
 
   return (
-    <div className="register-container">
-      
-      <div className="register-box">
-        <div className="register-form">
-          <Link to="/" className="back-home-link">
-            <h1 className="register-title">Register Account</h1>
-          </Link>
-
+    <div className="adminCreate-container">
+      <div className="adminCreate-box">
+        <div className="adminCreate-form">
+          <h1 className="adminCreate-title">Create Account</h1>
           <Form
-            name="registerForm"
-            className="register-custom-form"
+            name="adminCreateForm"
+            className="adminCreate-custom-form"
             onFinish={onFinish}
             autoComplete="off"
             layout="vertical">
@@ -228,24 +220,16 @@ const RegisterPage = () => {
               <Button
                 type="primary"
                 htmlType="submit"
-                className="register-button">
+                className="adminCreate-button">
                 Sign Up
               </Button>
             </Form.Item>
           </Form>
           <Divider />
-          <div className="register-links">
-            <p>
-              Already have an account?{" "}
-              <Link to="/login" className="login-link">
-                Login here
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default RegisterPage;
+export default AdminCreatePage;

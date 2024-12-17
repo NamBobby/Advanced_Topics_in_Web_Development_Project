@@ -219,7 +219,7 @@ p {
   font-size: 16px;
 }
 
-.custom-form .ant-form-item-label > label {
+.register-custom-form .ant-form-item-label > label {
   color: #ffffff;
   font-size: 16px;
   font-weight: bold;

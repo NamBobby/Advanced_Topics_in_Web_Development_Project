@@ -1,0 +1,272 @@
+.adminCreate-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  p {
+    color: #888888;
+    font-size: 18px;
+    margin-top: 20px;
+  }
+  
+  .back-home-link{
+    text-decoration: none !important;
+  }
+  
+  .adminCreate-box {
+    width: 100%;
+    max-width: 650px;
+    max-height: 900px;
+    display: flex;
+    padding: 20px;
+    background-color: #121212;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .adminCreate-form {
+    width: 80%;
+  }
+  
+  .adminCreate-title {
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Các quy tắc chung cho Input (Email) và Input.Password */
+  .ant-input-outlined,
+  .ant-input-outlined:not(:focus) {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 10px;
+    transition: border 0.3s ease; /* Smooth border transition */
+  }
+  
+  /* Focus hiệu ứng cho Input và Input.Password */
+  .ant-input-outlined:focus {
+    background-color: transparent;
+    border: 1px solid rgba(30, 215, 96, 0.5); 
+  }
+  
+  /* Hover hiệu ứng cho cả hai loại Input */
+  .ant-input-outlined:hover:not(:focus) {
+    background-color: transparent;
+    border: 1px solid rgba(30, 215, 96, 0.5); 
+  } 
+  
+  /* Placeholder styling */
+  .ant-input-outlined::placeholder,
+  .ant-input-affix-wrapper > input.ant-input::placeholder {
+    color: #888888;
+    font-weight: 500;
+  }
+  
+  .anticon svg {
+    color: #ffffff;
+  }
+  
+  /* Quy tắc lỗi cho các Input */
+  .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+  .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+  .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
+  .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
+  .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus),
+  .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus) {
+    background: transparent;
+    border: 1px solid #e22222;
+  }
+  
+  /* Focus hiệu ứng cho Input có lỗi */
+  .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus,
+  .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus {
+    background: transparent;
+    border: 1px solid #e22222 !important;
+  }
+  
+  /* Focus hiệu ứng cho Input và Input.Password */
+  .ant-input-affix-wrapper.ant-input-password.ant-input-outlined:focus {
+    background-color: transparent;
+    border: 1px solid rgba(30, 215, 96, 0.5)  !important; 
+  }
+  
+  .ant-form-item .ant-form-item-label >label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+    content: ""
+  }
+  
+  /* Đặt chiều dài của Select */
+  .ant-select {
+    background-color: transparent;
+    color: #ffffff; 
+    border: 1px solid #ffffff; 
+    font-size: 18px;
+    border-radius: 5px;
+    font-weight: 500;
+    padding: 8px 10px;
+    transition: border 0.3s ease, box-shadow 0.3s ease; 
+  }
+  
+  .ant-select-single {
+    height: auto;
+  }
+  
+  /* Giao diện Selector */
+  .ant-select-selector {
+    background-color: transparent !important; 
+    border: none !important; 
+    box-shadow: none !important; 
+    height: auto !important;
+    color: #ffffff !important; 
+    display: flex;
+    align-items: center; 
+    padding: 0 10px; 
+  }
+  
+  .ant-select-selection-item{
+    font-size: 18px;
+  }
+  
+  .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+    color: #888888;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  /* Dropdown nền và màu chữ */
+  .ant-select-dropdown {
+    background-color: #121212 !important; 
+  }
+  
+  .ant-select-item-option{
+    color: #ffffff !important; 
+    font-size: 16px !important; 
+  }
+  
+  /* Hiệu ứng hover cho các tùy chọn */
+  .ant-select-item-option-active {
+    background-color: rgba(30, 215, 96, 0.2) !important; /* Nền xanh khi hover */
+  }
+  
+  /* Hiệu ứng cho tùy chọn được chọn */
+  .ant-select-item-option-selected {
+    background-color: rgba(30, 215, 96, 0.3) !important; /* Nền xanh đậm */
+  }
+  
+  .ant-select-focused:not(.ant-select-disabled) {
+    border-color: rgba(30, 215, 96, 0.8) !important; 
+  }
+  
+  .ant-select:hover {
+    border-color: rgba(30, 215, 96, 0.5) !important; 
+  }
+  
+  /* Đảm bảo chiều dài Select giống với Input */
+  .adminCreate-form .ant-select,
+  .adminCreate-form .ant-input {
+    width: 100%;
+  }
+  
+  /* Đảm bảo các thành phần nằm cân đối */
+  .adminCreate-form .ant-row .ant-col {
+    padding: 0;
+  }
+  
+  /* Hiệu ứng focus cho các thành phần */
+  .ant-select-focused:not(.ant-select-disabled) .ant-select-selector,
+  .ant-input:focus {
+    outline: none;
+    border-color: rgba(30, 215, 96, 0.8); 
+    box-shadow: 0 0 5px rgba(30, 215, 96, 0.5); 
+  }
+  
+  
+  /* Styling Radio Group */
+  .ant-radio-wrapper {
+    font-size: 18px; /* Tăng kích thước chữ */
+    color: #ffffff; /* Màu chữ trắng */
+  }
+  
+  /* Hover hiệu ứng cho Radio */
+  .ant-radio-wrapper:hover .ant-radio-inner {
+    border-color: rgba(30, 215, 96, 0.5); /* Viền hover */
+  }
+  
+  /* Radio đã chọn */
+  .ant-radio-checked .ant-radio-inner {
+    border-color: #1db954; /* Viền khi chọn */
+    background-color: #1db954; /* Nền khi chọn */
+  }
+  
+  /* Viền Radio mặc định */
+  .ant-radio-inner {
+    border-width: 2px;
+    border-color: #ffffff;
+  }
+  
+  
+  /* Giải thích lỗi */
+  .ant-form-item-explain-error {
+    color: #e22222;
+    font-size: 16px;
+  }
+  
+  .adminCreate-custom-form .ant-form-item-label > label {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    content: "";
+    display: block;
+  }
+  
+  .adminCreate-button {
+    width: 100%;
+    height: auto;
+    padding: 12px 0;
+    background-color: #1db954 !important;
+    color: #000000 !important;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .adminCreate-button:hover {
+    font-size: 19px;
+  }
+  
+  .login-link {
+    color: #ffffff;
+    font-size: 18px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .login-link:hover {
+    color: #1db954;
+  }
+  
+  .adminCreate-links {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .ant-radio-wrapper-checked .ant-radio-inner {
+    border-color: rgba(30, 215, 96, 0.8) !important;
+    background-color: rgba(30, 215, 96, 0.8) !important;
+  }
+  
+  .ant-radio-wrapper-checked .ant-radio-inner:after {
+    background-color: #000000 !important;
+  }

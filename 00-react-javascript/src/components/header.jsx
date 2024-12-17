@@ -1,24 +1,17 @@
 import React, { useContext, useState } from "react";
-import {
-  UserOutlined,
-  HomeOutlined,
-  SearchOutlined,
-  ExportOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, HomeOutlined, SearchOutlined, ExportOutlined } from "@ant-design/icons";
 import { Button, Dropdown, notification } from "antd";
-import "../assets/styles/header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth.context";
+import "../assets/styles/header.css";
 
 const Header = () => {
   const navigate = useNavigate();
   const { auth, setAuth } = useContext(AuthContext);
   console.log(">>> Check auth", auth);
   const [searchQuery, setSearchQuery] = useState("");
-  const [current, setCurrent] = useState("home");
 
   const handleSearch = () => {
-    console.log("Searching for:", searchQuery);
     navigate(`/search?query=${searchQuery}`);
   };
 
@@ -30,32 +23,24 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
-    localStorage.removeItem("user"); // Xóa thông tin user
-  
-    setAuth({ isAuthenticated: false, user: { email: "", name: "" } });
-    notification.success({
-      message: "Logout Successful",
-    });
-    navigate("/");
-  };
-  
+    localStorage.removeItem("role");
+    localStorage.removeItem("user");
 
-  const onClick = (e) => {
-    console.log("click", e);
-    setCurrent(e.key);
+    setAuth({ isAuthenticated: false, user: { email: "", name: "" } });
+    notification.success({ message: "Logout Successful" });
+    navigate("/");
   };
 
   // Menu items cho dropdown
   const items = auth.isAuthenticated
     ? [
         {
-          key: "username",
+          key: "profile",
           label: (
             <div
               style={{ cursor: "pointer" }}
-              onClick={() =>
-                navigate("/profile", { state: { user: auth.user } })
-              }>
+              onClick={() => navigate("/profile", { state: { user: auth.user } })}
+            >
               {auth.user.name}
               <ExportOutlined className="export-icon" />
             </div>
@@ -69,7 +54,7 @@ const Header = () => {
             </button>
           ),
         },
-      ]
+      ].filter(Boolean) // Lọc bỏ các giá trị null nếu role không khớp
     : [
         {
           key: "login",
@@ -92,7 +77,6 @@ const Header = () => {
   return (
     <div className="header-container">
       <div className="logo"></div>
-
       <div className="search-box">
         <div className="logo">
           <Link to="/">
@@ -114,7 +98,7 @@ const Header = () => {
 
       <div className="auth-buttons">
         <Dropdown menu={{ items }} trigger={["click"]}>
-          <Button icon={<UserOutlined />}></Button>
+          <Button icon={<UserOutlined />} />
         </Dropdown>
       </div>
     </div>
