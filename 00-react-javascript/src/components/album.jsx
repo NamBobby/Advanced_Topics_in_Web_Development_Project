@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useOutletContext  } from "react-router-dom";
+import { useNavigate  } from "react-router-dom";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { getMusicInAlbumApi } from "../services/apiService";
 import "../assets/styles/album.css";
@@ -12,10 +12,9 @@ const Album = ({ itemsToShow, albums }) => {
   
   const handleAlbumClick = async (album) => {
     try {
-      console.log("Album data:", album); // Debug album data
       const response = await getMusicInAlbumApi({ albumId: album.id });
-      console.log("Songs in album:", response); // Debug songs data
-      navigate(`/album/${album.name}`, { state: { album, songs: response } });
+      const albumName = album.name.replace(/\s+/g, "-").toLowerCase();
+      navigate(`/album/${albumName}`, { state: { album, songs: response } });
     } catch (error) {
       console.error("Error fetching songs for the album:", error);
     }

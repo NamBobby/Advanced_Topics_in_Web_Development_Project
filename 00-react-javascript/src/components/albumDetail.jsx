@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, Link, useOutletContext } from "react-router-dom";
+import { useLocation, useOutletContext, useNavigate } from "react-router-dom";
 import { CaretRightOutlined } from "@ant-design/icons";
 import "../assets/styles/albumDetail.css";
 import axios from "../services/axios.customize";
@@ -12,12 +12,7 @@ const AlbumDetail = () => {
   const [expanded, setExpanded] = useState(false);
   const [durations, setDurations] = useState({});
   const { setCurrentSong, setSongList } = useOutletContext();
-
-  // const backgroundStyle = {
-  //   backgroundImage: album?.thumbnailPath
-  //     ? `url(${axios.defaults.baseURL}/${album.thumbnailPath.replace(/^src[\\/]/,"")})`
-  //     : "url('https://via.placeholder.com/400')",
-  // };
+  const navigate = useNavigate();
 
   const handleSeeMore = () => {
     setItemsToShow(expanded ? 5 : songs.length);
@@ -31,9 +26,14 @@ const AlbumDetail = () => {
     audio.onloadedmetadata = () => {
       setDurations((prevDurations) => ({
         ...prevDurations,
-        [index]: Math.floor(audio.duration), // Duration in seconds
+        [index]: Math.floor(audio.duration), 
       }));
     };
+  };
+
+  const handleArtistClick = (artist) => {
+    const artistName = artist.name.replace(/\s+/g, "-").toLowerCase();
+    navigate(`artist/${artistName}`, { state: { artist } });
   };
 
   return (
@@ -54,9 +54,11 @@ const AlbumDetail = () => {
 
         <div className="albumdetail-header">
           <h1>{album.name}</h1>
-          <Link className="albumdetail-artist" to="/userInfo">
+          <div 
+            className="albumdetail-artist" 
+            onClick={() => handleArtistClick(album.artist)}>
             <h2>{album.artist}</h2>
-          </Link>
+          </div>
         </div>
       </div>
       <div className="albumdetail-content">

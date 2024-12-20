@@ -1,60 +1,14 @@
 import React, { useState } from "react";
 import { CaretRightOutlined } from "@ant-design/icons";
 import "../assets/styles/songuser.css";
+import axios from "../services/axios.customize";
 
-const SongUser = () => {
+
+const SongUser = ({ songs, handleSongClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(5);
   const [expanded, setExpanded] = useState(false);
-
-  const songs = [
-    { img: "", title: "Only Girl (In the World)", duration: "4:53" },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/vi/3/39/Umbrella-rihanna.jpg",
-      title: "Umbrella",
-      duration: "4:53",
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/en/c/c2/Rude_Boy_cover.png",
-      title: "Rude Boy",
-      duration: "4:53",
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/en/a/a8/Hey_Daddy_%28Daddy%27s_Home%29.jpg",
-      title: "Hey Daddy (Daddy's Home)",
-      duration: "4:53",
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/en/3/3e/Thinking_Out_Loud_cover.png",
-      title: "Thinking Out Loud",
-      duration: "4:09",
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/en/9/91/WDKYSingleCover.jpg",
-      title: "Stronger",
-      duration: "4:09",
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/en/f/fc/Mockingbird_%28Eminem_song%29_cover.jpg",
-      title: "Mockingbird",
-      duration: "4:09",
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/en/b/b9/Taylor_Swift_-_Anti-Hero.png",
-      title: "Anti-Hero",
-      duration: "4:39",
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/en/b/b9/Taylor_Swift_-_Anti-Hero.png",
-      title: "Anti-Hero",
-      duration: "4:39",
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/en/b/b9/Taylor_Swift_-_Anti-Hero.png",
-      title: "Anti-Hero",
-      duration: "4:39",
-    },
-  ];
+  const [durations, setDurations] = useState({});
 
   const handleSeeMore = () => {
     if (expanded) {
@@ -66,20 +20,37 @@ const SongUser = () => {
     }
   };
 
+  const loadSongDuration = (filePath, index) => {
+    const audio = new Audio(
+      `${axios.defaults.baseURL}/${filePath.replace(/^src[\\/]/, "")}`
+    );
+    audio.onloadedmetadata = () => {
+      setDurations((prevDurations) => ({
+        ...prevDurations,
+        [index]: Math.floor(audio.duration), 
+      }));
+    };
+  };
+
   return (
     <div className="songuser-wrapper">
-      {songs.slice(0, itemsToShow).map((song, index) => (
+      {songs.slice(0, itemsToShow).map((song, songid) => (
         <div
-          key={index}
+          key={songid}
           className="songuser"
-          onMouseEnter={() => setHoveredIndex(index)}
-          onMouseLeave={() => setHoveredIndex(null)}>
+          onMouseEnter={() => setHoveredIndex(songid)}
+          onMouseLeave={() => setHoveredIndex(null)}
+          onClick={() => handleSongClick(song)}>
+          
           <div className="songuser-number">
-            {hoveredIndex === index ? <CaretRightOutlined /> : index + 1}
+            {hoveredIndex === songid ? <CaretRightOutlined /> : songid + 1}
           </div>
           <div className="songuser-image-container">
-            {song.img ? (
-              <img src={song.img} alt={song.title} className="songuser-image" />
+            {song.thumbnailPath ? (
+              <img 
+              src={`${axios.defaults.baseURL}/${song.thumbnailPath.replace(/^src[\\/]/, "")}`} 
+              alt={song.title} 
+              className="songuser-image" />
             ) : (
               <div className="songuser-placeholder">
                 <CaretRightOutlined className="songuser-placeholder-icon" />
@@ -89,7 +60,16 @@ const SongUser = () => {
           <div className="songuser-info">
             <div className="songuser-name">{song.title}</div>
           </div>
-          <div className="songuser-duration">{song.duration}</div>
+          <div className="songuser-duration">
+          {durations[songid]
+                ? `${Math.floor(durations[songid] / 60)}:${String(
+                    durations[songid] % 60
+                  ).padStart(2, "0")}`
+                : "Loading..."}
+          </div>
+          {song.filePath &&
+              !durations[songid] &&
+              loadSongDuration(song.filePath, songid)}
         </div>
       ))}
 

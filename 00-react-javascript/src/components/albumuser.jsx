@@ -1,37 +1,23 @@
 import React, { useState } from "react";
 import { CaretRightOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { getMusicInAlbumApi } from "../services/apiService";
 import "../assets/styles/albumuser.css";
+import axios from "../services/axios.customize";
 
-const AlbumUser = ({ itemsToShow }) => {
+const AlbumUser = ({ itemsToShow, albums }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const navigate = useNavigate();
 
-  const albums = [
-    {
-      img: "https://i1.sndcdn.com/artworks-JriKS1DyZJ5jOzOn-1NCPkg-t500x500.jpg",
-      title: "B Ray Mix",
-      description: "RHYDER, Lê Hiếu and Sơn Tùng M-TP",
-    },
-    {
-      img: "https://i.ytimg.com/vi/7u4g483WTzw/maxresdefault.jpg",
-      title: "Upbeat Mix",
-      description: "Chappell Roan, Sabrina Carpenter, Eminem and more",
-    },
-    {
-      img: "",
-      title: "Pop Mix",
-      description: "Taylor Swift, Lady Gaga, Sabrina Carpenter and more",
-    },
-    {
-      img: "https://i.ytimg.com/vi/5_ozB0ImkYA/maxresdefault.jpg",
-      title: "Indie Mix",
-      description: "52Hz, Ngọt, Vũ. and more",
-    },
-    {
-      img: "https://cdn-images.dzcdn.net/images/cover/7947fa2b4981370977e39f0fd645d4b0/0x1900-000000-80-0-0.jpg",
-      title: "Chill Mix",
-      description: "RAP VIỆT, SOOBIN, ANH TRAI 'SAY HI' and more",
+  const handleAlbumClick = async (album) => {
+    try {
+      const response = await getMusicInAlbumApi({ albumId: album.id });
+      const albumName = album.name.replace(/\s+/g, "-").toLowerCase();
+      navigate(`/album/${albumName}`, { state: { album, songs: response } });
+    } catch (error) {
+      console.error("Error fetching songs for the album:", error);
     }
-  ];
+  };
 
   return (
     <div className="albumuser-wrapper">
@@ -39,22 +25,26 @@ const AlbumUser = ({ itemsToShow }) => {
         <div
           key={albumid}
           className="albumuser"
+          onClick={() => handleAlbumClick(album)}
           onMouseEnter={() => setHoveredIndex(albumid)}
           onMouseLeave={() => setHoveredIndex(null)}>
-          {album.img ? (
+          {album.thumbnailPath ? (
             <img
-              src={album.img}
-              alt={album.title}
-              className="albumuser-image"
+              src={`${axios.defaults.baseURL}/${album.thumbnailPath.replace(
+                /^src[\\/]/,
+                ""
+              )}`}
+              alt={album.name}
+              className="album-image"
             />
           ) : (
-            <div className="albumuser-placeholder">
-              <CaretRightOutlined className="albumuser-placeholder-icon" />
+            <div className="album-placeholder">
+              <CaretRightOutlined className="album-placeholder-icon" />
             </div>
           )}
           <div className="albumuser-info">
-            <div className="albumuser-title">{album.title}</div>
-            <div className="albumuser-description">{album.description}</div>
+            <div className="albumuser-title">{album.name}</div>
+            <div className="albumuser-artist">{album.artist}</div>
           </div>
           {hoveredIndex === albumid && (
             <div className="albumuser-icon">

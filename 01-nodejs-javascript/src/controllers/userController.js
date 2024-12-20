@@ -14,7 +14,6 @@ const {
   getPlaylistService,
   getMusicService,
   getMusicInPlaylistService,
-  getUserAlbumsService,
   getMusicInAlbumService,
   searchMusicService,
   getAlbumsService,
@@ -236,22 +235,6 @@ const getMusicInPlaylist = async (req, res) => {
   }
 };
 
-const getUserAlbums = async (req, res) => {
-  try {
-    const { name } = req.body;
-
-    const albums = await getUserAlbumsService(name);
-    res.status(200).json(albums);
-  } catch (error) {
-    if (error.message === "Artist not found") {
-      res.status(404).json({ message: error.message });
-    } else {
-      console.error("Error in getUserAlbums:", error);
-      res.status(500).json({ message: "Error fetching albums for user" });
-    }
-  }
-};
-
 const getMusicInAlbum = async (req, res) => {
   try {
     const { albumId } = req.body; 
@@ -301,7 +284,6 @@ module.exports = {
   getMusics,
   getUser,
   getMusicInPlaylist,
-  getUserAlbums,
   getMusicInAlbum,
   searchMusic,
   getAlbums

@@ -6,13 +6,16 @@ import PlaylistUser from "../../components/playlistuser";
 import "../../assets/styles/userInfo.css";
 
 const UserInfo = () => {
+
+
   return (
       <div className="userinfo-overlay">
         <div className="userinfo-background">
           <div className="userinfo-header">
             <p className="user-role">Artist</p>
-            <h3 className="user-name">John Doe</h3>
+            <h3 className="user-name">Name</h3>
           </div>
+        </div>
         <div className="userinfo-content">
           <div className="title-header">
             <h2 className="title">Music</h2>
@@ -29,7 +32,7 @@ const UserInfo = () => {
           </div>
           <PlaylistUser />
         </div>
-      </div>
+      
     </div>
   );
 };

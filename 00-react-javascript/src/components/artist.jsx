@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { CaretRightOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { CaretRightOutlined} from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import "../assets/styles/artist.css";
 import axios from "../services/axios.customize";
 
 const Artist = ({ artists, itemsToShow }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("Artists received in Artist component:", artists);
-  }, [artists]);
+  const handleArtistClick = (artist) => {
+    navigate(`artist/${artist.id}`, { state: { artist } });
+  };
+
 
   return (
     <div className="artist-wrapper">
@@ -17,11 +20,11 @@ const Artist = ({ artists, itemsToShow }) => {
           <div
             key={artistid}
             className="artist"
+            onClick={() => handleArtistClick(artist)}
             onMouseEnter={() => setHoveredIndex(artistid)}
             onMouseLeave={() => setHoveredIndex(null)}
           >
             {artist.avatarPath ? (
-              // Sửa đường dẫn avatarPath để loại bỏ tiền tố 'src\\'
               <img
                 src={`${axios.defaults.baseURL}/uploads/${artist.avatarPath.replace(/^src[\\/]/, "")}`}
                 alt={artist.name}

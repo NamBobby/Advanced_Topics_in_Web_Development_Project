@@ -1,7 +1,6 @@
 .userinfo-overlay {
   display: flex;
   flex-grow: 1;
-  overflow-y: auto;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
@@ -14,22 +13,33 @@
 }
 
 .userinfo-background {
+  position: relative;
   width: 100%;
-  height: 400px;
+  height: 500px;
   border-radius: 20px;
-  background-image: url("https://yt3.googleusercontent.com/oN0p3-PD3HUzn2KbMm4fVhvRrKtJhodGlwocI184BBSpybcQIphSeh3Z0i7WBgTq7e12yKxb=s900-c-k-c0x00ffffff-no-rj");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+.avatar-image{
+  position: absolute;
+  width: 100%;
+  height: 500px;
+  border-radius: 20px;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
 .userinfo-header {
-    margin-top: 250px;
-    margin-left: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  position: absolute;
+  top: 150px; 
+  left: 50px;
+  color: #aaa;
+  display: flex;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 2;
 }
 
 /* User role and name styling */
@@ -52,7 +62,7 @@
 .userinfo-content {
   width: 100%;
   background-color: #282c34;
+  overflow-y: auto;
   padding: 20px;
-  overflow: hidden;
 }
 

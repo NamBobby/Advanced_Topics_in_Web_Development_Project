@@ -62,22 +62,21 @@ const HomePage = () => {
     };
   }, []);
 
-  // Fetch dữ liệu artist từ API
+  
   useEffect(() => {
     const fetchArtists = async () => {
       try {
         const response = await getUserApi();
-        console.log("API Response:", response); // In trực tiếp dữ liệu API
+        console.log("API Response:", response); 
 
-        // Kiểm tra cấu trúc dữ liệu của response
-        const data = response?.data || response; // Nếu không có `data` thì sử dụng chính response
-        console.log("Data fetched: ", data); // Xem toàn bộ dữ liệu
+        
+        const data = response?.data || response; 
+        console.log("Data fetched: ", data); 
 
-        // Lọc các artist
         const filteredArtists = data.filter(
           (user) => user.role && user.role.toLowerCase() === "artist"
         );
-        console.log("Filtered artists:", filteredArtists); // In ra kết quả lọc
+        console.log("Filtered artists:", filteredArtists); 
 
         setArtists(filteredArtists);
       } catch (error) {
@@ -97,7 +96,7 @@ const HomePage = () => {
         const response = await getMusicsApi();
         console.log("Music API Response:", response);
         setMusics(response || []);
-        setSongList(response || []); // No issues including setSongList here
+        setSongList(response || []); 
       } catch (error) {
         console.error("Error fetching musics:", error);
         setMusics([]);
@@ -105,7 +104,7 @@ const HomePage = () => {
     };
   
     fetchMusics();
-  }, [setSongList]); // Include setSongList as a dependency
+  }, [setSongList]); 
 
   useEffect(() => {
     const fetchAlbums = async () => {

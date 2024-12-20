@@ -305,7 +305,7 @@ const getPlaylistService = async (accountId) => {
 const getMusicService = async () => {
   try {
     const musics = await Music.findAll({
-      attributes: { exclude: ["uploadDate", "accountId", "albumRef"] },
+      attributes: { exclude: ["uploadDate"] },
     });
     return musics;
   } catch (error) {
@@ -399,35 +399,12 @@ const getMusicInPlaylistService = async (playlistId) => {
 const getAlbumsService = async () => {
   try {
     const albums = await Album.findAll({
-      attributes: { exclude: ["createdDate", "accountId" ] },
+      attributes: { exclude: ["createdDate" ] },
     });
     return albums;
   } catch (error) {
     console.error("Error in getAlbumsService:", error);
     throw new Error("Error fetching albums");
-  }
-};
-
-const getUserAlbumsService = async (name) => {
-  try {
-    const artist = await User.findOne({
-      where: { name: name, role: "Artist" },
-      attributes: ["id"],
-    });
-
-    if (!artist) {
-      throw new Error("Artist not found");
-    }
-
-    const albums = await Album.findAll({
-      where: { accountId: artist.id },
-      attributes: ["name", "thumbnailPath", "publishedYear"],
-    });
-
-    return albums;
-  } catch (error) {
-    console.error("Error in getUserAlbumsService:", error);
-    throw new Error("Error fetching albums for user");
   }
 };
 
@@ -533,7 +510,6 @@ module.exports = {
   getMusicService,
   getUserService,
   getMusicInPlaylistService,
-  getUserAlbumsService,
   getMusicInAlbumService,
   searchMusicService,
   getAlbumsService

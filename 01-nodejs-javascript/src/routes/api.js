@@ -14,7 +14,6 @@ const {
   getPlaylists,
   getMusics,
   getMusicInPlaylist,
-  getUserAlbums,
   getMusicInAlbum,
   searchMusic,
   getUser,
@@ -73,7 +72,6 @@ routerAPI.post("/add-music-to-playlist", addMusicToPlaylist);
 routerAPI.post("/remove-music-from-playlist", removeMusicFromPlaylist);
 routerAPI.delete("/delete-playlist/:id", deletePlaylist);
 routerAPI.post("/playlists/music", getMusicInPlaylist);
-routerAPI.post("/albums/artist", getUserAlbums);
 routerAPI.post("/albums/music", getMusicInAlbum);
 routerAPI.post("/search/music", searchMusic);
 routerAPI.get("/user", getUser);
