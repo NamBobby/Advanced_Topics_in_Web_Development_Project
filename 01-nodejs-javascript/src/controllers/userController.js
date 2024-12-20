@@ -17,6 +17,7 @@ const {
   getUserAlbumsService,
   getMusicInAlbumService,
   searchMusicService,
+  getAlbumsService,
 } = require("../services/userService");
 const User = require("../models/user");
 const { upload, checkThumbnailSize } = require("../config/multerConfig");
@@ -189,6 +190,12 @@ const getMusics = async (req, res) => {
   res.status(200).json(musics);
 };
 
+// Controller function to get all albums
+const getAlbums = async (req, res) => {
+  const albums = await getAlbumsService();
+  res.status(200).json(albums);
+};
+
 // Remove music from playlist function
 const removeMusicFromPlaylist = async (req, res) => {
   try {
@@ -247,21 +254,19 @@ const getUserAlbums = async (req, res) => {
 
 const getMusicInAlbum = async (req, res) => {
   try {
-    const { name, albumId } = req.body;
-
-    const musicList = await getMusicInAlbumService(name, albumId);
+    const { albumId } = req.body; 
+    if (!albumId) {
+      return res.status(400).json({ message: "albumId is required" });
+    }
+    console.log("Fetching music for albumId:", albumId);
+    const musicList = await getMusicInAlbumService(albumId);
     res.status(200).json(musicList);
   } catch (error) {
-    if (error.message === "Artist not found" || error.message === "Album not found for the given artist") {
-      res.status(404).json({ message: error.message });
-    } else if (error.message === "No music found in the album") {
-      res.status(400).json({ message: error.message });
-    } else {
-      console.error("Error in getMusicInAlbum:", error);
-      res.status(500).json({ message: "Error fetching music in album" });
-    }
+    console.error("Error in getMusicInAlbum:", error.message);
+    res.status(500).json({ message: "Error fetching music in album" });
   }
 };
+
 
 const searchMusic = async (req, res) => {
   try {
@@ -299,4 +304,5 @@ module.exports = {
   getUserAlbums,
   getMusicInAlbum,
   searchMusic,
+  getAlbums
 };

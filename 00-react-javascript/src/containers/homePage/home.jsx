@@ -4,10 +4,11 @@ import { useOutletContext } from "react-router-dom";
 import Song from "../../components/song";
 import Artist from "../../components/artist";
 import Album from "../../components/album";
-import { getUserApi, getMusicsApi } from "../../services/apiService"; // Gọi API lấy artist
+import { getUserApi, getMusicsApi, getAlbumsApi } from "../../services/apiService"; // Gọi API lấy artist
 import "../../assets/styles/home.css";
 
 const HomePage = () => {
+  const [albums, setAlbums] = useState([]);
   const [artists, setArtists] = useState([]);
   const [musics, setMusics] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -106,6 +107,21 @@ const HomePage = () => {
     fetchMusics();
   }, [setSongList]); // Include setSongList as a dependency
 
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      try {
+        const response = await getAlbumsApi();
+        console.log("Album API Response:", response);
+        setAlbums(response || []);
+      } catch (error) {
+        console.error("Error fetching albums:", error);
+        setAlbums([]);
+      }
+    };
+
+    fetchAlbums();
+  }, []);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -133,7 +149,7 @@ const HomePage = () => {
         <h2 className="title">Popular Albums</h2>
         <Link to="/">See more</Link>
       </div>
-      <Album itemsToShow={itemsToShow.albums} />
+      <Album itemsToShow={itemsToShow.albums} albums={albums} />
     </div>
   );
 };

@@ -1,78 +1,26 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext  } from "react-router-dom";
 import { CaretRightOutlined } from "@ant-design/icons";
+import { getMusicInAlbumApi } from "../services/apiService";
 import "../assets/styles/album.css";
+import axios from "../services/axios.customize";
 
-const Album = ({ itemsToShow }) => {
+
+const Album = ({ itemsToShow, albums }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const navigate = useNavigate();
-
-  const albums = [
-    {
-      img: "https://i1.sndcdn.com/artworks-JriKS1DyZJ5jOzOn-1NCPkg-t500x500.jpg",
-      title: "B Ray Mix",
-      description: "RHYDER, Lê Hiếu and Sơn Tùng M-TP",
-      songs: [
-        { title: "Sky Tour (Intro)", duration: "2:29" },
-        { title: "Chạy Ngay Đi", duration: "5:09" },
-        { title: "Chúng Ta Không Thuộc Về Nhau", duration: "4:07" },
-      ],
-    },
-    {
-      img: "https://i.ytimg.com/vi/7u4g483WTzw/maxresdefault.jpg",
-      title: "Upbeat Mix",
-      description: "Chappell Roan, Sabrina Carpenter, Eminem and more",
-      songs: [
-        { title: "Sky Tour (Intro)", duration: "2:29" },
-        { title: "Chạy Ngay Đi", duration: "5:09" },
-        { title: "Chúng Ta Không Thuộc Về Nhau", duration: "4:07" },
-      ],
-    },
-    {
-      img: "",
-      title: "Pop Mix",
-      description: "Taylor Swift, Lady Gaga, Sabrina Carpenter and more",
-      songs: [
-        { title: "Sky Tour (Intro)", duration: "2:29" },
-        { title: "Chạy Ngay Đi", duration: "5:09" },
-        { title: "Chúng Ta Không Thuộc Về Nhau", duration: "4:07" },
-      ],
-    },
-    {
-      img: "https://i.ytimg.com/vi/5_ozB0ImkYA/maxresdefault.jpg",
-      title: "Indie Mix",
-      description: "52Hz, Ngọt, Vũ. and more",
-      songs: [
-        { title: "Sky Tour (Intro)", duration: "2:29" },
-        { title: "Chạy Ngay Đi", duration: "5:09" },
-        { title: "Chúng Ta Không Thuộc Về Nhau", duration: "4:07" },
-      ],
-    },
-    {
-      img: "https://cdn-images.dzcdn.net/images/cover/7947fa2b4981370977e39f0fd645d4b0/0x1900-000000-80-0-0.jpg",
-      title: "Chill Mix",
-      description: "RAP VIỆT, SOOBIN, ANH TRAI 'SAY HI' and more",
-      songs: [
-        { title: "Sky Tour (Intro)", duration: "2:29" },
-        { title: "Chạy Ngay Đi", duration: "5:09" },
-        { title: "Chúng Ta Không Thuộc Về Nhau", duration: "4:07" },
-      ],
-    },
-    {
-      img: "https://images2.thanhnien.vn/528068263637045248/2024/9/18/edit-457047072900098568810546446218-17266692101441990737648.jpeg",
-      title: "Chill Mix",
-      description: "RAP VIỆT",
-      songs: [
-        { title: "Sky Tour (Intro)", duration: "2:29" },
-        { title: "Chạy Ngay Đi", duration: "5:09" },
-        { title: "Chúng Ta Không Thuộc Về Nhau", duration: "4:07" },
-      ],
-    },
-  ];
-
-  const handleAlbumClick = (album) => {
-    navigate(`/album/${album.title}`, { state: { album } });
+  
+  const handleAlbumClick = async (album) => {
+    try {
+      console.log("Album data:", album); // Debug album data
+      const response = await getMusicInAlbumApi({ albumId: album.id });
+      console.log("Songs in album:", response); // Debug songs data
+      navigate(`/album/${album.name}`, { state: { album, songs: response } });
+    } catch (error) {
+      console.error("Error fetching songs for the album:", error);
+    }
   };
+  
 
   return (
     <div className="album-wrapper">
@@ -83,16 +31,19 @@ const Album = ({ itemsToShow }) => {
           onClick={() => handleAlbumClick(album)}
           onMouseEnter={() => setHoveredIndex(albumid)}
           onMouseLeave={() => setHoveredIndex(null)}>
-          {album.img ? (
-            <img src={album.img} alt={album.title} className="album-image" />
+          {album.thumbnailPath ? (
+            <img 
+            src={`${axios.defaults.baseURL}/${album.thumbnailPath.replace(/^src[\\/]/, "")}`} 
+            alt={album.name} 
+            className="album-image" />
           ) : (
             <div className="album-placeholder">
               <CaretRightOutlined className="album-placeholder-icon" />
             </div>
           )}
           <div className="album-info">
-            <div className="album-title">{album.title}</div>
-            <div className="album-description">{album.description}</div>
+            <div className="album-title">{album.name}</div>
+            <div className="album-artist">{album.artist}</div>
           </div>
           {hoveredIndex === albumid && (
             <div className="album-icon">

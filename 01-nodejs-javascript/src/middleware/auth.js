@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 const auth = async (req, res, next) => {
-  const allow_lists = ["/", "/register", "/user", "/login", "/sendemail", "/sendotp", "/verifyotp", "/musics", "/albums/artist", "/albums/music", "/search/music"];
+  const allow_lists = ["/", "/register", "/user", "/login", "/sendemail", "/sendotp", "/verifyotp", "/musics", "/albums/artist", "/albums/music", "/search/music", "/albums"];
 
   if (allow_lists.find(item => '/v1/api' + item === req.originalUrl)) {
     next();

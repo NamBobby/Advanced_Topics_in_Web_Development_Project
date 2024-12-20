@@ -7,7 +7,6 @@ import "../../assets/styles/userInfo.css";
 
 const UserInfo = () => {
   return (
-    
       <div className="userinfo-overlay">
         <div className="userinfo-background">
           <div className="userinfo-header">

@@ -309,8 +309,8 @@ const getMusicService = async () => {
     });
     return musics;
   } catch (error) {
-    console.error("Error in getPlaylistService:", error);
-    throw new Error("Error fetching playlists");
+    console.error("Error in getMusicService:", error);
+    throw new Error("Error fetching musics");
   }
 };
 
@@ -396,6 +396,18 @@ const getMusicInPlaylistService = async (playlistId) => {
   }
 };
 
+const getAlbumsService = async () => {
+  try {
+    const albums = await Album.findAll({
+      attributes: { exclude: ["createdDate", "accountId" ] },
+    });
+    return albums;
+  } catch (error) {
+    console.error("Error in getAlbumsService:", error);
+    throw new Error("Error fetching albums");
+  }
+};
+
 const getUserAlbumsService = async (name) => {
   try {
     const artist = await User.findOne({
@@ -419,31 +431,34 @@ const getUserAlbumsService = async (name) => {
   }
 };
 
-const getMusicInAlbumService = async (name, albumId) => {
+const getMusicInAlbumService = async (albumId) => {
   try {
-    const artist = await User.findOne({
-      where: { name: name, role: "Artist" },
-      attributes: ["id"],
-    });
-
-    if (!artist) {
-      throw new Error("Artist not found");
-    }
-
+    // Fetch album to verify its existence
     const album = await Album.findOne({
-      where: { id: albumId, accountId: artist.id },
-      attributes: ["id"],
+      where: { id: albumId },
+      attributes: ["id", "name", "artist"], // Lấy tên và nghệ sĩ của album
     });
 
     if (!album) {
-      throw new Error("Album not found for the given artist");
+      throw new Error("Album not found");
     }
 
+    // Query để lấy dữ liệu bài hát kèm thông tin chi tiết
     const query = `
-      SELECT m.title, m.artist, m.genre, m.album, m.filePath
-      FROM albums a
-      INNER JOIN music m ON a.id = m.albumRef
-      WHERE a.id = :albumId
+      SELECT 
+        m.id,
+        m.title,
+        m.artist,
+        m.genre,
+        m.albumId AS albumId,
+        m.filePath,
+        m.description,
+        m.thumbnailPath,
+        m.publishedYear,
+        a.name AS album
+      FROM music m
+      JOIN albums a ON m.albumId = a.id
+      WHERE m.albumId = :albumId
     `;
 
     const musicList = await sequelize.query(query, {
@@ -453,12 +468,12 @@ const getMusicInAlbumService = async (name, albumId) => {
 
     if (musicList.length === 0) {
       console.log("No music found for albumId:", albumId);
-      throw new Error("No music found");
+      throw new Error("No music found in this album");
     }
 
     return musicList;
   } catch (error) {
-    console.error("Error in getMusicInAlbumService:", error);
+    console.error("Error in getMusicInAlbumService:", error.message || error);
     throw new Error("Error fetching music in album");
   }
 };
@@ -521,4 +536,5 @@ module.exports = {
   getUserAlbumsService,
   getMusicInAlbumService,
   searchMusicService,
+  getAlbumsService
 };

@@ -1,80 +1,115 @@
 import React, { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useOutletContext } from "react-router-dom";
 import { CaretRightOutlined } from "@ant-design/icons";
 import "../assets/styles/albumDetail.css";
+import axios from "../services/axios.customize";
 
 const AlbumDetail = () => {
   const location = useLocation();
-  const { album } = location.state || {};
+  const { album, songs } = location.state || {};
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(5);
   const [expanded, setExpanded] = useState(false);
+  const [durations, setDurations] = useState({});
+  const { setCurrentSong, setSongList } = useOutletContext();
 
-  if (!album) {
-    return <div>Album not found!</div>;
-  }
-
-  const backgroundStyle = {
-    backgroundImage: album.img ? `url(${album.img})` : "",
-    backgroundColor: album.img ? "transparent" : "#1e1e1e",
-  };
+  // const backgroundStyle = {
+  //   backgroundImage: album?.thumbnailPath
+  //     ? `url(${axios.defaults.baseURL}/${album.thumbnailPath.replace(/^src[\\/]/,"")})`
+  //     : "url('https://via.placeholder.com/400')",
+  // };
 
   const handleSeeMore = () => {
-    if (expanded) {
-      setItemsToShow(5);
-      setExpanded(false);
-    } else {
-      setItemsToShow(album.songs.length);
-      setExpanded(true);
-    }
+    setItemsToShow(expanded ? 5 : songs.length);
+    setExpanded(!expanded);
+  };
+
+  const loadSongDuration = (filePath, index) => {
+    const audio = new Audio(
+      `${axios.defaults.baseURL}/${filePath.replace(/^src[\\/]/, "")}`
+    );
+    audio.onloadedmetadata = () => {
+      setDurations((prevDurations) => ({
+        ...prevDurations,
+        [index]: Math.floor(audio.duration), // Duration in seconds
+      }));
+    };
   };
 
   return (
     <div className="albumdetail-overlay">
-      <div className="albumdetail-background" style={backgroundStyle}>
+      <div className="albumdetail-background">
+        <img
+          src={
+            album.thumbnailPath
+              ? `${axios.defaults.baseURL}/${album.thumbnailPath.replace(
+                  /^src[\\/]/,
+                  ""
+                )}`
+              : "https://via.placeholder.com/400"
+          }
+          alt="Album thumbnail"
+          className="hidden-image"
+        />
+
         <div className="albumdetail-header">
-          <h1>{album.title}</h1>
-          <p>{album.description}</p>
-          <h2>
-            <Link to="/userInfo">Sơn Tùng M-TP</Link>
-          </h2>
+          <h1>{album.name}</h1>
+          <Link className="albumdetail-artist" to="/userInfo">
+            <h2>{album.artist}</h2>
+          </Link>
         </div>
-        <div className="albumdetail-content">
-          <h2>Album List</h2>
-          {album.songs.slice(0, itemsToShow).map((song, songid) => (
-            <div
-              key={songid}
-              className="albumsong"
-              onMouseEnter={() => setHoveredIndex(songid)}
-              onMouseLeave={() => setHoveredIndex(null)}>
-              <div className="albumsong-number">
-                {hoveredIndex === songid ? <CaretRightOutlined /> : songid + 1}
-              </div>
-              <div className="albumsong-image-container">
-                {song.img ? (
-                  <img
-                    src={song.img}
-                    alt={song.title}
-                    className="albumsong-image"
-                  />
-                ) : (
-                  <div className="albumsong-placeholder">
-                    <CaretRightOutlined className="albumsong-placeholder-icon" />
-                  </div>
-                )}
-              </div>
-              <div className="albumsong-info">
-                <div className="albumsong-name">{song.title}</div>
-              </div>
-              <div className="albumsong-duration">{song.duration}</div>
+      </div>
+      <div className="albumdetail-content">
+        <h2>Album {album.name} List</h2>
+        {songs.slice(0, itemsToShow).map((song, songid) => (
+          <div
+            key={songid}
+            className="albumsong"
+            onClick={() => {
+              setCurrentSong(song);
+              setSongList(songs);
+            }}
+            onMouseEnter={() => setHoveredIndex(songid)}
+            onMouseLeave={() => setHoveredIndex(null)}>
+            <div className="albumsong-number">
+              {hoveredIndex === songid ? <CaretRightOutlined /> : songid + 1}
             </div>
-          ))}
-          {album.songs.length > 5 && (
-            <div className="albumsong-see-more" onClick={handleSeeMore}>
-              {expanded ? "See Less" : "See More"}
+            <div className="albumsong-image-container">
+              {song.thumbnailPath ? (
+                <img
+                  src={`${axios.defaults.baseURL}/${song.thumbnailPath.replace(
+                    /^src[\\/]/,
+                    ""
+                  )}`}
+                  alt={song.title}
+                  className="albumsong-image"
+                />
+              ) : (
+                <div className="albumsong-placeholder">
+                  <CaretRightOutlined className="albumsong-placeholder-icon" />
+                </div>
+              )}
             </div>
-          )}
-        </div>
+            <div className="albumsong-info">
+              <div className="albumsong-name">{song.title}</div>
+            </div>
+            <div className="albumsong-duration">
+              {durations[songid]
+                ? `${Math.floor(durations[songid] / 60)}:${String(
+                    durations[songid] % 60
+                  ).padStart(2, "0")}`
+                : "Loading..."}
+            </div>
+            {song.filePath &&
+              !durations[songid] &&
+              loadSongDuration(song.filePath, songid)}
+          </div>
+        ))}
+        {songs.length > 5 && (
+          <div onClick={handleSeeMore}>
+            {expanded ? "See Less" : "See More"}
+          </div>
+        )}
       </div>
     </div>
   );

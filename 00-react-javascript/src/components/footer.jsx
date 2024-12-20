@@ -60,13 +60,13 @@ const Footer = ({ currentSong, songList, setCurrentSong }) => {
     }
   }, [songList, currentSong, setCurrentSong]);
 
-  const handlePrevSong = () => {
+  const handlePrevSong = useCallback(() => {
     if (songList && songList.length > 0) {
       const currentIndex = songList.findIndex((song) => song.id === currentSong?.id);
       const prevIndex = (currentIndex - 1 + songList.length) % songList.length; // Loop to the end
       setCurrentSong(songList[prevIndex]);
     }
-  };
+  }, [songList, currentSong, setCurrentSong]);
 
   // Automatically play the next song when the current one ends
   useEffect(() => {

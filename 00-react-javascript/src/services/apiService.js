@@ -86,6 +86,11 @@ const getMusicsApi = () => {
 };
 
 // Album APIs
+const getAlbumsApi = () => {
+  const URL_API = '/v1/api/albums';
+  return axios.get(URL_API);
+};
+
 const createAlbumApi = (albumData) => {
   const URL_API = '/v1/api/create-album';
   return axios.post(URL_API, albumData);
@@ -112,8 +117,8 @@ const getUserAlbumsApi = () => {
 };
 
 const getMusicInAlbumApi = (data) => {
-  const URL_API = '/v1/api/albums/music';
-  return axios.post(URL_API, data);
+  const URL_API = '/v1/api/albums/music'; 
+  return axios.post(URL_API, data); 
 };
 
 // Search API
@@ -170,6 +175,7 @@ export {
   deleteMusicApi,
 
   // Album APIs
+  getAlbumsApi,
   createAlbumApi,
   addMusicToAlbumApi,
   removeMusicFromAlbumApi,

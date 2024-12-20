@@ -18,6 +18,7 @@ const {
   getMusicInAlbum,
   searchMusic,
   getUser,
+  getAlbums,
 } = require("../controllers/userController");
 const auth = require("../middleware/auth");
 const delaymodule = require("../middleware/delay");
@@ -67,6 +68,7 @@ routerAPI.patch("/password", delaymodule, updatePassword);
 routerAPI.post("/create-playlist", createPlaylist);
 routerAPI.get("/playlists", getPlaylists);
 routerAPI.get("/musics", getMusics);
+routerAPI.get("/albums", getAlbums);
 routerAPI.post("/add-music-to-playlist", addMusicToPlaylist);
 routerAPI.post("/remove-music-from-playlist", removeMusicFromPlaylist);
 routerAPI.delete("/delete-playlist/:id", deletePlaylist);
