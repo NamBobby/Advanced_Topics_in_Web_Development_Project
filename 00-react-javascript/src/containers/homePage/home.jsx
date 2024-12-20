@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import Song from "../../components/song";
 import Artist from "../../components/artist";
 import Album from "../../components/album";
-import { getUserApi } from "../../services/apiService"; // Gọi API lấy artist
+import { getUserApi, getMusicsApi } from "../../services/apiService"; // Gọi API lấy artist
 import "../../assets/styles/home.css";
 
 const HomePage = () => {
   const [artists, setArtists] = useState([]);
+  const [musics, setMusics] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { setCurrentSong, setSongList } = useOutletContext();
   const [itemsToShow, setItemsToShow] = useState({
     songs: 10,
     artists: 6,
@@ -38,6 +41,7 @@ const HomePage = () => {
         }
       }
     };
+    
 
     const resizeObserver = new ResizeObserver(() => {
       handleResize();
@@ -86,6 +90,22 @@ const HomePage = () => {
     fetchArtists();
   }, []);
 
+  useEffect(() => {
+    const fetchMusics = async () => {
+      try {
+        const response = await getMusicsApi();
+        console.log("Music API Response:", response);
+        setMusics(response || []);
+        setSongList(response || []); // No issues including setSongList here
+      } catch (error) {
+        console.error("Error fetching musics:", error);
+        setMusics([]);
+      }
+    };
+  
+    fetchMusics();
+  }, [setSongList]); // Include setSongList as a dependency
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -96,7 +116,14 @@ const HomePage = () => {
         <h2 className="title">Popular Music</h2>
         <Link to="/">See more</Link>
       </div>
-      <Song itemsToShow={itemsToShow.songs} />
+      <Song 
+      itemsToShow={itemsToShow.songs} 
+      musics={musics}
+      handleSongClick={(song) => {
+        setCurrentSong(song);
+        setSongList(musics); 
+      }} />
+
       <div className="title-header">
         <h2 className="title">Popular Artists</h2>
         <Link to="/">See more</Link>

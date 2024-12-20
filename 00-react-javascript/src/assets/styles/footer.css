@@ -1,6 +1,7 @@
 .footer {
   display: flex;
   justify-content: space-between;
+  position: relative;
   align-items: center;
   width: 100%;
   height: 120px; 
@@ -10,11 +11,16 @@
 .footer-left {
   display: flex;
   align-items: center;
+  width: 30%;
+  position: relative;
+  z-index: 1;
 }
 
 .footer-right {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  width: 30%;
 }
 
 .album-cover {
@@ -27,6 +33,10 @@
 .song-info-play .song-title-play {
   font-size: 18px;
   font-weight: bold;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  max-width: 200px;
 }
 
 .song-info-play .song-artist-play {
@@ -35,11 +45,16 @@
 }
 
 .footer-center {
+  position: absolute; /* Absolute positioning to overlap */
+  top: 10%; /* Position at the top of the container */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for perfect centering */
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  margin-left: 50px;
+  z-index: 2; /* Higher z-index to ensure it's on top */
+  padding: 10px 20px; /* Optional: Add padding for aesthetics */
 }
 
 .footer-control {
