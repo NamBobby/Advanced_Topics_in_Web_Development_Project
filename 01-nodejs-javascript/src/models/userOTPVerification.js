@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
+const User = require('./user');
 
 const UserOTPVerification = sequelize.define('userotpverification', {
   id: {
@@ -23,6 +24,17 @@ const UserOTPVerification = sequelize.define('userotpverification', {
     type: DataTypes.DATE,
     allowNull: false,
   },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'id'
+    }
+  }
 });
+
+User.hasMany(UserOTPVerification, { foreignKey: 'userId' });
+UserOTPVerification.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = UserOTPVerification;
