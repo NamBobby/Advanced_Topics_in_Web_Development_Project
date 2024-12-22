@@ -373,7 +373,17 @@ const deletePlaylistService = async (playlistId) => {
 const getMusicInPlaylistService = async (playlistId) => {
   try {
     const query = `
-      SELECT m.title, m.artist, m.genre, m.album, m.filePath
+      SELECT
+        m.id,
+        m.title,
+        m.artist,
+        m.genre,
+        m.albumId AS albumId,
+        m.filePath,
+        m.description,
+        m.thumbnailPath,
+        m.publishedYear,
+        a.name AS album
       FROM playlistmusics pm
       INNER JOIN music m ON pm.musicId = m.id
       WHERE pm.playlistId = :playlistId

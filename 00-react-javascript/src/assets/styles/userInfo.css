@@ -15,7 +15,7 @@
 .userinfo-background {
   position: relative;
   width: 100%;
-  height: 500px;
+  height: 600px;
   border-radius: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
@@ -23,7 +23,7 @@
 .avatar-image{
   position: absolute;
   width: 100%;
-  height: 500px;
+  height: 600px;
   border-radius: 20px;
   top: 0;
   left: 0;

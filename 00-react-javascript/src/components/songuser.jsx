@@ -60,6 +60,7 @@ const SongUser = ({ songs, handleSongClick }) => {
           <div className="songuser-info">
             <div className="songuser-name">{song.title}</div>
           </div>
+          <div className="songuser-description">{song.description}</div>
           <div className="songuser-duration">
           {durations[songid]
                 ? `${Math.floor(durations[songid] / 60)}:${String(

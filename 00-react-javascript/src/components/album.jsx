@@ -12,9 +12,8 @@ const Album = ({ itemsToShow, albums }) => {
   
   const handleAlbumClick = async (album) => {
     try {
-      const response = await getMusicInAlbumApi({ albumId: album.id });
       const albumName = album.name.replace(/\s+/g, "-").toLowerCase();
-      navigate(`/album/${albumName}`, { state: { album, songs: response } });
+      navigate(`/album/${albumName}`, { state: { album }});
     } catch (error) {
       console.error("Error fetching songs for the album:", error);
     }

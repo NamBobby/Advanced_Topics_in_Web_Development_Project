@@ -47,6 +47,17 @@ const Header = () => {
           ),
         },
         {
+          key: "userInfo",
+          label: (
+            <div
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/userInfo", { state: { user: auth.user } })}
+            >
+              {"Info"}
+            </div>
+          ),
+        },
+        {
           key: "logout",
           label: (
             <button className="logout-btn" onClick={handleLogout}>

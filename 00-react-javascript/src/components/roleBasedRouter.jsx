@@ -15,13 +15,13 @@ import AlbumDetail from "../components/albumDetail.jsx";
 import PlaylistDetail from "../components/playlistDetail.jsx";
 import UploadMusicPage from "../containers/userPage/uploadmusic.jsx";
 import UserAccount from "../containers/userPage/userAccount.jsx";
-//import UserInfo from "../containers/profileInfoPage/userInfo.jsx";
+import UserInfo from "../containers/profileInfoPage/userInfo.jsx";
 
 // Các route chung cho User và Artist
 const commonRoutes = [
   { index: true, element: <HomePage /> },
   { path: "artist/:id", element: <ArtistInfo /> },
-  //{ path: "/userInfo", element: <UserInfo /> },
+  { path: "/userInfo", element: <UserInfo /> },
   { path: "userAlbum", element: <AlbumUserList /> },
   { path: "userPlaylist", element: <PlayListUserList /> },
   { path: "album/:title", element: <AlbumDetail /> },
