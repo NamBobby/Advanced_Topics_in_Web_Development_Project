@@ -53,7 +53,7 @@ const RoleBasedRouter = () => {
         ...(role === "Guest"
           ? [
               { index: true, element: <HomePage /> },
-              { path: "artist/:name", element: <ArtistInfo /> },
+              { path: "artist/:id", element: <ArtistInfo /> },
               { path: "userAlbum", element: <AlbumUserList /> },
               { path: "album/:title", element: <AlbumDetail /> },
             ]
