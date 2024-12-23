@@ -4,13 +4,13 @@ import { useOutletContext } from "react-router-dom";
 import Song from "../../components/song";
 import Artist from "../../components/artist";
 import Album from "../../components/album";
-import { getUserApi, getMusicsApi, getAlbumsApi } from "../../services/apiService"; // Gọi API lấy artist
+import { getUserApi, getMusicsApi, getAlbumsApi } from "../../services/apiService"; 
 import "../../assets/styles/home.css";
 
 const HomePage = () => {
   const [albums, setAlbums] = useState([]);
   const [artists, setArtists] = useState([]);
-  const [musics, setMusics] = useState([]);
+  const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const { setCurrentSong, setSongList } = useOutletContext();
   const [itemsToShow, setItemsToShow] = useState({
@@ -74,7 +74,7 @@ const HomePage = () => {
         console.log("Data fetched: ", data); 
 
         const filteredArtists = data.filter(
-          (user) => user.role && user.role.toLowerCase() === "artist"
+          (user) => user.role && user.role === "Artist"
         );
         console.log("Filtered artists:", filteredArtists); 
 
@@ -95,11 +95,11 @@ const HomePage = () => {
       try {
         const response = await getMusicsApi();
         console.log("Music API Response:", response);
-        setMusics(response || []);
+        setSongs(response || []);
         setSongList(response || []); 
       } catch (error) {
         console.error("Error fetching musics:", error);
-        setMusics([]);
+        setSongs([]);
       }
     };
   
@@ -133,10 +133,10 @@ const HomePage = () => {
       </div>
       <Song 
       itemsToShow={itemsToShow.songs} 
-      musics={musics}
+      songs={songs}
       handleSongClick={(song) => {
         setCurrentSong(song);
-        setSongList(musics); 
+        setSongList(songs); 
       }} />
 
       <div className="title-header">

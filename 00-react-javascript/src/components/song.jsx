@@ -4,12 +4,12 @@ import '../assets/styles/song.css';
 import axios from "../services/axios.customize";
 
 
-const Song = ({ itemsToShow, musics, handleSongClick }) => {
+const Song = ({ itemsToShow, songs, handleSongClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   return (
     <div className="song-wrapper">
-      {musics.slice(0, itemsToShow).map((song,  songid) => (
+      {songs.slice(0, itemsToShow).map((song,  songid) => (
         <div
           key={songid}
           className="song"
