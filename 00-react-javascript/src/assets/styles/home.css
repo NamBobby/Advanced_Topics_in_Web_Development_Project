@@ -1,71 +1,87 @@
-.home-content{
+.home-content {
   flex-grow: 1;
-  overflow-y: auto;  
-  max-height: calc(90vh - 95px);  
+  overflow-y: auto;
+  max-height: calc(90vh - 95px);
   box-sizing: border-box;
   padding: 20px;
 }
 
 a {
-    color: #1db954; 
-    text-decoration: none;
+  color: #1db954;
+  text-decoration: none;
 }
 
 a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
+}
+
+.see-more-less-control {
+    display: flex;
+    gap: 10px;
+}
+
+.see-more-less {
+  display: inline-block;
+  margin-left: 10px;
+  color: #1db954;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.see-more-less:hover {
+  text-decoration: underline;
 }
 
 /* Title Header Styling */
 .title-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 25px;
 }
 
 .title {
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
 }
 
 /* Content Section Styling */
 .content-section {
-    padding: 0 25px;
-    margin-bottom: 30px;
+  padding: 0 25px;
+  margin-bottom: 30px;
 }
 
 /* Artist Section Styling */
 .artist-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 0 25px;
-    margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0 25px;
+  margin-bottom: 30px;
 }
 
 /* Album Section Styling */
 .album-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 0 25px;
-    margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0 25px;
+  margin-bottom: 30px;
 }
 
 /* Cards or Items Styling (Optional) */
 .card {
-    background-color: #1e1e1e;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
+  background-color: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
 }
 
 .card:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
-
-
-

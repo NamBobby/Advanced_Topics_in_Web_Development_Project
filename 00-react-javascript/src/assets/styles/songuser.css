@@ -85,17 +85,19 @@
   color: #aaa;
 }
 
-.songuser-see-more {
-  cursor: pointer;
-  text-align: left;
-  color: #1db954;
-  font-size: 16px;
-  font-weight: bold;
+.songuser-controls {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
   margin-top: 10px;
-  margin-left: 80px;
-  transition: color 0.3s ease;
+  margin-left: 30px;
 }
 
-.songuser-see-more:hover {
-  color: #1ed760;
+.songuser-see-more, .songuser-see-less {
+  cursor: pointer;
+  color: #1db954;
+}
+
+.songuser-see-more:hover, .songuser-see-less:hover {
+  text-decoration: underline;
 }

@@ -3,7 +3,6 @@ import { CaretRightOutlined } from "@ant-design/icons";
 import "../assets/styles/songuser.css";
 import axios from "../services/axios.customize";
 
-
 const SongUser = ({ songs, handleSongClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(5);
@@ -11,13 +10,11 @@ const SongUser = ({ songs, handleSongClick }) => {
   const [durations, setDurations] = useState({});
 
   const handleSeeMore = () => {
-    if (expanded) {
-      setItemsToShow(5);
-      setExpanded(false);
-    } else {
-      setItemsToShow(songs.length);
-      setExpanded(true);
-    }
+    setItemsToShow((prev) => Math.min(prev + 5, songs.length));
+  };
+
+  const handleSeeLess = () => {
+    setItemsToShow(5);
   };
 
   const loadSongDuration = (filePath, index) => {
@@ -27,7 +24,7 @@ const SongUser = ({ songs, handleSongClick }) => {
     audio.onloadedmetadata = () => {
       setDurations((prevDurations) => ({
         ...prevDurations,
-        [index]: Math.floor(audio.duration), 
+        [index]: Math.floor(audio.duration),
       }));
     };
   };
@@ -41,16 +38,19 @@ const SongUser = ({ songs, handleSongClick }) => {
           onMouseEnter={() => setHoveredIndex(songid)}
           onMouseLeave={() => setHoveredIndex(null)}
           onClick={() => handleSongClick(song)}>
-          
           <div className="songuser-number">
             {hoveredIndex === songid ? <CaretRightOutlined /> : songid + 1}
           </div>
           <div className="songuser-image-container">
             {song.thumbnailPath ? (
-              <img 
-              src={`${axios.defaults.baseURL}/${song.thumbnailPath.replace(/^src[\\/]/, "")}`} 
-              alt={song.title} 
-              className="songuser-image" />
+              <img
+                src={`${axios.defaults.baseURL}/${song.thumbnailPath.replace(
+                  /^src[\\/]/,
+                  ""
+                )}`}
+                alt={song.title}
+                className="songuser-image"
+              />
             ) : (
               <div className="songuser-placeholder">
                 <CaretRightOutlined className="songuser-placeholder-icon" />
@@ -62,21 +62,30 @@ const SongUser = ({ songs, handleSongClick }) => {
           </div>
           <div className="songuser-description">{song.description}</div>
           <div className="songuser-duration">
-          {durations[songid]
-                ? `${Math.floor(durations[songid] / 60)}:${String(
-                    durations[songid] % 60
-                  ).padStart(2, "0")}`
-                : "Loading..."}
+            {durations[songid]
+              ? `${Math.floor(durations[songid] / 60)}:${String(
+                  durations[songid] % 60
+                ).padStart(2, "0")}`
+              : "Loading..."}
           </div>
           {song.filePath &&
-              !durations[songid] &&
-              loadSongDuration(song.filePath, songid)}
+            !durations[songid] &&
+            loadSongDuration(song.filePath, songid)}
         </div>
       ))}
 
       {songs.length > 5 && (
-        <div className="songuser-see-more" onClick={handleSeeMore}>
-          {expanded ? "See Less" : "See More"}
+        <div className="songuser-controls">
+          {itemsToShow < songs.length && (
+            <div className="songuser-see-more" onClick={handleSeeMore}>
+              See More
+            </div>
+          )}
+          {itemsToShow > 5 && (
+            <div className="songuser-see-less" onClick={handleSeeLess}>
+              See Less
+            </div>
+          )}
         </div>
       )}
     </div>

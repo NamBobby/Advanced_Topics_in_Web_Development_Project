@@ -49,8 +49,11 @@ const AlbumDetail = () => {
   }, [title, navigate]);
 
   const handleSeeMore = () => {
-    setItemsToShow(expanded ? 5 : songs.length);
-    setExpanded(!expanded);
+    setItemsToShow((prev) => Math.min(prev + 5, songs.length));
+  };
+
+  const handleSeeLess = () => {
+    setItemsToShow(5);
   };
 
   const loadSongDuration = (filePath, index) => {
@@ -156,10 +159,19 @@ const AlbumDetail = () => {
           </div>
         ))}
         {songs.length > 5 && (
-          <div onClick={handleSeeMore}>
-            {expanded ? "See Less" : "See More"}
-          </div>
-        )}
+        <div className="songuser-controls">
+          {itemsToShow < songs.length && (
+            <div className="songuser-see-more" onClick={handleSeeMore}>
+              See More
+            </div>
+          )}
+          {itemsToShow > 5 && (
+            <div className="songuser-see-less" onClick={handleSeeLess}>
+              See Less
+            </div>
+          )}
+        </div>
+      )}
       </div>
     </div>
   );

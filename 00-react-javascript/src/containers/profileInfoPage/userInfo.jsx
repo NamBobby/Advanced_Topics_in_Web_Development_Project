@@ -1,12 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useOutletContext, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useOutletContext,
+  useNavigate,
+} from "react-router-dom";
 import SongUser from "../../components/songuser";
 import AlbumUser from "../../components/albumuser";
 import PlaylistUser from "../../components/playlistuser";
 import { LeftOutlined } from "@ant-design/icons";
-import { getMusicsApi, getAlbumsApi, getPlaylistsApi } from "../../services/apiService";
+import {
+  getMusicsApi,
+  getAlbumsApi,
+  getPlaylistsApi,
+} from "../../services/apiService";
 import "../../assets/styles/userInfo.css";
 import axios from "../../services/axios.customize";
+
+const getItemsToShow = (width) => {
+  console.log("width", width);
+  if (width < 1100) {
+    return { playlists: 2, albums: 2 };
+  } else if (width < 1407) {
+    return { playlists: 3, albums: 3 };
+  } else if (width < 1430) {
+    return { playlists: 4, albums: 4 };
+  } else if (width < 1630) {
+    return { playlists: 4, albums: 4 };
+  } else if (width < 2100) {
+    return { playlists: 5, albums: 5 };
+  } else {
+    return { playlists: 5, albums: 6 };
+  }
+};
 
 const UserInfo = () => {
   const location = useLocation();
@@ -16,7 +42,39 @@ const UserInfo = () => {
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
   const { setCurrentSong, setSongList } = useOutletContext();
+  const [itemsToShow, setItemsToShow] = useState(() => {
+    const mainContent = document.querySelector(".main-content");
+    return mainContent
+      ? getItemsToShow(mainContent.offsetWidth)
+      : { songs: 6, artists: 4, albums: 4 };
+  });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mainContent = document.querySelector(".main-content");
+      if (mainContent) {
+        const width = mainContent.offsetWidth;
+        setItemsToShow(getItemsToShow(width));
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(handleResize);
+    const mainContent = document.querySelector(".main-content");
+
+    if (mainContent) {
+      resizeObserver.observe(mainContent);
+    }
+
+    handleResize();
+
+    return () => {
+      if (mainContent) {
+        resizeObserver.unobserve(mainContent);
+      }
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -33,7 +91,7 @@ const UserInfo = () => {
           } else {
             console.error("Songs data not found");
           }
-  
+
           // Fetch and filter albums for the logged-in user
           const albumsResponse = await getAlbumsApi();
           console.log("Albums API Response:", albumsResponse);
@@ -45,7 +103,7 @@ const UserInfo = () => {
           } else {
             console.error("Albums data not found");
           }
-  
+
           // Fetch and filter playlists for the logged-in user
           const playlistsResponse = await getPlaylistsApi();
           console.log("Playlists API Response:", playlistsResponse);
@@ -64,15 +122,33 @@ const UserInfo = () => {
         setLoading(false);
       }
     };
-  
+
     fetchUserData();
   }, [user]);
 
   const handleBackClick = () => {
-    navigate(-1); 
+    navigate(-1);
   };
-  
-  
+
+  const handleSeeMore = (type, totalItems) => {
+    const mainContent = document.querySelector(".main-content");
+    const width = mainContent ? mainContent.offsetWidth : 0;
+
+    setItemsToShow((prev) => ({
+      ...prev,
+      [type]: Math.min(prev[type] + getItemsToShow(width)[type], totalItems),
+    }));
+  };
+
+  const handleSeeLess = (type) => {
+    const mainContent = document.querySelector(".main-content");
+    const width = mainContent ? mainContent.offsetWidth : 0;
+
+    setItemsToShow((prev) => ({
+      ...prev,
+      [type]: getItemsToShow(width)[type],
+    }));
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -87,7 +163,10 @@ const UserInfo = () => {
         <img
           src={
             user.avatarPath
-              ? `${axios.defaults.baseURL}/uploads/${user.avatarPath.replace(/^src[\\/]/, "")}`
+              ? `${axios.defaults.baseURL}/uploads/${user.avatarPath.replace(
+                  /^src[\\/]/,
+                  ""
+                )}`
               : "https://via.placeholder.com/400"
           }
           alt={user.name}
@@ -113,16 +192,52 @@ const UserInfo = () => {
             />
             <div className="title-header">
               <h2 className="title">Albums</h2>
-              <Link to="/userAlbum">See more</Link>
+              <div className="see-more-less-control">
+                {itemsToShow.albums < albums.length && (
+                  <div
+                    className="see-more-less"
+                    onClick={() => handleSeeMore("albums", albums.length)}>
+                    See More
+                  </div>
+                )}
+                {itemsToShow.albums >
+                  getItemsToShow(
+                    document.querySelector(".main-content")?.offsetWidth || 0
+                  ).albums && (
+                  <div
+                    className="see-more-less"
+                    onClick={() => handleSeeLess("albums")}>
+                    See Less
+                  </div>
+                )}
+              </div>
             </div>
-            <AlbumUser albums={albums} />
+            <AlbumUser itemsToShow={itemsToShow.albums} albums={albums} />
           </>
         )}
         <div className="title-header">
           <h2 className="title">Playlists</h2>
-          <Link to="/userAlbum">See more</Link>
+          <div className="see-more-less-control">
+            {itemsToShow.playlists < playlists.length && (
+              <div
+                className="see-more-less"
+                onClick={() => handleSeeMore("playlists", playlists.length)}>
+                See More
+              </div>
+            )}
+            {itemsToShow.playlists >
+              getItemsToShow(
+                document.querySelector(".main-content")?.offsetWidth || 0
+              ).playlists && (
+              <div
+                className="see-more-less"
+                onClick={() => handleSeeLess("playlists")}>
+                See Less
+              </div>
+            )}
+          </div>
         </div>
-        <PlaylistUser playlists={playlists} />
+        <PlaylistUser itemsToShow={itemsToShow.playlists} playlists={playlists} />
       </div>
     </div>
   );

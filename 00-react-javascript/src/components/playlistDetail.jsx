@@ -31,14 +31,13 @@ const PlaylistDetail = () => {
   };
 
   const handleSeeMore = () => {
-    if (expanded) {
-      setItemsToShow(5);
-      setExpanded(false);
-    } else {
-      setItemsToShow(playlist.songs.length);
-      setExpanded(true);
-    }
+    setItemsToShow((prev) => Math.min(prev + 5, songs.length));
   };
+
+  const handleSeeLess = () => {
+    setItemsToShow(5);
+  };
+
 
   const handleBackClick = () => {
     navigate(-1); 
@@ -116,10 +115,19 @@ const PlaylistDetail = () => {
           </div>
         ))}
         {songs.length > 5 && (
-          <div onClick={handleSeeMore}>
-            {expanded ? "See Less" : "See More"}
-          </div>
-        )}
+        <div className="songuser-controls">
+          {itemsToShow < songs.length && (
+            <div className="songuser-see-more" onClick={handleSeeMore}>
+              See More
+            </div>
+          )}
+          {itemsToShow > 5 && (
+            <div className="songuser-see-less" onClick={handleSeeLess}>
+              See Less
+            </div>
+          )}
+        </div>
+      )}
       </div>
     </div>
   );
