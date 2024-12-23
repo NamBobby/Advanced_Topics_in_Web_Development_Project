@@ -25,7 +25,6 @@ const HomePage = () => {
     const handleResize = () => {
       if (mainContent) {
         const width = mainContent.offsetWidth;
-        console.log("Main content width:", width);
 
         if (width < 1400) {
           setItemsToShow({ songs: 4, artists: 3, albums: 3 });

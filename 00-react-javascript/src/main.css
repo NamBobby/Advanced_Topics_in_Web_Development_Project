@@ -10,11 +10,11 @@ body {
   display: flex;
   flex: 1; /* Ensures this grows to fill available space */
   background-color: black;
-  width: 100%;
+  width: 100%; 
 }
 
 .main-layout {
-  height: 90vh; /* Full viewport height */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -29,18 +29,12 @@ body {
 
 
 header {
-  position: fixed;
-  top: 0;
-  left: 0;
   background-color: #000;
   color: white;
   z-index: 1000;
 }
 
 footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   background-color: #000;
   color: white;
   z-index: 1000;
@@ -63,3 +57,4 @@ footer {
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
+

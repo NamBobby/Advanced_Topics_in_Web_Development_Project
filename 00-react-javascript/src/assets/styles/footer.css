@@ -3,8 +3,8 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: auto; 
-  padding: 20px;
+  height: 7vh; 
+  padding: 5vh 2vw;
 }
 
 .footer-left {
@@ -22,15 +22,15 @@
   width: 30%;
 }
 
-.album-cover {
-  width: 70px;
-  height: 70px;
+.song-cover {
+  width: 7vh;
+  height: 7vh;
   border-radius: 5px;
   margin-right: 10px;
 }
 
 .song-info-play .song-title-play {
-  font-size: 18px;
+  font-size: 1.8vh;
   font-weight: bold;
   white-space: nowrap; 
   overflow: hidden;
@@ -39,21 +39,17 @@
 }
 
 .song-info-play .song-artist-play {
-  font-size: 16px;
+  font-size: 1.6vh;
   color: #aaa;
 }
 
-.footer-center {
-  position: absolute; /* Absolute positioning to overlap */
-  top: 10%; /* Position at the top of the container */
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%); /* Adjust for perfect centering */
+.footer-center { 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 2; /* Higher z-index to ensure it's on top */
-  padding: 10px 20px; /* Optional: Add padding for aesthetics */
+  z-index: 2; 
+  padding: 1vh 2vh; 
 }
 
 .footer-control {
@@ -64,8 +60,8 @@
   background: none;
   border: none;
   color: white;
-  font-size: 32px;
-  margin: 0 10px;
+  font-size: 3.2vh;
+  margin: 0 1vh;
   cursor: pointer;
 }
 
@@ -80,14 +76,14 @@
 
 .current-time,
 .total-time {
-  font-size: 14px;
-  margin: 0 5px;
+  font-size: 1.4vh;
+  margin: 0 0.5vh;
 }
 
 /* Slider for progress bar */
 .progress-slider {
-  width: 600px;
-  height: 5px;
+  width: 25vw;
+  height: 0.75vh;
   background-color: #444; /* Background of the track */
   border-radius: 5px;
   -webkit-appearance: none; /* Remove default styling for WebKit browsers */
@@ -97,24 +93,24 @@
 .progress-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 1.6vh;
+  height: 1.6vh;
   background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
   border-radius: 50%;
   cursor: pointer;
 }
 
 .progress-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 1.6vh;
+  height: 1.6vh;
   background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
   border-radius: 50%;
   cursor: pointer;
 }
 
 .progress-slider::-ms-thumb {
-  width: 16px;
-  height: 16px;
+  width: 1.6vh;
+  height: 1.6vh;
   background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
   border-radius: 50%;
   cursor: pointer;
@@ -122,8 +118,8 @@
 
 /* Slider for volume control */
 .volume-slider {
-  width: 150px;
-  height: 5px;
+  width: 7vw;
+  height: 0.75vh;
   background-color: #444; /* Background of the track */
   border-radius: 5px;
   -webkit-appearance: none;
@@ -133,23 +129,23 @@
 .volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 1.6vh;
+  height: 1.6vh;
   background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
   border-radius: 50%;
   cursor: pointer;
 }
 
 .volume-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 1.6vh;
+  height: 1.6vh;
   background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
   border-radius: 50%;
   cursor: pointer;
 }
 
 .volume-slider::-ms-thumb {
-  width: 16px;
+  width: 1.6vh;
   height: 16px;
   background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
   border-radius: 50%;

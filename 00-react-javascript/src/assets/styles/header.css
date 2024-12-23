@@ -3,9 +3,8 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 75px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  height: 7.5vh;
+  padding: 1vh 2vw;
 }
 
 .auth-buttons {
@@ -19,8 +18,8 @@
   background-color: transparent;
   border:none;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 5vh;
+  height: 5vh;
   padding-bottom: 5px;
   display: flex;
   align-items: center;
@@ -28,7 +27,7 @@
 }
 
 .ant-btn-icon .anticon svg{
-  font-size: 28px;
+  font-size: 2.8vh;
   color: #919191 !important;
 }
 
@@ -80,20 +79,20 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 600px;
+  width: 30vw;
   margin-left: 60px;
 }
 
 .logo{
   display: flex;
   align-items: center;
-  width: 50px;
-  height: 50px;
+  width: 5vh;
+  height: 5vh;
   border-radius: 50%;
   background-color: transparent;
-  margin-left: 20px;
-  margin-right: 20px;
-  padding-left: 12px;
+  padding-left: 1.2vh;
+  margin-left: 2vh;
+  margin-right: 2vh;
   transition: background-color 0.2s ease;
 }
 
@@ -102,12 +101,12 @@
 }
 
 .search-icon {
-  font-size: 28px;
+  font-size: 2.8vh;
   margin-right: 10px;
 }
 
 .home-icon {
-  font-size: 28px;
+  font-size: 2.8vh;
   margin-right: 12px;
 }
 
@@ -117,11 +116,11 @@
 
 .search-input {
   max-width: 600px;
-  padding: 12px;
+  padding: 1.1vh 1.1vw;
   border: 1px solid #ccc;
   background-color: #1f1f1f;
   color: white;
-  border-radius: 16px;
+  border-radius: 15px;
   width: 100%;
   box-sizing: border-box;
   font-size: 20px;

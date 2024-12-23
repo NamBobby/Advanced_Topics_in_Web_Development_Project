@@ -132,7 +132,7 @@ const Footer = ({ currentSong, songList, setCurrentSong }) => {
             ? `${axios.defaults.baseURL}/${currentSong.thumbnailPath.replace(/^src[\\/]/, "")}`
             : "https://via.placeholder.com/50"}
           alt={currentSong?.title || "Song Thumbnail"}
-          className="album-cover"
+          className="song-cover"
         />
         <div className="song-info-play">
           <h4 className="song-title-play">{currentSong?.title || "Select a song"}</h4>
