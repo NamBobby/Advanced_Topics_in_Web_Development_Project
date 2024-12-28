@@ -5,7 +5,7 @@ const SendEmail = async (req, res) => {
     const { from, to, subject, html } = req.body;
     const mailOptions = {
       from,
-      to: [to], // Convert the to field to an array
+      to: [to], 
       subject,
       html
     };

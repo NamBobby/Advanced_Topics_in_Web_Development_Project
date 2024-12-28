@@ -194,89 +194,88 @@ const updatePasswordService = async (id, currentPassword, newPassword, confirmPa
 // Generate OTP service
 const generateOtp = async (email) => {
   try {
-    // Find the user by email
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return { EC: 1, EM: "User   not found" };
-    }
-
-    // Generate a random OTP
-    const otp = Math.floor(100000 + Math.random() * 900000);
-
-    // Hash the OTP
-    const hashedOTP = await bcrypt.hash(otp.toString(), saltRounds);
-
-    // Check if an OTP verification record already exists
-    const existingOTPVerification = await UserOTPVerification.findOne({
-      where: { email },
-    });
-    if (existingOTPVerification) {
-      // Update the existing record
-      existingOTPVerification.otp = hashedOTP;
-      existingOTPVerification.createdAt = Date.now();
-      existingOTPVerification.expiresAt = Date.now() + 180000;
-      await existingOTPVerification.save();
-    } else {
-      // Create a new OTP verification record
-      const newOTPVerification = await UserOTPVerification.create({
-        email, // Include the email value here
-        otp: hashedOTP,
-        createdAt: Date.now(),
-        expiresAt: Date.now() + 180000,
-      });
-      await newOTPVerification.save();
-    }
-
-    // Send the OTP to the user's email
-    await mailService.sendOTP(email, otp);
-
-    return { EC: 0, EM: `OTP: ${otp} sent successfully` };
-  } catch (error) {
-    console.log(error);
-    return { EC: 3, EM: "Error sending OTP" };
-  }
-};
-
-// Verify OTP and update password service
-const verifyOtpAndUpdatePassword = async (
-  email,
-  otp,
-  newPassword,
-  confirmPassword
-) => {
-  try {
-    // Find the user by email
     const user = await User.findOne({ where: { email } });
     if (!user) {
       return { EC: 1, EM: "User not found" };
     }
 
-    // Verify the OTP
-    const existingOTPVerification = await UserOTPVerification.findOne({
-      where: { email },
+    const otp = Math.floor(100000 + Math.random() * 900000); // Generate OTP
+    const hashedOTP = await bcrypt.hash(otp.toString(), saltRounds);
+
+    // Hủy các OTP trước đó của người dùng
+    await UserOTPVerification.update(
+      { status: false },
+      { where: { email, status: true } }
+    );
+
+    // Tạo OTP mới
+    const newOTP = await UserOTPVerification.create({
+      email,
+      otp: hashedOTP,
+      userId: user.id,
+      status: true // Kích hoạt trạng thái ban đầu là true
     });
-    if (!existingOTPVerification) {
-      return { EC: 2, EM: "OTP not found" };
+
+    // Gửi OTP qua email
+    await mailService.sendOTP(email, otp);
+
+    // Thiết lập tự động hủy sau 10 phút
+    setTimeout(async () => {
+      await UserOTPVerification.update(
+        { status: false },
+        { where: { id: newOTP.id } }
+      );
+    }, 10 * 60 * 1000); // 10 phút
+
+    return { EC: 0, EM: "OTP sent successfully" };
+  } catch (error) {
+    console.log(error);
+    return { EC: 3, EM: "Error generating OTP" };
+  }
+};
+
+
+// Verify OTP and update password service
+const verifyOtpAndUpdatePassword = async (email, otp, newPassword) => {
+  try {
+    // Tìm user trong bảng users
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return { EC: 1, EM: "User not found" };
     }
 
-    const isMatchOtp = await bcrypt.compare(
-      otp.toString(),
-      existingOTPVerification.otp
-    );
+    // Tìm OTP còn hiệu lực
+    const existingOTP = await UserOTPVerification.findOne({
+      where: { email, status: true }, // Chỉ lấy OTP có status = true
+    });
+
+    if (!existingOTP) {
+      return { EC: 2, EM: "No valid OTP found" };
+    }
+
+    // Kiểm tra OTP
+    const isMatchOtp = await bcrypt.compare(otp.toString(), existingOTP.otp);
     if (!isMatchOtp) {
       return { EC: 2, EM: "Invalid OTP" };
     }
 
-    // Update the password
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(newPassword, salt);
-    await user.save();
+    // Cập nhật mật khẩu
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await User.update({ password: hashedPassword }, { where: { id: user.id } });
+
+    // Cập nhật trạng thái OTP
+    await UserOTPVerification.update(
+      { status: false },
+      { where: { id: existingOTP.id } }
+    );
+
     return { EC: 0, EM: "Password updated successfully" };
   } catch (error) {
-    console.log(error);
-    return { EC: 3, EM: "Error updating password" };
+    console.error("Error in verifyOtpAndUpdatePassword:", error);
+    return { EC: 3, EM: "Error verifying OTP" };
   }
 };
+
 
 // Create playlist
 const createPlaylistService = async (playlistData) => {

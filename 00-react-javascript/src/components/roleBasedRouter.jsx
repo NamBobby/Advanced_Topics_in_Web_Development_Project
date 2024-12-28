@@ -16,6 +16,8 @@ import PlaylistDetail from "../components/playlistDetail.jsx";
 import UploadMusicPage from "../containers/userPage/uploadmusic.jsx";
 import UserAccount from "../containers/userPage/userAccount.jsx";
 import UserInfo from "../containers/profileInfoPage/userInfo.jsx";
+import SendOtpPage from "../containers/auth/sendotp.jsx";
+import ResetPasswordPage from "../containers/auth/resetPassword.jsx";
 
 // Các route chung cho User và Artist
 const commonRoutes = [
@@ -62,6 +64,8 @@ const RoleBasedRouter = () => {
     },
     { path: "/profile", element: <UserAccount /> },
     { path: "/register", element: <RegisterPage /> },
+    { path: "/forgot-password", element: <SendOtpPage /> },
+    { path: "/resetpassword", element: <ResetPasswordPage /> },
     { path: "/login", element: <LoginPage /> },
     { path: "*", element: <Navigate to="/" /> },
   ]);

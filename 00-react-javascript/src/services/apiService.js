@@ -33,9 +33,9 @@ const getAccountApi = () => {
   return axios.get(URL_API);
 };
 
-const sendOtpApi = () => {
+const sendOtpApi = (data) => {
   const URL_API = '/v1/api/sendotp';
-  return axios.post(URL_API);
+  return axios.post(URL_API, data);
 };
 
 const verifyOtpApi = (otpData) => {

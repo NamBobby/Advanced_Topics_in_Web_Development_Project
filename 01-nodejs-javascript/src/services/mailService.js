@@ -38,7 +38,7 @@ const sendOTP = async (email, otp) => {
       from: process.env.AUTH_EMAIL,
       to: email,
       subject: 'Verify Your Email',
-      html: `<p>Enter your OTP: ${otp} to verify your email address and complete the process </p><p> This code <b>expires in 5 minutes</b></p>`,
+      html: `<p>Enter your OTP: ${otp} to verify your email address and complete the process </p><p> This code <b>expires in 10 minutes</b></p>`,
     };
 
     await sendMail(mailOptions);

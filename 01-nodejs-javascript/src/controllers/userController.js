@@ -104,27 +104,33 @@ const updatePassword = async (req, res) => {
 
 
 const sendOtp = async (req, res) => {
-  const { email } = req.body;
-  const data = await generateOtp(email);
-  if (data.EC !== 0) {
-    return res.status(400).json(data);
+  try {
+    const email = req.body?.email;
+    if (!email) {
+      return res.status(400).json({ EC: 1, EM: "Email is required" });
+    }
+    const data = await generateOtp(email);
+    return res.status(data.EC === 0 ? 200 : 400).json(data);
+  } catch (error) {
+    console.error("Error in sendOtp:", error);
+    return res.status(500).json({ EC: 3, EM: "Internal server error" });
   }
-  return res.status(200).json(data);
 };
 
 const verifyOtp = async (req, res) => {
-  const { email, otp, newPassword, confirmPassword } = req.body;
-  const data = await verifyOtpAndUpdatePassword(
-    email,
-    otp,
-    newPassword,
-    confirmPassword
-  );
-  if (data.EC !== 0) {
-    return res.status(400).json(data);
+  try {
+    const { email, otp, newPassword } = req.body;
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ EC: 1, EM: "Invalid request parameters" });
+    }
+    const data = await verifyOtpAndUpdatePassword(email, otp, newPassword);
+    return res.status(data.EC === 0 ? 200 : 400).json(data);
+  } catch (error) {
+    console.error("Error in verifyOtp:", error);
+    return res.status(500).json({ EC: 3, EM: "Internal server error" });
   }
-  return res.status(200).json(data);
 };
+
 
 const getAccount = async (req, res) => {
   const data = await getProfileService(req.user.id);
