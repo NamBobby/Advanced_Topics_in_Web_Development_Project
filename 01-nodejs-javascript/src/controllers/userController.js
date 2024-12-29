@@ -17,6 +17,9 @@ const {
   getMusicInAlbumService,
   searchMusicService,
   getAlbumsService,
+  followItemService, 
+  getFollowedItemsService,
+  unfollowItemService
 } = require("../services/userService");
 const User = require("../models/user");
 const { upload, checkThumbnailSize } = require("../config/multerConfig");
@@ -274,6 +277,55 @@ const getUser = async(req, res) => {
   return res.status(200).json(data)
 }
 
+// Follow an item
+const followItem = async (req, res) => {
+  try {
+    const { followType, followId } = req.body;
+    const userId = req.user.id;
+
+    const response = await followItemService(userId, followType, followId);
+    if (response.EC !== 0) {
+      return res.status(500).json({ message: response.EM });
+    }
+    res.status(201).json({ message: response.EM, follow: response.data });
+  } catch (error) {
+    console.error("Error in followItem:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Get followed items
+const getFollowedItems = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const response = await getFollowedItemsService(userId);
+    if (response.EC !== 0) {
+      return res.status(500).json({ message: response.EM });
+    }
+    res.status(200).json({ message: response.EM, followedItems: response.data });
+  } catch (error) {
+    console.error("Error in getFollowedItems:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+// Unfollow an item
+const unfollowItem = async (req, res) => {
+  try {
+    const { followType, followId } = req.body;
+    const userId = req.user.id;
+
+    const response = await unfollowItemService(userId, followType, followId);
+    if (response.EC !== 0) {
+      return res.status(400).json({ message: response.EM });
+    }
+    res.status(200).json({ message: response.EM });
+  } catch (error) {
+    console.error("Error in unfollowItem:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   UserRegister,
   handleLogin,
@@ -292,5 +344,8 @@ module.exports = {
   getMusicInPlaylist,
   getMusicInAlbum,
   searchMusic,
-  getAlbums
+  getAlbums,
+  followItem,
+  getFollowedItems,
+  unfollowItem
 };

@@ -15,6 +15,7 @@ const {
   Music,
   Playlist,
   PlaylistMusic,
+  UserFollow
 } = require("./models/associations");
 
 const app = express();

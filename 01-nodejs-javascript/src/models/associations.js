@@ -3,6 +3,7 @@ const Album = require('./album');
 const Music = require('./music');
 const Playlist = require('./playlist'); 
 const PlaylistMusic = require('./playlistMusic');
+const UserFollow = require('./userFollow');
 
 // Setup dynamic associations
 User.hasMany(Album, { foreignKey: "accountId" });
@@ -20,4 +21,10 @@ Music.belongsTo(Album, { foreignKey: 'albumId', as: 'AlbumDetails' });
 Playlist.belongsToMany(Music, { through: PlaylistMusic, foreignKey: 'playlistId'}); 
 Music.belongsToMany(Playlist, { through: PlaylistMusic, foreignKey: 'musicId'}); 
 
-module.exports = { User, Album, Music, Playlist, PlaylistMusic };
+User.hasMany(UserFollow, { foreignKey: "userId" });
+UserFollow.belongsTo(User, { foreignKey: "userId" });
+
+Album.hasMany(UserFollow, { foreignKey: "followId", constraints: false });
+UserFollow.belongsTo(Album, { foreignKey: "followId", constraints: false });
+
+module.exports = { User, Album, Music, Playlist, PlaylistMusic, UserFollow };

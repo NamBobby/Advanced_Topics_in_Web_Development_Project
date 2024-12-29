@@ -8,7 +8,7 @@ import "../assets/styles/header.css";
 const Header = () => {
   const navigate = useNavigate();
   const { auth, setAuth } = useContext(AuthContext);
-  console.log(">>> Check auth", auth);
+  //console.log(">>> Check auth", auth);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
@@ -28,6 +28,7 @@ const Header = () => {
 
     setAuth({ isAuthenticated: false, user: { email: "", name: "" } });
     notification.success({ message: "Logout Successful" });
+    window.location.reload();
     navigate("/");
   };
 

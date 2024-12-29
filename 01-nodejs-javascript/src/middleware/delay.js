@@ -4,10 +4,10 @@ const delaymodule = (req, res, next) => {
 
         if ( req.headers.authorization){
             const token = req.headers.authorization.split(' ')[1];
-            console.log(">>> check token:", token)
+            //console.log(">>> check token:", token)
         }
         next()
-    }, 2000)
+    }, 250)
 }
 
 module.exports = delaymodule;

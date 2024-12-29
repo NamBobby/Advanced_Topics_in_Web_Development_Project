@@ -72,6 +72,7 @@ p {
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(30, 215, 96, 0.8);
+  z-index: 1;
 }
 
 .avatar-image {
@@ -94,6 +95,7 @@ p {
   text-align: center;
   border: none;
   cursor: pointer;
+  z-index: 2;
 }
 
 .avatar-upload-button:hover {
@@ -102,7 +104,7 @@ p {
 }
 
 .avatar-frame:hover .avatar-upload-button {
-  display: block;
+  display: block !important;
 }
 
 .user-account-form .ant-input,

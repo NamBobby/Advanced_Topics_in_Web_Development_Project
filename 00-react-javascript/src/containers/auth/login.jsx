@@ -36,6 +36,9 @@ const LoginPage = () => {
           },
         });
 
+        // Notify sidebar to refresh followed items
+        window.dispatchEvent(new Event("authUpdate"));
+
         // Điều hướng về "/"
         navigate("/");
 

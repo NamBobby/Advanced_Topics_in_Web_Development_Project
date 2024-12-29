@@ -1,152 +1,162 @@
 import axios from './axios.customize';
 
 // User APIs
-const createUserApi = (name, email, password, dateOfBirth, gender) => {
+const createUserApi = async (name, email, password, dateOfBirth, gender) => {
   const URL_API = '/v1/api/register';
   const data = { name, email, password, dateOfBirth, gender };
-  return axios.post(URL_API, data);
+  return await axios.post(URL_API, data);
 };
 
-const LoginApi = (email, password) => {
+const LoginApi = async (email, password) => {
   const URL_API = '/v1/api/login';
   const data = { email, password };
-  return axios.post(URL_API, data);
+  return await axios.post(URL_API, data);
 };
 
-const getUserApi = () => {
+const getUserApi = async () => {
   const URL_API = '/v1/api/user';
-  return axios.get(URL_API);
+  return await axios.get(URL_API);
 };
 
-const updateUserApi = (id, userData) => {
+const updateUserApi = async (id, userData) => {
   const URL_API = `/v1/api/profile`;
-  return axios.patch(URL_API, userData);
+  return await axios.patch(URL_API, userData);
 };
 
-const updatePasswordApi = (id, passwordData) => {
+const updatePasswordApi = async (id, passwordData) => {
   const URL_API = `/v1/api/password`;
-  return axios.patch(URL_API, passwordData);
+  return await axios.patch(URL_API, passwordData);
 };
 
-const getAccountApi = () => {
+const getAccountApi = async () => {
   const URL_API = '/v1/api/account';
-  return axios.get(URL_API);
+  return await axios.get(URL_API);
 };
 
-const sendOtpApi = (data) => {
+const sendOtpApi = async (data) => {
   const URL_API = '/v1/api/sendotp';
-  return axios.post(URL_API, data);
+  return await axios.post(URL_API, data);
 };
 
-const verifyOtpApi = (otpData) => {
+const verifyOtpApi = async (otpData) => {
   const URL_API = '/v1/api/verifyotp';
-  return axios.post(URL_API, otpData);
+  return await axios.post(URL_API, otpData);
 };
 
-const sendEmailApi = (emailData) => {
-  const URL_API = '/v1/api/sendemail';
-  return axios.post(URL_API, emailData);
+const followApi = async (data) => {
+  const URL_API = "/v1/api/follow";
+  return await axios.post(URL_API, data);
+};
+
+const getFollowedItemsApi = async () => {
+  const URL_API = "/v1/api/followed-items";
+  return await axios.get(URL_API);
+};
+
+const unfollowApi = async (data) => {
+  const URL_API = "/v1/api/unfollow";
+  return await axios.post(URL_API, data);
 };
 
 // Playlist APIs
-const createPlaylistApi = (playlistData) => {
+const createPlaylistApi = async (playlistData) => {
   const URL_API = '/v1/api/create-playlist';
-  return axios.post(URL_API, playlistData);
+  return await axios.post(URL_API, playlistData);
 };
 
-const getPlaylistsApi = () => {
+const getPlaylistsApi = async () => {
   const URL_API = '/v1/api/playlists';
-  return axios.get(URL_API);
+  return await axios.get(URL_API);
 };
 
-const addMusicToPlaylistApi = (data) => {
+const addMusicToPlaylistApi = async (data) => {
   const URL_API = '/v1/api/add-music-to-playlist';
-  return axios.post(URL_API, data);
+  return await axios.post(URL_API, data);
 };
 
-const removeMusicFromPlaylistApi = (data) => {
+const removeMusicFromPlaylistApi = async (data) => {
   const URL_API = '/v1/api/remove-music-from-playlist';
-  return axios.post(URL_API, data);
+  return await axios.post(URL_API, data);
 };
 
-const deletePlaylistApi = (id) => {
+const deletePlaylistApi = async (id) => {
   const URL_API = `/v1/api/delete-playlist/${id}`;
-  return axios.delete(URL_API);
+  return await axios.delete(URL_API);
 };
 
-const getMusicInPlaylistApi = (data) => {
+const getMusicInPlaylistApi = async (data) => {
   const URL_API = '/v1/api/playlists/music';
-  return axios.post(URL_API, data);
+  return await axios.post(URL_API, data);
 };
 
 // Music APIs
-const getMusicsApi = () => {
+const getMusicsApi = async () => {
   const URL_API = '/v1/api/musics';
-  return axios.get(URL_API);
+  return await axios.get(URL_API);
 };
 
 // Album APIs
-const getAlbumsApi = () => {
+const getAlbumsApi = async () => {
   const URL_API = '/v1/api/albums';
-  return axios.get(URL_API);
+  return await axios.get(URL_API);
 };
 
-const createAlbumApi = (albumData) => {
+const createAlbumApi = async (albumData) => {
   const URL_API = '/v1/api/create-album';
-  return axios.post(URL_API, albumData);
+  return await axios.post(URL_API, albumData);
 };
 
-const addMusicToAlbumApi = (data) => {
+const addMusicToAlbumApi = async (data) => {
   const URL_API = '/v1/api/add-music-to-album';
-  return axios.post(URL_API, data);
+  return await axios.post(URL_API, data);
 };
 
-const removeMusicFromAlbumApi = (data) => {
+const removeMusicFromAlbumApi = async (data) => {
   const URL_API = '/v1/api/remove-music-from-album';
-  return axios.post(URL_API, data);
+  return await axios.post(URL_API, data);
 };
 
-const deleteAlbumApi = (id) => {
+const deleteAlbumApi = async (id) => {
   const URL_API = `/v1/api/delete-album/${id}`;
-  return axios.delete(URL_API);
+  return await axios.delete(URL_API);
 };
 
-const getUserAlbumsApi = () => {
+const getUserAlbumsApi = async () => {
   const URL_API = '/v1/api/albums/artist';
-  return axios.post(URL_API);
+  return await axios.post(URL_API);
 };
 
-const getMusicInAlbumApi = (data) => {
+const getMusicInAlbumApi = async (data) => {
   const URL_API = '/v1/api/albums/music'; 
-  return axios.post(URL_API, data); 
+  return await axios.post(URL_API, data); 
 };
 
 // Search API
-const searchMusicApi = (query) => {
+const searchMusicApi = async (query) => {
   const URL_API = '/v1/api/search/music';
-  return axios.post(URL_API, query);
+  return await axios.post(URL_API, query);
 };
 
 // Artist APIs
-const uploadMusicApi = (musicData) => {
+const uploadMusicApi = async (musicData) => {
   const URL_API = '/v1/api/upload-music';
-  return axios.post(URL_API, musicData);
+  return await axios.post(URL_API, musicData);
 };
 
-const deleteMusicApi = (id) => {
+const deleteMusicApi = async (id) => {
   const URL_API = `/v1/api/music/${id}`;
-  return axios.delete(URL_API);
+  return await axios.delete(URL_API);
 };
 
 // Admin APIs
-const createUserByAdminApi = (data) => {
+const createUserByAdminApi = async (data) => {
   const URL_API = '/v1/api/createuser';
-  return axios.post(URL_API, data);
+  return await axios.post(URL_API, data);
 };
 
-const deleteAccountApi = (data) => {
+const deleteAccountApi = async (data) => {
   const URL_API = '/v1/api/deleteaccount';
-  return axios.post(URL_API, data);
+  return await axios.post(URL_API, data);
 };
 
 export {
@@ -159,7 +169,9 @@ export {
   getAccountApi,
   sendOtpApi,
   verifyOtpApi,
-  sendEmailApi,
+  followApi, 
+  getFollowedItemsApi,
+  unfollowApi,
 
   // Playlist APIs
   createPlaylistApi,

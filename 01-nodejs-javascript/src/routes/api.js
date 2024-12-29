@@ -18,6 +18,9 @@ const {
   searchMusic,
   getUser,
   getAlbums,
+  followItem,
+  getFollowedItems,
+  unfollowItem
 } = require("../controllers/userController");
 const auth = require("../middleware/auth");
 const delaymodule = require("../middleware/delay");
@@ -43,12 +46,12 @@ routerAPI.all("*", auth);
 routerAPI.get("/", getHomepage);
 
 // Admin routes
-routerAPI.post("/createuser", createUser);
+routerAPI.post("/createuser", delaymodule, createUser);
 routerAPI.post("/deleteaccount", deleteUser);
 
 
 // Artist routes
-routerAPI.post("/upload-music", uploadMusical);
+routerAPI.post("/upload-music", delaymodule, uploadMusical);
 routerAPI.post("/create-album", createAlbum);
 routerAPI.delete('/music/:id', deleteMusic);
 routerAPI.post("/add-music-to-album", addMusicToAlbum);
@@ -56,24 +59,27 @@ routerAPI.post("/remove-music-from-album", removeMusicFromAlbum);
 routerAPI.delete("/delete-album/:id", deleteAlbum);
 
 // User routes
-routerAPI.post("/register", UserRegister);
-routerAPI.post("/login", handleLogin);
+routerAPI.post("/register",delaymodule, UserRegister);
+routerAPI.post("/login",delaymodule, handleLogin);
 routerAPI.get("/account", delaymodule, getAccount);
-routerAPI.post("/sendotp", sendOtp);
+routerAPI.post("/sendotp",delaymodule, sendOtp);
 routerAPI.post("/verifyotp", delaymodule, verifyOtp);
 routerAPI.post("/sendemail", SendEmail);
 routerAPI.patch("/profile", upload, delaymodule, updateUser);
 routerAPI.patch("/password", delaymodule, updatePassword);
 routerAPI.post("/create-playlist", createPlaylist);
-routerAPI.get("/playlists", getPlaylists);
-routerAPI.get("/musics", getMusics);
-routerAPI.get("/albums", getAlbums);
+routerAPI.get("/playlists",delaymodule, getPlaylists);
+routerAPI.get("/musics",delaymodule, getMusics);
+routerAPI.get("/albums",delaymodule, getAlbums);
 routerAPI.post("/add-music-to-playlist", addMusicToPlaylist);
 routerAPI.post("/remove-music-from-playlist", removeMusicFromPlaylist);
 routerAPI.delete("/delete-playlist/:id", deletePlaylist);
-routerAPI.post("/playlists/music", getMusicInPlaylist);
-routerAPI.post("/albums/music", getMusicInAlbum);
-routerAPI.post("/search/music", searchMusic);
+routerAPI.post("/playlists/music",delaymodule, getMusicInPlaylist);
+routerAPI.post("/albums/music", delaymodule, getMusicInAlbum);
+routerAPI.post("/search/music",delaymodule, searchMusic);
 routerAPI.get("/user", getUser);
+routerAPI.post("/follow",delaymodule, followItem);
+routerAPI.get("/followed-items", getFollowedItems);
+routerAPI.post("/unfollow",delaymodule, unfollowItem);
 
 module.exports = routerAPI; //export default

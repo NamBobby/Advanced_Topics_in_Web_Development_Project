@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   ArrowLeftOutlined,
   UnorderedListOutlined,
@@ -6,17 +6,65 @@ import {
   CaretRightOutlined,
 } from "@ant-design/icons";
 import "../assets/styles/sider.css";
+import { useNavigate } from "react-router-dom";
+import { getFollowedItemsApi, getPlaylistsApi } from "../services/apiService";
+import { AuthContext } from "../components/auth.context";
+import axios from "../services/axios.customize";
 
 const SiderBar = () => {
-  const [isExpanded, setIsExpanded] = useState(true); // Trạng thái mở rộng/thu nhỏ
-  const sidebarWidth = isExpanded ? 300 : 110; // Độ rộng cố định
+  const [isExpanded, setIsExpanded] = useState(true);
+  const sidebarWidth = isExpanded ? 300 : 110;
+  const [playlists, setPlaylists] = useState([]);
+  const [followedArtists, setFollowedArtists] = useState([]);
+  const [followedAlbums, setFollowedAlbums] = useState([]);
+  const [hoveredItem, setHoveredItem] = useState({ list: null, index: null });
+  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleToggle = () => {
-    setIsExpanded(!isExpanded); // Đổi trạng thái
+    setIsExpanded(!isExpanded);
   };
 
-  const [hoveredItem, setHoveredItem] = useState({ list: null, index: null });
-  
+  // Fetch playlists and followed items
+  useEffect(() => {
+    const fetchSidebarData = async () => {
+      if (!auth.isAuthenticated) {
+        setPlaylists([]);
+        setFollowedArtists([]);
+        setFollowedAlbums([]);
+        return;
+      }
+
+      try {
+        const playlistsResponse = await getPlaylistsApi();
+        setPlaylists(playlistsResponse || []);
+
+        const followedItemsResponse = await getFollowedItemsApi();
+        const followedItems = followedItemsResponse.followedItems || [];
+
+        setFollowedArtists(
+          followedItems.filter((item) => item.followType === "Artist")
+        );
+        setFollowedAlbums(
+          followedItems.filter((item) => item.followType === "Album")
+        );
+      } catch (error) {
+        console.error("Error fetching sidebar data:", error);
+      }
+    };
+
+    fetchSidebarData(); // Initial fetch on component mount
+
+    const handleAuthUpdate = () => {
+      fetchSidebarData();
+    };
+
+    window.addEventListener("authUpdate", handleAuthUpdate);
+
+    return () => {
+      window.removeEventListener("authUpdate", handleAuthUpdate);
+    };
+  }, [auth.isAuthenticated]);
 
   const handleMouseEnter = (listName, index) => {
     setHoveredItem({ list: listName, index });
@@ -29,40 +77,17 @@ const SiderBar = () => {
   const isHovered = (listName, index) =>
     hoveredItem.list === listName && hoveredItem.index === index;
 
-  
-
-  const albums = [
-    {
-      img: "",
-      title: "B Ray Mix",
-    },
-    {
-      img: "https://i.ytimg.com/vi/7u4g483WTzw/maxresdefault.jpg",
-      title: "Upbeat Mix",
-    },
-  ];
-
-  const playlists = [
-    {
-      img: "https://i1.sndcdn.com/artworks-JriKS1DyZJ5jOzOn-1NCPkg-t500x500.jpg",
-      title: "B Ray Mix",
-    },
-    {
-      img: "https://i.ytimg.com/vi/7u4g483WTzw/maxresdefault.jpg",
-      title: "Upbeat Mix",
-    },
-  ];
-
-  const artists = [
-    {
-      img: "",
-      name: "Vũ Cát Tường",
-    },
-    {
-      img: "https://vcdn1-giaitri.vnecdn.net/2024/07/13/mck2-6299-1720843087-172084518-4401-4174-1720845590.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=ttvHeCbAZ-Cj2wkxTz416Q",
-      name: "RPT MCK",
-    },
-  ];
+  const handleItemClick = (type, item) => {
+    if (type === "Album") {
+      const albumName = item.name.replace(/\s+/g, "-").toLowerCase();
+      navigate(`/album/${albumName}`, { state: { album: item } });
+    } else if (type === "Artist") {
+      navigate(`/artist/${item.followId}`, { state: { artist: item } });
+    } else if (type === "Playlist") {
+      const playlistName = item.name.replace(/\s+/g, "-").toLowerCase();
+      navigate(`/playlist/${playlistName}`, { state: { playlist: item } });
+    }
+  };  
 
   return (
     <div className="slider-bar" style={{ width: `${sidebarWidth}px` }}>
@@ -70,8 +95,8 @@ const SiderBar = () => {
         <div className="slider-bar-wrapper">
           <div className="library" onClick={handleToggle}>
             <div className="library-content">Your Library</div>
-            {/* Nút Toggle */}
-            <div className="slider-bar-toggle-button" onClick={handleToggle}>
+            {/* Toggle Buttons */}
+            <div className="slider-bar-toggle-button">
               <div className="slider-bar-toggle-icon">
                 <PlusOutlined />
               </div>
@@ -82,129 +107,156 @@ const SiderBar = () => {
               </div>
             </div>
           </div>
-          {/* Nội dung Sidebar */}
+          {/* Sidebar Content */}
           <div className="slider-bar-content">
-            <div className="slider-bar-lists">
-              {playlists.map((playlist, playlistid) => (
-                <div
-                  key={playlistid}
-                  className="slider-bar-list"
-                  onMouseEnter={() => handleMouseEnter("playlists", playlistid)}
-                  onMouseLeave={handleMouseLeave}>
-                  {playlist.img ? (
-                    <img
-                      src={playlist.img}
-                      alt={playlist.title}
-                      className="slider-bar-image"
-                    />
-                  ) : (
-                    <div className="slider-bar-placeholder">
-                      <CaretRightOutlined className="slider-bar-placeholder-icon" />
-                    </div>
-                  )}
-                  <div className="slider-bar-info">
-                    <div className="slider-bar-name">{playlist.title}</div>
-                    <div className="slider-bar-role">Playlist</div>
-                  </div>
-                  {isHovered("playlists", playlistid) && (
-                    <div className="slider-bar-icon">
-                      <div className="slider-bar-hover-icon">
-                        <CaretRightOutlined />
+            {auth.isAuthenticated ? (
+              <>
+                <div className="slider-bar-lists">
+                  {playlists.map((playlist) => (
+                    <div
+                      key={playlist.id}
+                      className="slider-bar-list"
+                      onMouseEnter={() =>
+                        handleMouseEnter("playlists", playlist.id)
+                      }
+                      onMouseLeave={handleMouseLeave}
+                      onClick={() => handleItemClick("Playlist", playlist)}>
+                      <img
+                        src={
+                          playlist.thumbnailPath
+                            ? `${
+                                axios.defaults.baseURL
+                              }/${playlist.thumbnailPath.replace(
+                                /^src[\\/]/,
+                                ""
+                              )}`
+                            : "https://via.placeholder.com/400"
+                        }
+                        alt="PLaylist thumbnail"
+                        className="slider-bar-image"
+                      />
+                      <div className="slider-bar-info">
+                        <div className="slider-bar-name">{playlist.name}</div>
+                        <div className="slider-bar-role">Playlist</div>
                       </div>
+                      {isHovered("playlists", playlist.id) && (
+                        <div className="slider-bar-icon">
+                          <div className="slider-bar-hover-icon">
+                            <CaretRightOutlined />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="slider-bar-lists">
-              {albums.map((album, albumid) => (
-                <div
-                  key={albumid}
-                  className="slider-bar-list"
-                  onMouseEnter={() => handleMouseEnter("albums", albumid)}
-                  onMouseLeave={handleMouseLeave}>
-                  {album.img ? (
-                    <img
-                      src={album.img}
-                      alt={album.title}
-                      className="slider-bar-image"
-                    />
-                  ) : (
-                    <div className="slider-bar-placeholder">
-                      <CaretRightOutlined className="slider-bar-placeholder-icon" />
-                    </div>
-                  )}
-                  <div className="slider-bar-info">
-                    <div className="slider-bar-name">{album.title}</div>
-                    <div className="slider-bar-role">Album</div>
-                  </div>
-                  {isHovered("albums", albumid) && (
-                    <div className="slider-bar-icon">
-                      <div className="slider-bar-hover-icon">
-                        <CaretRightOutlined />
+
+                <div className="slider-bar-lists">
+                  {followedArtists.map((artist) => (
+                    <div
+                      key={artist.followId}
+                      className="slider-bar-list"
+                      onMouseEnter={() =>
+                        handleMouseEnter("followedArtists", artist.followId)
+                      }
+                      onMouseLeave={handleMouseLeave}
+                      onClick={() =>
+                        handleItemClick("Artist", artist)
+                      }>
+                      <img
+                        src={
+                          artist.thumbnailPath 
+                            ? `${
+                                axios.defaults.baseURL
+                              }/uploads/${artist.thumbnailPath.replace(
+                                /^src[\\/]/,
+                                ""
+                              )}`
+                            : "https://via.placeholder.com/100"
+                        }
+                        alt={artist.name}
+                        className="slider-bar-artist-image"
+                      />
+                      <div className="slider-bar-artist-info">
+                        <div className="slider-bar-artist-name">
+                          {artist.name}
+                        </div>
+                        <div className="slider-bar-artist-role">Artist</div>
                       </div>
+                      {isHovered("followedArtists", artist.followId) && (
+                        <div className="slider-bar-artist-icon">
+                          <div className="slider-bar-artist-hover-icon">
+                            <CaretRightOutlined />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="slider-bar-lists">
-              {artists.map((artist, artistid) => (
-                <div
-                  key={artistid}
-                  className="slider-bar-list"
-                  onMouseEnter={() => handleMouseEnter("artists", artistid)}
-                  onMouseLeave={handleMouseLeave}>
-                  {artist.img ? (
-                    <img
-                      src={artist.img}
-                      alt={artist.title}
-                      className="slider-bar-artist-image"
-                    />
-                  ) : (
-                    <div className="slider-bar-artist-placeholder">
-                      <CaretRightOutlined className="slider-bar-artist-placeholder-icon" />
-                    </div>
-                  )}
-                  <div className="slider-bar-artist-info">
-                    <div className="slider-bar-artist-name">{artist.name}</div>
-                    <div className="slider-bar-artist-role">Artist</div>
-                  </div>
-                  {isHovered("artists", artistid) && (
-                    <div className="slider-bar-artist-icon">
-                      <div className="slider-bar-artist-hover-icon">
-                        <CaretRightOutlined />
+
+                <div className="slider-bar-lists">
+                  {followedAlbums.map((album) => (
+                    <div
+                      key={album.followId}
+                      className="slider-bar-list"
+                      onMouseEnter={() =>
+                        handleMouseEnter("followedItems", album.followId)
+                      }
+                      onMouseLeave={handleMouseLeave}
+                      onClick={() =>
+                        handleItemClick("Album", album)
+                      }>
+                      <img
+                        src={
+                          album.thumbnailPath
+                            ? `${
+                                axios.defaults.baseURL
+                              }/${album.thumbnailPath.replace(/^src[\\/]/, "")}`
+                            : "https://via.placeholder.com/400"
+                        }
+                        alt="Album thumbnail"
+                        className="slider-bar-image"
+                      />
+                      <div className="slider-bar-info">
+                        <div className="slider-bar-name">{album.name}</div>
+                        <div className="slider-bar-role">Album</div>
                       </div>
+                      {isHovered("followedAlbums", album.followId) && (
+                        <div className="slider-bar-icon">
+                          <div className="slider-bar-hover-icon">
+                            <CaretRightOutlined />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            ) : (
+              <div className="slider-bar-placeholder-message">
+                Please log in to see your library.
+              </div>
+            )}
           </div>
         </div>
       ) : (
         <div className="slider-bar-wrapper">
-          <div 
-            className="library"
-            onClick={handleToggle}
-          >
-            {/* Nút Toggle */}
+          <div className="library" onClick={handleToggle}>
+            {/* Toggle Button */}
             <div
               className="slider-bar-toggle-button"
-              onClick={handleToggle}
               onMouseEnter={() => setHoveredItem({ list: "toggle", index: 0 })}
               onMouseLeave={handleMouseLeave}
               style={{
                 width: "60px",
                 height: "60px",
                 backgroundColor: isHovered("toggle", 0)
-                ? "rgba(255, 255, 255, 0.3)"
-                : "rgba(74, 74, 74, 0.3)",
+                  ? "rgba(255, 255, 255, 0.3)"
+                  : "rgba(74, 74, 74, 0.3)",
                 transform: "translate(-50%, -50%)",
                 borderRadius: "10px",
                 transition: "background-color 0.3s ease",
                 marginLeft: "30px",
-                marginTop: "45px"
+                marginTop: "45px",
               }}>
               <div
                 className="slider-bar-toggle-icon"
@@ -216,28 +268,31 @@ const SiderBar = () => {
               </div>
             </div>
           </div>
-          {/* Nội dung Sidebar */}
+          {/* Collapsed Sidebar Content */}
           <div className="slider-bar-content">
             <div className="slider-bar-lists">
-              {playlists.map((playlist, playlistid) => (
+              {playlists.map((playlist) => (
                 <div
-                  key={playlistid}
+                  key={playlist.id}
                   className="slider-bar-list"
                   style={{ width: "70px" }}
-                  onMouseEnter={() => handleMouseEnter("playlists", playlistid)}
-                  onMouseLeave={handleMouseLeave}>
-                  {playlist.img ? (
-                    <img
-                      src={playlist.img}
-                      alt={playlist.title}
-                      className="slider-bar-image"
-                    />
-                  ) : (
-                    <div className="slider-bar-placeholder">
-                      <CaretRightOutlined className="slider-bar-placeholder-icon" />
-                    </div>
-                  )}
-                  {isHovered("playlists", playlistid) && (
+                  onMouseEnter={() =>
+                    handleMouseEnter("playlists", playlist.id)
+                  }
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleItemClick("Playlist", playlist)}>
+                  <img
+                    src={
+                      playlist.thumbnailPath
+                        ? `${
+                            axios.defaults.baseURL
+                          }/${playlist.thumbnailPath.replace(/^src[\\/]/, "")}`
+                        : "https://via.placeholder.com/400"
+                    }
+                    alt="PLaylist thumbnail"
+                    className="slider-bar-image"
+                  />
+                  {isHovered("playlists", playlist.id) && (
                     <div className="slider-bar-icon" style={{ left: "50%" }}>
                       <div className="slider-bar-hover-icon">
                         <CaretRightOutlined />
@@ -248,58 +303,72 @@ const SiderBar = () => {
               ))}
             </div>
             <div className="slider-bar-lists">
-              {albums.map((album, albumid) => (
+              {followedArtists.map((artist) => (
                 <div
-                  key={albumid}
+                  key={artist.followId}
                   className="slider-bar-list"
                   style={{ width: "70px" }}
-                  onMouseEnter={() => handleMouseEnter("albums", albumid)}
-                  onMouseLeave={handleMouseLeave}>
-                  {album.img ? (
-                    <img
-                      src={album.img}
-                      alt={album.title}
-                      className="slider-bar-image"
-                    />
-                  ) : (
-                    <div className="slider-bar-placeholder">
-                      <CaretRightOutlined className="slider-bar-placeholder-icon" />
-                    </div>
-                  )}
-                  {isHovered("albums", albumid) && (
-                    <div className="slider-bar-icon" style={{ left: "50%" }}>
-                      <div className="slider-bar-hover-icon">
-                        <CaretRightOutlined />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="slider-bar-lists">
-              {artists.map((artist, artistid) => (
-                <div
-                  key={artistid}
-                  className="slider-bar-list"
-                  style={{ width: "70px" }}
-                  onMouseEnter={() => handleMouseEnter("artists", artistid)}
-                  onMouseLeave={handleMouseLeave}>
-                  {artist.img ? (
-                    <img
-                      src={artist.img}
-                      alt={artist.title}
-                      className="slider-bar-artist-image"
-                    />
-                  ) : (
-                    <div className="slider-bar-artist-placeholder">
-                      <CaretRightOutlined className="slider-bar-artist-placeholder-icon" />
-                    </div>
-                  )}
-                  {isHovered("artists", artistid) && (
+                  onMouseEnter={() =>
+                    handleMouseEnter("followedArtists", artist.followId)
+                  }
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() =>
+                    handleItemClick("Artist", artist)
+                  }>
+                  <img
+                    src={
+                      artist.thumbnailPath 
+                        ? `${
+                            axios.defaults.baseURL
+                          }/uploads/${artist.thumbnailPath.replace(
+                            /^src[\\/]/,
+                            ""
+                          )}`
+                        : "https://via.placeholder.com/100"
+                    }
+                    alt={artist.name}
+                    className="slider-bar-artist-image"
+                  />
+                  {isHovered("followedArtists", artist.followId) && (
                     <div
                       className="slider-bar-artist-icon"
                       style={{ left: "50%" }}>
                       <div className="slider-bar-artist-hover-icon">
+                        <CaretRightOutlined />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="slider-bar-lists">
+              {followedAlbums.map((album) => (
+                <div
+                  key={album.followId}
+                  className="slider-bar-list"
+                  style={{ width: "70px" }}
+                  onMouseEnter={() =>
+                    handleMouseEnter("followedAlbums", album.followId)
+                  }
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() =>
+                    handleItemClick("Album", album)
+                  }>
+                  <img
+                    src={
+                      album.thumbnailPath
+                        ? `${
+                            axios.defaults.baseURL
+                          }/${album.thumbnailPath.replace(/^src[\\/]/, "")}`
+                        : "https://via.placeholder.com/400"
+                    }
+                    alt="Album thumbnail"
+                    className="slider-bar-image"
+                  />
+                  {isHovered("followedAlbums", album.followId) && (
+                    <div className="slider-bar-icon" style={{ left: "50%" }}>
+                      <div className="slider-bar-hover-icon">
                         <CaretRightOutlined />
                       </div>
                     </div>

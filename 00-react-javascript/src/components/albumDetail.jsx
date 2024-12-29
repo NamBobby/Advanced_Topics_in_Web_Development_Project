@@ -4,6 +4,7 @@ import { CaretRightOutlined, LeftOutlined } from "@ant-design/icons";
 import "../assets/styles/albumDetail.css";
 import axios from "../services/axios.customize";
 import { getAlbumsApi, getMusicInAlbumApi } from "../services/apiService";
+import FollowButton from "../components/followButton";
 
 const AlbumDetail = () => {
   const { title } = useParams(); // Extract album name from URL
@@ -12,7 +13,6 @@ const AlbumDetail = () => {
   const [songs, setSongs] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(5);
-  const [expanded, setExpanded] = useState(false);
   const [durations, setDurations] = useState({});
   const [loading, setLoading] = useState(true);
   const { setCurrentSong, setSongList } = useOutletContext();
@@ -109,6 +109,7 @@ const AlbumDetail = () => {
             onClick={() => handleArtistClick(album.artist)}>
             <h2>{album.artist}</h2>
           </div>
+          <FollowButton followType="Album" followId={album.id} />
         </div>
       </div>
       <div className="albumdetail-content">

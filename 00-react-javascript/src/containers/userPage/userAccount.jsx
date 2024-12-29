@@ -96,20 +96,21 @@ const UserAccount = () => {
 
   // Handle avatar upload
   const handleAvatarChange = (info) => {
-    console.log("Avatar Info:", info); // Kiểm tra thông tin file
-    const file = info.file; // Sử dụng trực tiếp info.file
+    const file = info.file;
 
     if (file) {
       if (file.type.startsWith("image/")) {
-        // Kiểm tra tệp có phải là ảnh không
-        setAvatarFile(file); // Lưu tệp vào state
+        console.log("Avatar Info:", file); // Debug log
 
-        // Sử dụng FileReader để tạo preview
+        setAvatarFile(file);
+
+        // Generate preview
         const reader = new FileReader();
         reader.onload = (e) => {
-          setAvatarPreview(e.target.result); // Hiển thị preview tạm thời
+          console.log("Preview URL:", e.target.result); // Debug preview URL
+          setAvatarPreview(e.target.result); // Update state with preview URL
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(file); // Convert file to base64 URL
       } else {
         notification.error({
           message: "Invalid File",
@@ -117,7 +118,7 @@ const UserAccount = () => {
         });
       }
     } else {
-      console.error("File is not valid:", file);
+      console.error("No valid file selected:", file);
     }
   };
 
@@ -128,7 +129,7 @@ const UserAccount = () => {
       const formData = new FormData();
 
       if (avatarFile) {
-        formData.append("avatar", avatarFile);
+        formData.append("avatar", avatarFile); // Append new avatar file
       }
 
       const formattedDate = `${values.year}-${values.month
@@ -137,18 +138,23 @@ const UserAccount = () => {
       formData.append("dateOfBirth", formattedDate);
       formData.append("gender", values.gender);
 
+      // Update user profile
       await updateUserApi(userData.id, formData);
       notification.success({
         message: "Success",
         description: "Profile updated successfully!",
       });
 
+      // Fetch updated user data
       const updatedUser = await getAccountApi();
       if (updatedUser && Array.isArray(updatedUser) && updatedUser.length > 0) {
-        setUserData(updatedUser[0]);
-        if (updatedUser[0].avatarPath) {
+        const newUser = updatedUser[0];
+        setUserData(newUser);
+
+        // Update avatarPreview with the new avatar path
+        if (newUser.avatarPath) {
           setAvatarPreview(
-            `${axios.defaults.baseURL}/${updatedUser[0].avatarPath.replace(
+            `${axios.defaults.baseURL}/uploads/${newUser.avatarPath.replace(
               /^src[\\/]/,
               ""
             )}`
@@ -223,9 +229,12 @@ const UserAccount = () => {
             <div className="avatar-frame">
               <img
                 src={
-                  userData.avatarPath
-                    ? avatarPreview
-                    : "https://via.placeholder.com/100"
+                  avatarPreview ||
+                  (userData.avatarPath
+                    ? `${
+                        axios.defaults.baseURL
+                      }/uploads/${userData.avatarPath.replace(/^src[\\/]/, "")}`
+                    : "https://via.placeholder.com/100")
                 }
                 alt="Avatar"
                 className="avatar-image"
@@ -243,33 +252,35 @@ const UserAccount = () => {
             </div>
           </div>
           <Form form={form} layout="vertical" className="useraccount-form">
-            <Form.Item label="Username" name="name">
+            <Form.Item label="Username" name="name" id="username">
               <Input
                 placeholder="Username"
                 readOnly
                 className="readonly-input"
+                autoComplete="username"
               />
             </Form.Item>
-            <Form.Item label="Email" name="email">
-              <Input placeholder="Email" readOnly className="readonly-input" />
+            <Form.Item label="Email" name="email" id="email">
+              <Input
+                placeholder="Email"
+                readOnly
+                className="readonly-input"
+                autoComplete="email"
+              />
             </Form.Item>
-            <Form.Item label="Role" name="role">
-              <Input placeholder="Role" readOnly className="readonly-input" />
+            <Form.Item label="Role" name="role" id="role">
+              <Input
+                placeholder="Role"
+                readOnly
+                className="readonly-input"
+                autoComplete="off"
+              />
             </Form.Item>
-            <Form.Item
-              label="Date of Birth"
-              name="dateOfBirth"
-              required
-              rules={[
-                {
-                  required: true,
-                  message: "Please select your date of birth!",
-                },
-              ]}>
+            <Form.Item label="Date of Birth" required>
               <Row gutter={8}>
                 <Col span={8}>
-                  <Form.Item name="day" noStyle>
-                    <Select placeholder="Day">
+                  <Form.Item name="day" id="dob-day" noStyle>
+                    <Select placeholder="Day" autoComplete="bday-day">
                       {days.map((day) => (
                         <Select.Option key={day} value={day}>
                           {day}
@@ -279,8 +290,8 @@ const UserAccount = () => {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item name="month" noStyle>
-                    <Select placeholder="Month">
+                  <Form.Item name="month" id="dob-month" noStyle>
+                    <Select placeholder="Month" autoComplete="bday-month">
                       {months.map((month, index) => (
                         <Select.Option key={index + 1} value={index + 1}>
                           {month}
@@ -292,28 +303,38 @@ const UserAccount = () => {
                 <Col span={8}>
                   <Form.Item
                     name="year"
+                    id="dob-year"
                     noStyle
                     rules={[
+                      { required: true, message: "Please enter a valid year!" },
                       {
-                        required: true,
-                        message: "Please enter a valid year!",
-                      },
-                      {
-                        pattern: /^(19\d{2}|20(0\d|1\d|2[0-4]))$/,
+                        pattern: /^(19\\d{2}|20(0\\d|1\\d|2[0-4]))$/,
                         message: "Year must be between 1900 and 2024!",
                       },
                     ]}>
-                    <Input type="number" placeholder="Year" />
+                    <Input
+                      type="number"
+                      placeholder="Year"
+                      autoComplete="bday-year"
+                    />
                   </Form.Item>
                 </Col>
               </Row>
             </Form.Item>
-            <Form.Item label="Gender" name="gender">
-              <Radio.Group>
-                <Radio value="Man">Man</Radio>
-                <Radio value="Woman">Woman</Radio>
-                <Radio value="Something else">Something else</Radio>
-                <Radio value="Prefer not to say">Prefer not to say</Radio>
+            <Form.Item label="Gender" required>
+              <Radio.Group id="gender">
+                <Radio value="Man" id="gender-man">
+                  Man
+                </Radio>
+                <Radio value="Woman" id="gender-woman">
+                  Woman
+                </Radio>
+                <Radio value="Something else" id="gender-other">
+                  Something else
+                </Radio>
+                <Radio value="Prefer not to say" id="gender-prefer-not-to-say">
+                  Prefer not to say
+                </Radio>
               </Radio.Group>
             </Form.Item>
             <Form.Item>
@@ -325,6 +346,7 @@ const UserAccount = () => {
               </Button>
             </Form.Item>
           </Form>
+
           <Divider />
           <Form
             form={passwordForm}

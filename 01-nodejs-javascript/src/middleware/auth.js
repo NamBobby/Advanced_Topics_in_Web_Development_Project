@@ -28,7 +28,7 @@ const auth = async (req, res, next) => {
           role: user.role,
         };
 
-        console.log(">>> check auth: ", req.user);
+        //console.log(">>> check auth: ", req.user);
         next();
       } catch (error) {
         return res.status(401).json({ message: "TokenExpired/Error" });

@@ -1,0 +1,31 @@
+.follow-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  
+  .follow-button.follow {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+  }
+  
+  .follow-button.follow:hover {
+    background-color: #e6e6e6;
+  }
+  
+  .follow-button.following {
+    background-color: #4caf50;
+    color: #fff;
+    border: 1px solid #4caf50;
+  }
+  
+  .follow-button.following:hover {
+    background-color: #45a049;
+  }
+  

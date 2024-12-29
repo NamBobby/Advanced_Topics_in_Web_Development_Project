@@ -11,13 +11,20 @@ const {
   Playlist,
   Music,
   PlaylistMusic,
+  UserFollow,
 } = require("../models/associations");
 const fs = require("fs");
 const { Op } = require("sequelize");
 const path = require("path");
 
 // Create user service
-const createUserService = async (name, email, password, dateOfBirth, gender) => {
+const createUserService = async (
+  name,
+  email,
+  password,
+  dateOfBirth,
+  gender
+) => {
   try {
     // Kiểm tra xem email đã tồn tại hay chưa
     const user = await User.findOne({ where: { email } });
@@ -133,10 +140,14 @@ const updateUserService = async (profileData) => {
     }
 
     // Kiểm tra thay đổi avatar và xóa avatar cũ nếu cần
-    if (profileData.avatarPath && user.avatarPath && profileData.avatarPath !== user.avatarPath) {
+    if (
+      profileData.avatarPath &&
+      user.avatarPath &&
+      profileData.avatarPath !== user.avatarPath
+    ) {
       const oldAvatarPath = path.join(__dirname, "../uploads", user.avatarPath); // Không thêm 'src/uploads' nữa
       console.log("Old Avatar Path:", oldAvatarPath); // Debug đường dẫn avatar cũ
-    
+
       if (fs.existsSync(oldAvatarPath)) {
         fs.unlinkSync(oldAvatarPath); // Xóa file avatar cũ
         console.log("Old avatar deleted successfully.");
@@ -159,9 +170,13 @@ const updateUserService = async (profileData) => {
   }
 };
 
-
 // Update password service
-const updatePasswordService = async (id, currentPassword, newPassword, confirmPassword) => {
+const updatePasswordService = async (
+  id,
+  currentPassword,
+  newPassword,
+  confirmPassword
+) => {
   try {
     const user = await User.findByPk(id);
     if (!user) {
@@ -169,7 +184,10 @@ const updatePasswordService = async (id, currentPassword, newPassword, confirmPa
     }
 
     // Kiểm tra mật khẩu hiện tại
-    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+    const isValidPassword = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
     if (!isValidPassword) {
       return { EC: 7, EM: "Invalid current password" };
     }
@@ -189,7 +207,6 @@ const updatePasswordService = async (id, currentPassword, newPassword, confirmPa
     return { EC: 9, EM: "Error updating password" };
   }
 };
-
 
 // Generate OTP service
 const generateOtp = async (email) => {
@@ -213,7 +230,7 @@ const generateOtp = async (email) => {
       email,
       otp: hashedOTP,
       userId: user.id,
-      status: true // Kích hoạt trạng thái ban đầu là true
+      status: true, // Kích hoạt trạng thái ban đầu là true
     });
 
     // Gửi OTP qua email
@@ -233,7 +250,6 @@ const generateOtp = async (email) => {
     return { EC: 3, EM: "Error generating OTP" };
   }
 };
-
 
 // Verify OTP and update password service
 const verifyOtpAndUpdatePassword = async (email, otp, newPassword) => {
@@ -275,7 +291,6 @@ const verifyOtpAndUpdatePassword = async (email, otp, newPassword) => {
     return { EC: 3, EM: "Error verifying OTP" };
   }
 };
-
 
 // Create playlist
 const createPlaylistService = async (playlistData) => {
@@ -408,7 +423,7 @@ const getMusicInPlaylistService = async (playlistId) => {
 const getAlbumsService = async () => {
   try {
     const albums = await Album.findAll({
-      attributes: { exclude: ["createdDate" ] },
+      attributes: { exclude: ["createdDate"] },
     });
     return albums;
   } catch (error) {
@@ -503,6 +518,78 @@ const searchMusicService = async (searchTerm) => {
   }
 };
 
+// Follow an item
+const followItemService = async (userId, followType, followId) => {
+  try {
+    const follow = await UserFollow.create({
+      userId,
+      followType,
+      followId,
+    });
+    return { EC: 0, EM: "Followed successfully", data: follow };
+  } catch (error) {
+    console.error("Error in followItemService:", error);
+    return { EC: 1, EM: "Error following item" };
+  }
+};
+
+// Get followed items
+const getFollowedItemsService = async (userId) => {
+  try {
+    console.log("Fetching followed items for userId:", userId);
+
+    const query = `
+    SELECT 
+      uf.followType, 
+      uf.followId, 
+      CASE 
+        WHEN uf.followType = 'Album' THEN a.name 
+        WHEN uf.followType = 'Artist' THEN u.name 
+      END AS name,
+      CASE 
+        WHEN uf.followType = 'Album' THEN a.thumbnailPath 
+        WHEN uf.followType = 'Artist' THEN u.avatarPath 
+      END AS thumbnailPath
+    FROM userfollows uf
+    LEFT JOIN albums a ON uf.followId = a.id AND uf.followType = 'Album'
+    LEFT JOIN users u ON uf.followId = u.id AND uf.followType = 'Artist'
+    WHERE uf.userId = :userId
+    `;
+
+    const followedItems = await sequelize.query(query, {
+      replacements: { userId },
+      type: sequelize.QueryTypes.SELECT,
+    });
+
+    console.log("Followed items fetched:", followedItems);
+
+    return {
+      EC: 0,
+      EM: "Fetched followed items successfully",
+      data: followedItems,
+    };
+  } catch (error) {
+    console.error("Error in getFollowedItemsService:", error);
+    return { EC: 1, EM: "Error fetching followed items" };
+  }
+};
+
+// Unfollow an item
+const unfollowItemService = async (userId, followType, followId) => {
+  try {
+    const unfollow = await UserFollow.destroy({
+      where: { userId, followType, followId },
+    });
+    if (!unfollow) {
+      return { EC: 1, EM: "Item not followed" };
+    }
+    return { EC: 0, EM: "Unfollowed successfully" };
+  } catch (error) {
+    console.error("Error in unfollowItemService:", error);
+    return { EC: 1, EM: "Error unfollowing item" };
+  }
+};
+
 module.exports = {
   createUserService,
   loginService,
@@ -521,5 +608,8 @@ module.exports = {
   getMusicInPlaylistService,
   getMusicInAlbumService,
   searchMusicService,
-  getAlbumsService
+  getAlbumsService,
+  followItemService,
+  getFollowedItemsService,
+  unfollowItemService,
 };

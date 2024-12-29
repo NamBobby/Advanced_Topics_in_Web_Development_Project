@@ -41,7 +41,6 @@ const UserOTPVerification = sequelize.define('userotpverification', {
   }
 });
 
-// Liên kết với bảng User
 User.hasMany(UserOTPVerification, { foreignKey: 'userId' });
 UserOTPVerification.belongsTo(User, { foreignKey: 'userId' });
 

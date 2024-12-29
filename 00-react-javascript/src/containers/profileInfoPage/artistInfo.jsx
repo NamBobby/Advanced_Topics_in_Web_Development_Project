@@ -10,6 +10,7 @@ import {
 } from "../../services/apiService";
 import axios from "../../services/axios.customize";
 import { LeftOutlined } from "@ant-design/icons";
+import FollowButton from "../../components/followButton";
 
 const getItemsToShow = (width) => {
   if (width < 1100) {
@@ -158,6 +159,7 @@ const ArtistInfo = () => {
         <div className="userinfo-header">
           <p className="user-role">Artist</p>
           <h3 className="user-name">{artist.name}</h3>
+          <FollowButton followType="Artist" followId={artist.id} />
         </div>
       </div>
       <div className="userinfo-content">
