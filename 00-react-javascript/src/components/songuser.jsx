@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { CaretRightOutlined } from "@ant-design/icons";
 import "../assets/styles/songuser.css";
 import axios from "../services/axios.customize";
+import { CaretRightOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { deleteMusicApi } from "../services/apiService";
 
-const SongUser = ({ songs, handleSongClick }) => {
+const SongUser = ({ songs, handleSongClick, onDelete }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(5);
   const [durations, setDurations] = useState({});
@@ -26,6 +27,18 @@ const SongUser = ({ songs, handleSongClick }) => {
         [index]: Math.floor(audio.duration),
       }));
     };
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteMusicApi(id);
+      if (onDelete) {
+        onDelete(id); 
+      }
+      window.dispatchEvent(new CustomEvent("authUpdate"));
+    } catch (error) {
+      console.error("Error deleting music:", error);
+    }
   };
 
   return (
@@ -66,6 +79,15 @@ const SongUser = ({ songs, handleSongClick }) => {
                   durations[songid] % 60
                 ).padStart(2, "0")}`
               : "Loading..."}
+          </div>
+          <div className="songuser-actions">
+            <MinusCircleOutlined
+              className="delete-icon"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent triggering parent click
+                handleDelete(song.id);
+              }}
+            />
           </div>
           {song.filePath &&
             !durations[songid] &&

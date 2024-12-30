@@ -9,8 +9,6 @@ import RegisterPage from "../containers/auth/register.jsx";
 import LoginPage from "../containers/auth/login.jsx";
 import HomePage from "../containers/homePage/home.jsx";
 import ArtistInfo from "../containers/profileInfoPage/artistInfo.jsx";
-import AlbumUserList from "../containers/profileInfoPage/albumuserlist.jsx";
-import PlayListUserList from "../containers/profileInfoPage/playlistuserlist.jsx";
 import AlbumDetail from "../components/albumDetail.jsx";
 import PlaylistDetail from "../components/playlistDetail.jsx";
 import UploadMusicPage from "../containers/userPage/uploadmusic.jsx";
@@ -26,8 +24,6 @@ const commonRoutes = [
   { index: true, element: <HomePage /> },
   { path: "artist/:id", element: <ArtistInfo /> },
   { path: "userInfo", element: <UserInfo /> },
-  { path: "userAlbum", element: <AlbumUserList /> },
-  { path: "userPlaylist", element: <PlayListUserList /> },
   { path: "album/:title", element: <AlbumDetail /> },
   { path: "playlist/:title", element: <PlaylistDetail /> },
   { path: "createplaylist", element: <CreatePlaylist /> },
@@ -62,7 +58,6 @@ const RoleBasedRouter = () => {
           ? [
               { index: true, element: <HomePage /> },
               { path: "artist/:id", element: <ArtistInfo /> },
-              { path: "userAlbum", element: <AlbumUserList /> },
               { path: "album/:title", element: <AlbumDetail /> },
             ]
           : []),

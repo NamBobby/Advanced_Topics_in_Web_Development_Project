@@ -536,7 +536,7 @@ const followItemService = async (userId, followType, followId) => {
 // Get followed items
 const getFollowedItemsService = async (userId) => {
   try {
-    console.log("Fetching followed items for userId:", userId);
+    //console.log("Fetching followed items for userId:", userId);
 
     const query = `
     SELECT 
@@ -561,7 +561,7 @@ const getFollowedItemsService = async (userId) => {
       type: sequelize.QueryTypes.SELECT,
     });
 
-    console.log("Followed items fetched:", followedItems);
+    //console.log("Followed items fetched:", followedItems);
 
     return {
       EC: 0,

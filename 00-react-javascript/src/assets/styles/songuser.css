@@ -101,3 +101,10 @@
 .songuser-see-more:hover, .songuser-see-less:hover {
   text-decoration: underline;
 }
+
+.delete-icon {
+  color: red;
+  cursor: pointer;
+  margin-left: 10px;
+}
+

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Link,
   useLocation,
@@ -39,7 +39,6 @@ const UserInfo = () => {
   const [songs, setSongs] = useState([]);
   const [albums, setAlbums] = useState([]);
   const [playlists, setPlaylists] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { setCurrentSong, setSongList } = useOutletContext();
   const [itemsToShow, setItemsToShow] = useState(() => {
     const mainContent = document.querySelector(".main-content");
@@ -75,55 +74,46 @@ const UserInfo = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        if (user?.id) {
-          // Fetch and filter songs for the logged-in user
-          const songsResponse = await getMusicsApi();
-          //console.log("Songs API Response:", songsResponse);
-          if (songsResponse) {
-            const userSongs = songsResponse.filter(
-              (song) => song.accountId === user.id
-            );
-            setSongs(userSongs);
-          } else {
-            console.error("Songs data not found");
-          }
+  
+  const fetchUserData = useCallback(async () => {
+    try {
+      if (user?.id) {
+        const songsResponse = await getMusicsApi();
+        const userSongs = songsResponse.filter(
+          (song) => song.accountId === user.id
+        );
+        setSongs(userSongs);
 
-          // Fetch and filter albums for the logged-in user
-          const albumsResponse = await getAlbumsApi();
-          //console.log("Albums API Response:", albumsResponse);
-          if (albumsResponse) {
-            const userAlbums = albumsResponse.filter(
-              (album) => album.accountId === user.id
-            );
-            setAlbums(userAlbums);
-          } else {
-            console.error("Albums data not found");
-          }
+        const albumsResponse = await getAlbumsApi();
+        const userAlbums = albumsResponse.filter(
+          (album) => album.accountId === user.id
+        );
+        setAlbums(userAlbums);
 
-          // Fetch and filter playlists for the logged-in user
-          const playlistsResponse = await getPlaylistsApi();
-          //console.log("Playlists API Response:", playlistsResponse);
-          if (playlistsResponse) {
-            const userPlaylists = playlistsResponse.filter(
-              (playlist) => playlist.accountId === user.id
-            );
-            setPlaylists(userPlaylists);
-          } else {
-            console.error("Playlists data not found");
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      } finally {
-        setLoading(false);
+        const playlistsResponse = await getPlaylistsApi();
+        const userPlaylists = playlistsResponse.filter(
+          (playlist) => playlist.accountId === user.id
+        );
+        setPlaylists(userPlaylists);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } 
+  }, [user?.id]);
 
-    fetchUserData();
-  }, [user]);
+    useEffect(() => {
+      fetchUserData();
+  
+      const handleAuthUpdate = () => {
+        fetchUserData(); 
+      };
+  
+      window.addEventListener("authUpdate", handleAuthUpdate);
+  
+      return () => {
+        window.removeEventListener("authUpdate", handleAuthUpdate);
+      };
+    }, [fetchUserData]);
 
   const handleBackClick = () => {
     navigate(-1);
@@ -148,10 +138,6 @@ const UserInfo = () => {
       [type]: getItemsToShow(width)[type],
     }));
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="userinfo-overlay">

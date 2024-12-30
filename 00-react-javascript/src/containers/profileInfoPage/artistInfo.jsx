@@ -11,6 +11,7 @@ import {
 import axios from "../../services/axios.customize";
 import { LeftOutlined } from "@ant-design/icons";
 import FollowButton from "../../components/followButton";
+import SongArtist from "../../components/songartist";
 
 const getItemsToShow = (width) => {
   if (width < 1100) {
@@ -168,7 +169,7 @@ const ArtistInfo = () => {
         <div className="userinfo-header">
           <h2 className="title">Music</h2>
         </div>
-        <SongUser
+        <SongArtist
           songs={songs}
           handleSongClick={(song) => {
             setCurrentSong(song);
