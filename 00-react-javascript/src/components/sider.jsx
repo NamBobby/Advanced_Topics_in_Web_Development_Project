@@ -59,6 +59,7 @@ const SiderBar = () => {
       fetchSidebarData();
     };
 
+    // Listen to the custom event
     window.addEventListener("authUpdate", handleAuthUpdate);
 
     return () => {

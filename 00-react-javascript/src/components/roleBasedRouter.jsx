@@ -15,7 +15,7 @@ import AlbumDetail from "../components/albumDetail.jsx";
 import PlaylistDetail from "../components/playlistDetail.jsx";
 import UploadMusicPage from "../containers/userPage/uploadmusic.jsx";
 import UserAccount from "../containers/userPage/userAccount.jsx";
-import UserInfo from "../containers/profileInfoPage/userInfo.jsx";
+import UserInfo from "../containers/userPage/userInfo.jsx";
 import SendOtpPage from "../containers/auth/sendotp.jsx";
 import ResetPasswordPage from "../containers/auth/resetPassword.jsx";
 

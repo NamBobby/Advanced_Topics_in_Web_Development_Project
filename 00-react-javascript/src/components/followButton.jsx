@@ -14,6 +14,9 @@ const FollowButton = ({ followType, followId }) => {
         await followApi({ followType, followId });
         setIsFollowing(true);
       }
+    
+    // Dispatch event to notify other components
+    window.dispatchEvent(new CustomEvent("authUpdate"));
     } catch (error) {
       console.error("Error toggling follow:", error);
     }

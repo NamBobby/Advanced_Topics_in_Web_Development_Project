@@ -18,7 +18,6 @@ import "../../assets/styles/userInfo.css";
 import axios from "../../services/axios.customize";
 
 const getItemsToShow = (width) => {
-  console.log("width", width);
   if (width < 1100) {
     return { playlists: 2, albums: 2 };
   } else if (width < 1407) {
