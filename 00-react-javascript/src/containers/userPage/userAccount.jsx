@@ -221,10 +221,7 @@ const UserAccount = () => {
       </div>
       <div className="user-account-box">
         <div className="user-account-form">
-          <Link to="/" className="back-home-link">
-            <h1 className="user-account-title">User Profile</h1>
-          </Link>
-
+          <h1 className="user-account-title">User Profile</h1>
           <div className="avatar-wrapper">
             <div className="avatar-frame">
               <img

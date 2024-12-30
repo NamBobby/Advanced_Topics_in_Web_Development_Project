@@ -1,100 +1,198 @@
-import React from "react";
-import { Button, Form, Input, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import { Button, Form, Input, Upload, Select, notification } from "antd";
+import {
+  UploadOutlined,
+  LeftOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import {
+  uploadMusicApi,
+  getAlbumsApi,
+} from "../../services/apiService";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../assets/styles/uploadmusic.css";
 
 const UploadMusic = () => {
-  const onFinish = (values) => {
-    console.log("Form values:", values);
-    // Add logic to handle the upload
+  const [albums, setAlbums] = useState([]);
+  const [form] = Form.useForm();
+  const location = useLocation();
+  const { user } = location.state || {};
+  const navigate = useNavigate();
+  const [musicFile, setMusicFile] = useState(null);
+  const [fileList, setFileList] = useState([]);
+  const [thumbnailFile, setThumbnailFile] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState(null);
+
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      try {
+        const albumData = await getAlbumsApi();
+        if (albumData) {
+          const userAlbums = albumData.filter(
+            (album) => album.accountId === user.id
+          );
+          setAlbums(userAlbums);
+        }
+      } catch (error) {
+        console.error("Error fetching albums:", error);
+      }
+    };
+    fetchAlbums();
+  }, [user]);
+
+  const handleThumbnailChange = (info) => {
+    const file = info.file;
+
+    if (file) {
+      if (file.type.startsWith("image/")) {
+        setThumbnailFile(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setThumbnailPreview(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        notification.error({
+          message: "Invalid File",
+          description: "Please select a valid image file.",
+        });
+      }
+    }
   };
 
+  const handleFileChange = (info) => {
+    if (info.fileList.length > 0) {
+      const file = info.fileList[0];
+      setMusicFile(file.originFileObj);
+      setFileList(info.fileList);
+    }
+  };
+
+  const handleFileRemove = () => {
+    setMusicFile(null);
+    setFileList([]);
+  };
+
+  const handleUploadMusic = async () => {
+    try {
+      const values = form.getFieldsValue();
+  
+      if (!musicFile) {
+        notification.error({ message: "Please upload a music file." });
+        return;
+      }
+  
+      const formData = new FormData();
+      formData.append("musicFile", musicFile);
+      if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
+      Object.keys(values).forEach((key) => formData.append(key, values[key]));
+      formData.append("accountId", user.id);
+  
+      const response = await uploadMusicApi(formData);
+      //console.log("Response from uploadMusicApi:", response);
+  
+      notification.success({ message: "Music uploaded successfully!" });
+      navigate("/userInfo", { state: { user } });
+    } catch (error) {
+      console.error("Error uploading music:", error);
+      notification.error({ message: "Failed to upload music." });
+    }
+  };
+  
+
   return (
-    <div className="upload-overlay">
-      <div className="upload-background">
-        <div className="userinfo-header">
-          <p className="user-role">Artist</p>
-          <h3 className="user-name">John Doe</h3>
+    <div className="upload-container">
+      <div className="upload-navigation">
+        <div className="upload-logo">
+          <Link to="/userInfo" state={{ user }}>
+            <LeftOutlined className="back-icon" />
+          </Link>
         </div>
-        <div className="upload-content">
-        <div className="title-header">
-            <h2 className="title">Upload Music</h2>
-        </div>
+      </div>
+      <div className="upload-box">
+        <div className="upload-form">
+          <h1 className="upload-title">Upload Music</h1>
+
+          <div className="thumbnail-wrapper">
+            <div className="thumbnail-frame">
+              <img
+                src={thumbnailPreview || "https://via.placeholder.com/100"}
+                alt="Thumbnail"
+                className="thumbnail-image"
+              />
+              <Upload
+                beforeUpload={() => false}
+                onChange={handleThumbnailChange}
+                showUploadList={false}>
+                <Button
+                  icon={<UploadOutlined />}
+                  className="thumbnail-upload-button">
+                  Upload Thumbnail
+                </Button>
+              </Upload>
+            </div>
+          </div>
+
           <Form
             name="uploadForm"
-            className="custom-upload-form"
-            onFinish={onFinish}
+            className="upload-custom-form"
             layout="vertical"
             autoComplete="off"
-          >
-            {/* Title */}
-            <Form.Item
-              label="Title"
-              name="title"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the music title!",
-                },
-              ]}
-            >
+            form={form}>
+            <Form.Item name="title" label="Title" rules={[{ required: true }]}>
               <Input placeholder="Enter music title" />
             </Form.Item>
-
-            {/* Artist */}
-            <Form.Item
-              label="Artist"
-              name="artist"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the artist name!",
-                },
-              ]}
-            >
-              <Input placeholder="Enter artist name" />
-            </Form.Item>
-
-            {/* Genre */}
-            <Form.Item
-              label="Genre"
-              name="genre"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input the genre!",
-                },
-              ]}
-            >
+            <Form.Item name="genre" label="Genre" rules={[{ required: true }]}>
               <Input placeholder="Enter genre" />
             </Form.Item>
-
-            {/* Upload File */}
+            <Form.Item name="albumId" label="Album">
+              <Select placeholder="Select an album or leave blank">
+                <Select.Option value="">None</Select.Option>
+                {albums.map((album) => (
+                  <Select.Option key={album.id} value={album.id}>
+                    {album.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
             <Form.Item
-              label="Upload File"
-              name="file"
-              valuePropName="fileList"
-              getValueFromEvent={(e) => e.fileList}
+              name="publishedYear"
+              label="Published Year"
               rules={[
+                { required: true, message: "Please enter a valid year!" },
                 {
-                  required: true,
-                  message: "Please upload a music file!",
+                  pattern: /^(19\d{2}|20(0\d|1\d|2[0-5]))$/,
+                  message: "Year must be between 1900 and 2025!",
                 },
-              ]}
-            >
-              <Upload beforeUpload={() => false} listType="text">
-                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+              ]}>
+              <Input type="number" placeholder="Enter year" />
+            </Form.Item>
+            <Form.Item name="description" label="Description">
+              <Input.TextArea placeholder="Enter description" />
+            </Form.Item>
+
+            <Form.Item name="musicFile" label="Music File">
+              <Upload
+                beforeUpload={() => false}
+                fileList={fileList}
+                onChange={handleFileChange}
+                onRemove={handleFileRemove}
+                showUploadList={{
+                  showRemoveIcon: true,
+                  removeIcon: <DeleteOutlined />,
+                }}>
+                {!musicFile && (
+                  <Button icon={<UploadOutlined />}>Upload Music</Button>
+                )}
               </Upload>
             </Form.Item>
 
-            {/* Submit Button */}
             <Form.Item>
               <Button
                 type="primary"
-                htmlType="submit"
-                className="upload-submit-button"
-              >
-                Submit
+                className="upload-button"
+                onClick={handleUploadMusic}>
+                Upload
               </Button>
             </Form.Item>
           </Form>

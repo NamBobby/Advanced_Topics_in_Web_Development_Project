@@ -6,7 +6,6 @@ import axios from "../services/axios.customize";
 const SongUser = ({ songs, handleSongClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(5);
-  const [expanded, setExpanded] = useState(false);
   const [durations, setDurations] = useState({});
 
   const handleSeeMore = () => {

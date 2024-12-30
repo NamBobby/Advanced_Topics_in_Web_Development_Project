@@ -23,7 +23,7 @@ import ResetPasswordPage from "../containers/auth/resetPassword.jsx";
 const commonRoutes = [
   { index: true, element: <HomePage /> },
   { path: "artist/:id", element: <ArtistInfo /> },
-  { path: "/userInfo", element: <UserInfo /> },
+  { path: "userInfo", element: <UserInfo /> },
   { path: "userAlbum", element: <AlbumUserList /> },
   { path: "userPlaylist", element: <PlayListUserList /> },
   { path: "album/:title", element: <AlbumDetail /> },
@@ -50,7 +50,7 @@ const RoleBasedRouter = () => {
           ? [{ path: "uploadmusic", element: <UploadMusicPage /> }] // Route đặc biệt cho Artist
           : []),
         ...(role === "User" || role === "Artist"
-          ? commonRoutes // Các route chung cho User và Artist
+          ? commonRoutes 
           : []),
         ...(role === "Guest"
           ? [

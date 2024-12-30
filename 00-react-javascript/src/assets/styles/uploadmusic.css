@@ -1,34 +1,116 @@
-.upload-overlay {
+.upload-container {
   display: flex;
-  flex-grow: 1;
+  align-items: center;
+  max-height: calc(90vh - 60px); 
   overflow-y: auto;
   flex-direction: column;
-  justify-content: flex-start;
+  border-radius: 20px;
+}
+
+.upload-box {
+  width: 100%;
+  max-width: 650px;
+  display: flex;
+  justify-content: center;
+  max-height: 70vh;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.upload-navigation{
+  width: 650px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.upload-logo{
+  display: flex;
   align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #1f1f1f;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-left: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.upload-logo:hover{
+  background-color: darkgrey !important;
+}
+
+.back-icon {
+  font-size: 28px;
+  margin-right: 12px;
+}
+
+.upload-form {
+  width: 100%;
+}
+
+.upload-title {
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.thumbnail-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.thumbnail-frame {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid rgba(30, 215, 96, 0.8);
+  z-index: 1;
+}
+
+.thumbnail-image {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+}
+
+.thumbnail-upload-button {
+  position: absolute;
+  bottom: 0%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: none;
+  width: 100%;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
-  box-sizing: border-box;
+  font-size: 18px;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
 }
 
-.upload-background {
-  position: relative;
-  width: 100%;
-  height: 400px;
-  border-radius: 20px;
-  background-image: url("https://yt3.googleusercontent.com/oN0p3-PD3HUzn2KbMm4fVhvRrKtJhodGlwocI184BBSpybcQIphSeh3Z0i7WBgTq7e12yKxb=s900-c-k-c0x00ffffff-no-rj");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+.thumbnail-upload-button:hover {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  color: white !important;
 }
 
-.upload-content {
-  width: 100%;
-  background-color: #282c34;
-  padding: 30px 500px ;
-  overflow: hidden;
+.thumbnail-frame:hover .thumbnail-upload-button {
+  display: block !important;
 }
+
+
+.upload-form .ant-input,
+.upload-form .ant-radio-wrapper {
+  color: #ffffff;
+}
+
 
 .custom-upload-form .ant-form-item-label > label {
   color: #ffffff;
@@ -38,13 +120,7 @@
   display: block;
 }
 
-.custom-upload-form .ant-input {
-  background-color: transparent;
-  border: 1px solid #ffffff;
-  color: #ffffff;
-}
-
-.upload-submit-button {
+.upload-button {
   width: 100%;
   height: auto;
   padding: 12px 0;
@@ -57,4 +133,201 @@
   border-radius: 25px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.readonly-input {
+  border: 1px solid #2e2e2e !important;
+  color: #888888 !important;
+  cursor: not-allowed;
+}
+.readonly-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+/* Các quy tắc chung cho Input (Email) và Input.Password */
+.upload-form .ant-input-outlined,
+.upload-form .ant-input-outlined:not(:focus) {
+  background-color: #1e1e1e !important;
+  color: #ffffff;
+  border: 1px solid #1e1e1e !important; 
+  border-radius: 5px;
+  font-size: 18px;
+  padding: 10px;
+  transition: border 0.3s ease; /* Smooth border transition */
+}
+
+/* Focus hiệu ứng cho Input và Input.Password */
+.ant-input-outlined:focus {
+  background-color: transparent;
+  border: 1px solid rgba(30, 215, 96, 0.5); 
+}
+
+/* Hover hiệu ứng cho cả hai loại Input */
+.ant-input-outlined:hover:not(:focus) {
+  background-color: transparent;
+  border: 1px solid rgba(30, 215, 96, 0.5); 
+} 
+
+/* Placeholder styling */
+.ant-input-outlined::placeholder,
+.ant-input-affix-wrapper > input.ant-input::placeholder {
+  color: #888888;
+  font-weight: 500;
+}
+
+.upload-form .ant-upload-icon .anticon svg {
+  color: #ffffff;
+  font-size: 24px;
+}
+
+/* Quy tắc lỗi cho các Input */
+.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
+.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
+.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus),
+.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus) {
+  background: transparent;
+  border: 1px solid #e22222;
+}
+
+/* Focus hiệu ứng cho Input có lỗi */
+.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus,
+.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus {
+  background: transparent;
+  border: 1px solid #e22222 !important;
+}
+
+/* Focus hiệu ứng cho Input và Input.Password */
+.ant-input-affix-wrapper.ant-input-password.ant-input-outlined:focus {
+  background-color: transparent;
+  border: 1px solid rgba(30, 215, 96, 0.5)  !important; 
+}
+
+.ant-form-item .ant-form-item-label >label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  content: ""
+}
+
+/* Đặt chiều dài của Select */
+.upload-form .ant-select {
+  background-color: #1e1e1e !important;
+  color: #ffffff; 
+  border: 1px solid #1e1e1e !important; 
+  font-size: 18px;
+  border-radius: 5px;
+  font-weight: 500;
+  padding: 8px 10px;
+  transition: border 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.ant-select-single {
+  height: auto;
+}
+
+/* Giao diện Selector */
+.ant-select-selector {
+  background-color: transparent !important; 
+  border: none !important; 
+  box-shadow: none !important; 
+  height: auto !important;
+  color: #ffffff !important; 
+  display: flex;
+  align-items: center; 
+  padding: 0 10px; 
+}
+
+.ant-select-selection-item{
+  font-size: 18px;
+}
+
+.ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+  color: #888888;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Dropdown nền và màu chữ */
+.ant-select-dropdown {
+  background-color: #121212 !important; 
+}
+
+.ant-select-item-option{
+  color: #ffffff !important; 
+  font-size: 16px !important; 
+}
+
+/* Hiệu ứng hover cho các tùy chọn */
+.ant-select-item-option-active {
+  background-color: rgba(30, 215, 96, 0.2) !important; /* Nền xanh khi hover */
+}
+
+/* Hiệu ứng cho tùy chọn được chọn */
+.ant-select-item-option-selected {
+  background-color: rgba(30, 215, 96, 0.3) !important; /* Nền xanh đậm */
+}
+
+.ant-select-focused:not(.ant-select-disabled) {
+  border-color: rgba(30, 215, 96, 0.8) !important; 
+}
+
+.ant-select:hover {
+  border-color: rgba(30, 215, 96, 0.5) !important; 
+}
+
+/* Đảm bảo chiều dài Select giống với Input */
+.upload-form .ant-select,
+.upload-form .ant-input {
+  width: 100%;
+}
+
+.upload-form .ant-row .ant-col {
+  padding: 0;
+}
+
+/* Hiệu ứng focus cho các thành phần */
+.ant-select-focused:not(.ant-select-disabled) .ant-select-selector,
+.ant-input:focus {
+  outline: none;
+  border-color: rgba(30, 215, 96, 0.8); 
+  box-shadow: 0 0 5px rgba(30, 215, 96, 0.5); 
+}
+
+
+/* Giải thích lỗi */
+.ant-form-item-explain-error {
+  color: #e22222;
+  font-size: 16px;
+}
+
+.upload-form .ant-form-item-label > label {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  content: "";
+  display: block;
+}
+
+.upload-button:hover {
+  font-size: 19px;
+}
+
+.ant-upload-list-item {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  justify-content: space-between;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #fff
+}
+
+.ant-upload-list-item-name {
+  font-size: 16px;
+  flex-grow: 1;
+}
+
+.ant-upload-list-item-actions {
+  margin-left: 10px;
 }

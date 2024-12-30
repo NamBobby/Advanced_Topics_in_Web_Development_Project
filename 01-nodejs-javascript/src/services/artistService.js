@@ -31,7 +31,10 @@ const createAlbumService = async (albumData) => {
 const addMusicToAlbumService = async (albumId, musicId) => {
   try {
     const music = await Music.findByPk(musicId);
-    if (!music) throw new Error("Music not found");
+
+    if (!music) {
+      throw new Error("Music not found");
+    }
 
     if (music.album || music.albumId) {
       throw new Error("Music is already associated with an album");
@@ -40,26 +43,11 @@ const addMusicToAlbumService = async (albumId, musicId) => {
     const album = await Album.findByPk(albumId);
     if (!album) throw new Error("Album not found");
 
-    // Lấy tên album bằng truy vấn SQL thô
-    const [albumNameResult] = await sequelize.query(
-      `
-      SELECT name FROM albums WHERE id = :albumId
-    `,
-      {
-        replacements: { albumId },
-        type: sequelize.QueryTypes.SELECT,
-      }
-    );
-
-    const albumName = albumNameResult.name;
-
-    // Cập nhật albumId và album cho music
     await Music.update(
-      { albumId: albumId, album: albumName },
+      { albumId: albumId },
       { where: { id: musicId } }
     );
 
-    // Lấy lại thông tin music để trả về kết quả cập nhật
     const updatedMusic = await Music.findByPk(musicId);
 
     return updatedMusic;

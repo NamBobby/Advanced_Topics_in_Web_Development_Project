@@ -12,10 +12,6 @@
     margin-top: 20px;
   }
   
-  .back-home-link{
-    text-decoration: none !important;
-  }
-  
   .adminCreate-box {
     width: 100%;
     max-width: 650px;
@@ -40,11 +36,11 @@
   }
   
   /* Các quy tắc chung cho Input (Email) và Input.Password */
-  .ant-input-outlined,
-  .ant-input-outlined:not(:focus) {
-    background-color: transparent;
+  .adminCreate-form .ant-input-outlined,
+  .adminCreate-form .ant-input-outlined:not(:focus) {
+    background-color: #1e1e1e !important;
     color: #ffffff;
-    border: 1px solid #ffffff;
+    border: 1px solid #1e1e1e !important; 
     border-radius: 5px;
     font-size: 18px;
     padding: 10px;
@@ -52,15 +48,15 @@
   }
   
   /* Focus hiệu ứng cho Input và Input.Password */
-  .ant-input-outlined:focus {
+  .adminCreate-form .ant-input-outlined:focus {
     background-color: transparent;
-    border: 1px solid rgba(30, 215, 96, 0.5); 
+    border: 1px solid rgba(30, 215, 96, 0.8) !important; 
   }
   
   /* Hover hiệu ứng cho cả hai loại Input */
-  .ant-input-outlined:hover:not(:focus) {
+  .adminCreate-form .ant-input-outlined:hover:not(:focus) {
     background-color: transparent;
-    border: 1px solid rgba(30, 215, 96, 0.5); 
+    border: 1px solid rgba(30, 215, 96, 0.8) !important; 
   } 
   
   /* Placeholder styling */
@@ -103,10 +99,10 @@
   }
   
   /* Đặt chiều dài của Select */
-  .ant-select {
-    background-color: transparent;
+  .adminCreate-form .ant-select {
+    background-color: #1e1e1e !important;
     color: #ffffff; 
-    border: 1px solid #ffffff; 
+    border: 1px solid #1e1e1e !important; 
     font-size: 18px;
     border-radius: 5px;
     font-weight: 500;

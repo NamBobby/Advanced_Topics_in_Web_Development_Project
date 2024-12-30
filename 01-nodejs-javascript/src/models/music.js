@@ -29,10 +29,6 @@ const Music = sequelize.define("music", {
       notEmpty: true,
     },
   },
-  album: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
   filePath: {
     type: DataTypes.STRING,
     allowNull: false,

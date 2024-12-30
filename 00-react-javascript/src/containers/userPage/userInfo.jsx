@@ -8,7 +8,7 @@ import {
 import SongUser from "../../components/songuser";
 import AlbumUser from "../../components/albumuser";
 import PlaylistUser from "../../components/playlistuser";
-import { LeftOutlined } from "@ant-design/icons";
+import { LeftOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import {
   getMusicsApi,
   getAlbumsApi,
@@ -81,7 +81,7 @@ const UserInfo = () => {
         if (user?.id) {
           // Fetch and filter songs for the logged-in user
           const songsResponse = await getMusicsApi();
-          console.log("Songs API Response:", songsResponse);
+          //console.log("Songs API Response:", songsResponse);
           if (songsResponse) {
             const userSongs = songsResponse.filter(
               (song) => song.accountId === user.id
@@ -93,7 +93,7 @@ const UserInfo = () => {
 
           // Fetch and filter albums for the logged-in user
           const albumsResponse = await getAlbumsApi();
-          console.log("Albums API Response:", albumsResponse);
+          //console.log("Albums API Response:", albumsResponse);
           if (albumsResponse) {
             const userAlbums = albumsResponse.filter(
               (album) => album.accountId === user.id
@@ -105,7 +105,7 @@ const UserInfo = () => {
 
           // Fetch and filter playlists for the logged-in user
           const playlistsResponse = await getPlaylistsApi();
-          console.log("Playlists API Response:", playlistsResponse);
+          //console.log("Playlists API Response:", playlistsResponse);
           if (playlistsResponse) {
             const userPlaylists = playlistsResponse.filter(
               (playlist) => playlist.accountId === user.id
@@ -181,6 +181,11 @@ const UserInfo = () => {
           <>
             <div className="title-header">
               <h2 className="title">Music</h2>
+                <div className="userinfo-logo">
+                  <Link to="/uploadmusic" state={{ user }}>
+                    <PlusCircleOutlined className="userinfo-upload-icon" />
+                  </Link>
+                </div>   
             </div>
             <SongUser
               songs={songs}

@@ -22,7 +22,7 @@ const uploadMusical = [
         return res.status(400).json({ message: "No music file uploaded" });
       }
 
-      const { title, genre, album, publishedYear, description, albumId } = req.body;
+      const { title, genre, publishedYear, description, albumId } = req.body;
 
       if (!title || !genre || !publishedYear) {
         return res.status(400).json({ message: "Please fill in all required fields" });
@@ -40,14 +40,13 @@ const uploadMusical = [
         title,
         artist: account.name,
         genre,
-        album,
         filePath,
         publishedYear,
         description,
         thumbnailPath,
         uploadDate: new Date(),
         accountId: account.id,
-        albumId,
+        albumId: albumId || null,
       };
 
       const music = await uploadMusicService(musicData);
