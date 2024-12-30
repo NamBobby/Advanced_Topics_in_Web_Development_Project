@@ -104,12 +104,14 @@ const AlbumDetail = () => {
         />
         <div className="albumdetail-header">
           <h1>{album.name}</h1>
-          <div
-            className="albumdetail-artist"
-            onClick={() => handleArtistClick(album.artist)}>
-            <h2>{album.artist}</h2>
+          <div className="albumdetail-artist-role">
+            <div
+              className="albumdetail-artist"
+              onClick={() => handleArtistClick(album.artist)}>
+              <h2>{album.artist}</h2>
+            </div>
+            <FollowButton followType="Album" followId={album.id} />
           </div>
-          <FollowButton followType="Album" followId={album.id} />
         </div>
       </div>
       <div className="albumdetail-content">

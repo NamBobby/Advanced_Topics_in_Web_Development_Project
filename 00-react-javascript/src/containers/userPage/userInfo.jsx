@@ -171,7 +171,7 @@ const UserInfo = () => {
           alt={user.name}
           className="avatar-image"
         />
-        <div className="userinfo-header">
+        <div className="userinfo-header-background">
           <p className="user-role">{user.role}</p>
           <h3 className="user-name">{user.name}</h3>
         </div>
@@ -179,13 +179,13 @@ const UserInfo = () => {
       <div className="userinfo-content">
         {user.role === "Artist" && (
           <>
-            <div className="title-header">
+            <div className="userinfo-header">
               <h2 className="title">Music</h2>
-                <div className="userinfo-logo">
-                  <Link to="/uploadmusic" state={{ user }}>
-                    <PlusCircleOutlined className="userinfo-upload-icon" />
-                  </Link>
-                </div>   
+              <div className="userinfo-logo">
+                <Link to="/uploadmusic" state={{ user }}>
+                  <PlusCircleOutlined className="userinfo-upload-icon" />
+                </Link>
+              </div>
             </div>
             <SongUser
               songs={songs}
@@ -194,8 +194,13 @@ const UserInfo = () => {
                 setSongList(songs);
               }}
             />
-            <div className="title-header">
+            <div className="userinfo-header">
               <h2 className="title">Albums</h2>
+              <div className="userinfo-logo">
+                <Link to="/createalbum" state={{ user }}>
+                  <PlusCircleOutlined className="userinfo-upload-icon" />
+                </Link>
+              </div>
               <div className="see-more-less-control">
                 {itemsToShow.albums < albums.length && (
                   <div
@@ -219,8 +224,13 @@ const UserInfo = () => {
             <AlbumUser itemsToShow={itemsToShow.albums} albums={albums} />
           </>
         )}
-        <div className="title-header">
+        <div className="userinfo-header">
           <h2 className="title">Playlists</h2>
+          <div className="userinfo-logo">
+            <Link to="/createplaylist" state={{ user }}>
+              <PlusCircleOutlined className="userinfo-upload-icon" />
+            </Link>
+          </div>
           <div className="see-more-less-control">
             {itemsToShow.playlists < playlists.length && (
               <div
@@ -241,7 +251,10 @@ const UserInfo = () => {
             )}
           </div>
         </div>
-        <PlaylistUser itemsToShow={itemsToShow.playlists} playlists={playlists} />
+        <PlaylistUser
+          itemsToShow={itemsToShow.playlists}
+          playlists={playlists}
+        />
       </div>
     </div>
   );

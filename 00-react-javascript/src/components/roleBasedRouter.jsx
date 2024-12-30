@@ -18,6 +18,8 @@ import UserAccount from "../containers/userPage/userAccount.jsx";
 import UserInfo from "../containers/userPage/userInfo.jsx";
 import SendOtpPage from "../containers/auth/sendotp.jsx";
 import ResetPasswordPage from "../containers/auth/resetPassword.jsx";
+import CreateAlbum from "../containers/userPage/createAlbum.jsx";
+import CreatePlaylist from "../containers/userPage/createPlaylist.jsx";
 
 // Các route chung cho User và Artist
 const commonRoutes = [
@@ -28,6 +30,7 @@ const commonRoutes = [
   { path: "userPlaylist", element: <PlayListUserList /> },
   { path: "album/:title", element: <AlbumDetail /> },
   { path: "playlist/:title", element: <PlaylistDetail /> },
+  { path: "createplaylist", element: <CreatePlaylist /> },
 ];
 
 // Component Role-Based Router
@@ -44,10 +47,13 @@ const RoleBasedRouter = () => {
       element: role === "Administrator" ? <AdminPage /> : <MainLayout />,
       children: [
         ...(role === "Administrator"
-          ? [{ path: "create", element: <AdminCreatePage /> }] // Route đặc biệt cho Admin
+          ? [{ path: "create", element: <AdminCreatePage /> }] 
           : []),
         ...(role === "Artist"
-          ? [{ path: "uploadmusic", element: <UploadMusicPage /> }] // Route đặc biệt cho Artist
+          ? [
+            { path: "uploadmusic", element: <UploadMusicPage /> },
+            { path: "createalbum", element: <CreateAlbum /> },
+            ] 
           : []),
         ...(role === "User" || role === "Artist"
           ? commonRoutes 

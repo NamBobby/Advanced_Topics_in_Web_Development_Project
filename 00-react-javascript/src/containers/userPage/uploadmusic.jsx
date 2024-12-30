@@ -76,6 +76,10 @@ const UploadMusic = () => {
   const handleUploadMusic = async () => {
     try {
       const values = form.getFieldsValue();
+
+      if (!values.description) {
+        values.description = "";
+      }
   
       if (!musicFile) {
         notification.error({ message: "Please upload a music file." });
@@ -182,7 +186,7 @@ const UploadMusic = () => {
                   removeIcon: <DeleteOutlined />,
                 }}>
                 {!musicFile && (
-                  <Button icon={<UploadOutlined />}>Upload Music</Button>
+                  <Button icon={<UploadOutlined />}>Choose File</Button>
                 )}
               </Upload>
             </Form.Item>
@@ -192,7 +196,7 @@ const UploadMusic = () => {
                 type="primary"
                 className="upload-button"
                 onClick={handleUploadMusic}>
-                Upload
+                Upload Music
               </Button>
             </Form.Item>
           </Form>

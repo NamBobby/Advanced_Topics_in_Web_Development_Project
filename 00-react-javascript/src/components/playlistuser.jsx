@@ -43,7 +43,6 @@ const PlaylistUser = ({ itemsToShow, playlists }) => {
           )}
           <div className="playlistuser-info">
             <div className="playlistuser-title">{playlist.name}</div>
-            <div className="playlistuser-description">{playlist.creationDate}</div>
           </div>
           {hoveredIndex === playlistid && (
             <div className="playlistuser-icon">

@@ -36,14 +36,22 @@
 
 .albumdetail-header {
   position: absolute;
-  top: 45%; 
+  top: 35%; 
   left: 5%;
-  color: #aaa;
+  color: #1f1f1f;
   display: flex;
   padding: 20px;
   flex-direction: column;
   align-items: flex-start;
   z-index: 2;
+}
+
+.albumdetail-artist-role{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #aaa;
+  margin-top: 20px;
 }
 
 .logo-back{
@@ -67,7 +75,6 @@
 
 .albumdetail-artist{
   text-decoration: none;
-  margin-top: 10px;
   cursor: pointer;
 }
 

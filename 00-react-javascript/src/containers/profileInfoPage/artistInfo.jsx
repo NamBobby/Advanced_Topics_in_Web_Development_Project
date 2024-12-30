@@ -156,14 +156,16 @@ const ArtistInfo = () => {
           alt={artist.name}
           className="avatar-image"
         />
-        <div className="userinfo-header">
+        <div className="userinfo-header-background">
           <p className="user-role">Artist</p>
-          <h3 className="user-name">{artist.name}</h3>
-          <FollowButton followType="Artist" followId={artist.id} />
+          <div className="user-artist-role">
+            <h3 className="user-name">{artist.name}</h3>
+            <FollowButton followType="Artist" followId={artist.id} />
+          </div>   
         </div>
       </div>
       <div className="userinfo-content">
-        <div className="title-header">
+        <div className="userinfo-header">
           <h2 className="title">Music</h2>
         </div>
         <SongUser
@@ -173,7 +175,7 @@ const ArtistInfo = () => {
             setSongList(songs);
           }}
         />
-        <div className="title-header">
+        <div className="userinfo-header">
           <h2 className="title">Albums</h2>
           <div className="see-more-less-control">
             {itemsToShow.albums < albums.length && (
