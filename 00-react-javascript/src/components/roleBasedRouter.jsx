@@ -21,15 +21,6 @@ import CreatePlaylist from "../containers/userPage/createPlaylist.jsx";
 import AlbumUserDetail from "./albumuserDetail.jsx";
 import NotFoundPage from "../components/notfoundPage.jsx";
 
-// Các route chung cho User và Artist
-const commonRoutes = [
-  { index: true, element: <HomePage /> },
-  { path: "artist/:id", element: <ArtistInfo /> },
-  { path: "userInfo", element: <UserInfo /> },
-  { path: "album/:title", element: <AlbumDetail /> },
-  { path: "playlist/:title", element: <PlaylistDetail /> },
-  { path: "createplaylist", element: <CreatePlaylist /> },
-];
 
 // Component Role-Based Router
 const RoleBasedRouter = () => {
@@ -37,6 +28,17 @@ const RoleBasedRouter = () => {
 
   // Xác định role
   const role = auth.isAuthenticated ? auth.user.role : "Guest";
+
+  // Các route chung cho User và Artist
+  const commonRoutes = [
+    { index: true, element: <HomePage /> },
+    { path: "artist/:id", element: <ArtistInfo /> },
+    { path: "userInfo", element: <UserInfo />, state: { user: auth.user }, },
+    { path: "album/:title", element: <AlbumDetail /> },
+    { path: "playlist/:title", element: <PlaylistDetail /> },
+    { path: "createplaylist", element: <CreatePlaylist /> },
+  ];
+
 
   // Router configuration
   const router = createBrowserRouter([

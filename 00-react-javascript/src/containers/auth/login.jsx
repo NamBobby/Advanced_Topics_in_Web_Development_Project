@@ -38,15 +38,18 @@ const LoginPage = () => {
 
         // Notify sidebar to refresh followed items
         window.dispatchEvent(new Event("authUpdate"));
-
-        // Điều hướng về "/"
-        navigate("/");
+        
 
         // Thông báo thành công
         notification.success({
           message: "Login Successful",
           description: `Welcome back, ${user.name}!`,
         });
+
+        // Điều hướng về "/"
+        navigate("/");
+
+        window.location.reload();
       } else {
         // Xử lý lỗi từ server
         notification.error({

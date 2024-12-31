@@ -5,10 +5,7 @@ import {
   LeftOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import {
-  uploadMusicApi,
-  getAlbumsApi,
-} from "../../services/apiService";
+import { uploadMusicApi, getAlbumsApi } from "../../services/apiService";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../assets/styles/uploadmusic.css";
 import EmptyImage from "../../assets/images/blackimage.png";
@@ -78,32 +75,36 @@ const UploadMusic = () => {
     try {
       const values = form.getFieldsValue();
 
+      if (!values.albumId) {
+        values.albumId = ""; 
+      }
+
       if (!values.description) {
         values.description = "";
       }
-  
+
       if (!musicFile) {
         notification.error({ message: "Please upload a music file." });
         return;
       }
-  
+
       const formData = new FormData();
       formData.append("musicFile", musicFile);
       if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
       Object.keys(values).forEach((key) => formData.append(key, values[key]));
       formData.append("accountId", user.id);
-  
+
       const response = await uploadMusicApi(formData);
       //console.log("Response from uploadMusicApi:", response);
-  
+
       notification.success({ message: "Music uploaded successfully!" });
+      window.dispatchEvent(new CustomEvent("authUpdate"));
       navigate("/userInfo", { state: { user } });
     } catch (error) {
       console.error("Error uploading music:", error);
       notification.error({ message: "Failed to upload music." });
     }
   };
-  
 
   return (
     <div className="upload-container">
@@ -144,15 +145,33 @@ const UploadMusic = () => {
             layout="vertical"
             autoComplete="off"
             form={form}>
-            <Form.Item name="title" label="Title" rules={[{ required: true }]}>
+            <Form.Item
+              name="title"
+              label="Title"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input music title!",
+                },
+              ]}>
               <Input placeholder="Enter music title" />
             </Form.Item>
-            <Form.Item name="genre" label="Genre" rules={[{ required: true }]}>
-              <Input placeholder="Enter genre" />
+            <Form.Item
+              name="genre"
+              label="Genre"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input genre!",
+                },
+              ]}>
+              <Input placeholder="Enter music genre" />
             </Form.Item>
-            <Form.Item name="albumId" label="Album" rules={[{ required: true }]}>
-              <Select placeholder="Select an album or leave blank">
-                <Select.Option value="">None</Select.Option>
+            <Form.Item
+              name="albumId"
+              label="Album"
+            >
+              <Select placeholder="Select an album">
                 {albums.map((album) => (
                   <Select.Option key={album.id} value={album.id}>
                     {album.name}

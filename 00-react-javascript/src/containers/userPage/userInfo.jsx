@@ -10,6 +10,7 @@ import AlbumUser from "../../components/albumuser";
 import PlaylistUser from "../../components/playlistuser";
 import { LeftOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import {
+  getAccountApi,
   getMusicsApi,
   getAlbumsApi,
   getPlaylistsApi,
@@ -30,13 +31,12 @@ const getItemsToShow = (width) => {
   } else if (width < 2100) {
     return { playlists: 5, albums: 5 };
   } else {
-    return { playlists: 5, albums: 6 };
+    return { playlists: 6, albums: 6 };
   }
 };
 
 const UserInfo = () => {
-  const location = useLocation();
-  const user = location.state?.user;
+  const [user, setUser] = useState({});
   const [songs, setSongs] = useState([]);
   const [albums, setAlbums] = useState([]);
   const [playlists, setPlaylists] = useState([]);
@@ -45,9 +45,63 @@ const UserInfo = () => {
     const mainContent = document.querySelector(".main-content");
     return mainContent
       ? getItemsToShow(mainContent.offsetWidth)
-      : { songs: 6, artists: 4, albums: 4 };
+      : { songs: 5, playlists: 4, albums: 4 };
   });
   const navigate = useNavigate();
+
+  // Fetch updated user data
+  useEffect(() => {
+    const fetchUpdatedUserData = async () => {
+      try {
+        const userResponse = await getAccountApi(); // Lấy thông tin user mới từ API
+        if (userResponse && Array.isArray(userResponse) && userResponse.length > 0) {
+          const updatedUser = userResponse[0];
+          setUser(updatedUser); // Cập nhật state user
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUpdatedUserData();
+
+    const handleAuthUpdate = () => {
+      fetchUpdatedUserData(); 
+    };
+
+    window.addEventListener("authUpdate", handleAuthUpdate);
+
+    return () => {
+      window.removeEventListener("authUpdate", handleAuthUpdate);
+    };
+  }, []);
+
+  // Fetch user-related data (songs, albums, playlists)
+  const fetchUserData = useCallback(async () => {
+    try {
+      const songsResponse = await getMusicsApi();
+      const userSongs = songsResponse.filter((song) => song.accountId === user.id);
+      setSongs(userSongs);
+
+      const albumsResponse = await getAlbumsApi();
+      const userAlbums = albumsResponse.filter((album) => album.accountId === user.id);
+      setAlbums(userAlbums);
+
+      const playlistsResponse = await getPlaylistsApi();
+      const userPlaylists = playlistsResponse.filter(
+        (playlist) => playlist.accountId === user.id
+      );
+      setPlaylists(userPlaylists);
+    } catch (error) {
+      console.error("Error fetching user-related data:", error);
+    }
+  }, [user.id]);
+
+  useEffect(() => {
+    if (user.id) {
+      fetchUserData();
+    }
+  }, [user, fetchUserData]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -74,47 +128,6 @@ const UserInfo = () => {
       resizeObserver.disconnect();
     };
   }, []);
-
-  
-  const fetchUserData = useCallback(async () => {
-    try {
-      if (user?.id) {
-        const songsResponse = await getMusicsApi();
-        const userSongs = songsResponse.filter(
-          (song) => song.accountId === user.id
-        );
-        setSongs(userSongs);
-
-        const albumsResponse = await getAlbumsApi();
-        const userAlbums = albumsResponse.filter(
-          (album) => album.accountId === user.id
-        );
-        setAlbums(userAlbums);
-
-        const playlistsResponse = await getPlaylistsApi();
-        const userPlaylists = playlistsResponse.filter(
-          (playlist) => playlist.accountId === user.id
-        );
-        setPlaylists(userPlaylists);
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    } 
-  }, [user?.id]);
-
-    useEffect(() => {
-      fetchUserData();
-  
-      const handleAuthUpdate = () => {
-        fetchUserData(); 
-      };
-  
-      window.addEventListener("authUpdate", handleAuthUpdate);
-  
-      return () => {
-        window.removeEventListener("authUpdate", handleAuthUpdate);
-      };
-    }, [fetchUserData]);
 
   const handleBackClick = () => {
     navigate(-1);

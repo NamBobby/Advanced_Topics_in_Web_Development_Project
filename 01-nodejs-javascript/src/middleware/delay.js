@@ -7,7 +7,7 @@ const delaymodule = (req, res, next) => {
             //console.log(">>> check token:", token)
         }
         next()
-    }, 250)
+    }, 100)
 }
 
 module.exports = delaymodule;

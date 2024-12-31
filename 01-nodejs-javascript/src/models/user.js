@@ -37,7 +37,7 @@ const User = sequelize.define(
       type: DataTypes.ENUM(
         "Man",
         "Woman",
-        "Somthing else",
+        "Something else",
         "Prefer not to say"
       ),
       allowNull: false,

@@ -39,6 +39,7 @@ const Header = () => {
     setAuth({ isAuthenticated: false, user: { email: "", name: "" } });
     notification.success({ message: "Logout Successful" });
     navigate("/");
+    window.location.reload();
   };
 
   // Menu items cho dropdown

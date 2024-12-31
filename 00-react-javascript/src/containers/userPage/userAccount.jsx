@@ -147,7 +147,7 @@ const UserAccount = () => {
         message: "Success",
         description: "Profile updated successfully!",
       });
-
+      
       // Fetch updated user data
       const updatedUser = await getAccountApi();
       if (updatedUser && Array.isArray(updatedUser) && updatedUser.length > 0) {
@@ -164,6 +164,8 @@ const UserAccount = () => {
           );
         }
       }
+
+      window.dispatchEvent(new CustomEvent("authUpdate"));
     } catch (error) {
       console.error("Error updating profile:", error);
       notification.error({

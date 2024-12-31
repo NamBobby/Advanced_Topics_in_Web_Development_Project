@@ -5,7 +5,14 @@ const path = require("path");
 const { User, Playlist, Album, Music } = require("../models/associations");
 const saltRounds = 10;
 
-const createUserService = async (name, email, password, dateOfBirth, gender, role) => {
+const createUserService = async (
+  name,
+  email,
+  password,
+  dateOfBirth,
+  gender,
+  role
+) => {
   try {
     // Kiểm tra email đã tồn tại
     const existingUser = await User.findOne({ where: { email } });
@@ -26,10 +33,9 @@ const createUserService = async (name, email, password, dateOfBirth, gender, rol
     return { EC: 0, EM: "User created successfully", data: newUser };
   } catch (error) {
     console.error("Error in createUserService:", error);
-    return { EC: 3, EM: "Error creating user" }; 
+    return { EC: 3, EM: "Error creating user" };
   }
 };
-
 
 const deleteUserService = async (email) => {
   try {
@@ -40,8 +46,20 @@ const deleteUserService = async (email) => {
     }
 
     // Delete user avatar
-    if (user.avatarPath && fs.existsSync(user.avatarPath)) {
-      fs.unlinkSync(user.avatarPath);
+    // Xóa avatar của user nếu có
+    if (
+      user.avatarPath &&
+      fs.existsSync(path.resolve(__dirname, "../uploads", user.avatarPath))
+    ) {
+      const avatarPath = path.resolve(__dirname, "../uploads", user.avatarPath); // Đảm bảo đường dẫn chính xác
+      try {
+        fs.unlinkSync(avatarPath);
+        //console.log(`Deleted avatar file at ${avatarPath}`);
+      } catch (error) {
+        console.error("Error deleting avatar:", error);
+      }
+    } else {
+      console.log("Avatar file not found or already deleted:", user.avatarPath);
     }
 
     // Find and delete playlists and their thumbnails
@@ -83,7 +101,6 @@ const deleteUserService = async (email) => {
     return { EC: 3, EM: "Error deleting account and related files" };
   }
 };
-
 
 module.exports = {
   createUserService,

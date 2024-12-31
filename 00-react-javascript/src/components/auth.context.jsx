@@ -31,6 +31,8 @@ export const AuthWrapper = (props) => {
       });
     }
     setAppLoading(false);
+
+    window.dispatchEvent(new Event("authUpdate"));
   }, []);
 
   return (
