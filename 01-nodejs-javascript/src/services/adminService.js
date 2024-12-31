@@ -1,6 +1,8 @@
 require("dotenv").config();
-const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const fs = require("fs");
+const path = require("path");
+const { User, Playlist, Album, Music } = require("../models/associations");
 const saltRounds = 10;
 
 const createUserService = async (name, email, password, dateOfBirth, gender, role) => {
@@ -24,7 +26,7 @@ const createUserService = async (name, email, password, dateOfBirth, gender, rol
     return { EC: 0, EM: "User created successfully", data: newUser };
   } catch (error) {
     console.error("Error in createUserService:", error);
-    return { EC: 3, EM: "Error creating user" }; // Trả về lỗi tổng quát
+    return { EC: 3, EM: "Error creating user" }; 
   }
 };
 
@@ -34,15 +36,51 @@ const deleteUserService = async (email) => {
     // Find the user by email
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return { EC: 1, EM: "User  not found" };
+      return { EC: 1, EM: "User not found" };
     }
 
-    // Delete the user
+    // Delete user avatar
+    if (user.avatarPath && fs.existsSync(user.avatarPath)) {
+      fs.unlinkSync(user.avatarPath);
+    }
+
+    // Find and delete playlists and their thumbnails
+    const playlists = await Playlist.findAll({ where: { accountId: user.id } });
+    for (const playlist of playlists) {
+      if (playlist.thumbnailPath && fs.existsSync(playlist.thumbnailPath)) {
+        fs.unlinkSync(playlist.thumbnailPath);
+      }
+    }
+    await Playlist.destroy({ where: { accountId: user.id } });
+
+    // Find and delete albums and their thumbnails
+    const albums = await Album.findAll({ where: { accountId: user.id } });
+    for (const album of albums) {
+      if (album.thumbnailPath && fs.existsSync(album.thumbnailPath)) {
+        fs.unlinkSync(album.thumbnailPath);
+      }
+    }
+    await Album.destroy({ where: { accountId: user.id } });
+
+    // Find and delete music files
+    const musics = await Music.findAll({ where: { accountId: user.id } });
+    for (const music of musics) {
+      if (music.filePath && fs.existsSync(music.filePath)) {
+        fs.unlinkSync(music.filePath);
+      }
+      if (music.thumbnailPath && fs.existsSync(music.thumbnailPath)) {
+        fs.unlinkSync(music.thumbnailPath);
+      }
+    }
+    await Music.destroy({ where: { accountId: user.id } });
+
+    // Finally, delete the user account
     await User.destroy({ where: { email } });
-    return { EC: 0, EM: "Account deleted successfully" };
+
+    return { EC: 0, EM: "Account and related files deleted successfully" };
   } catch (error) {
-    console.log(error);
-    return { EC: 3, EM: "Error deleting account" };
+    console.error("Error in deleteUserService:", error);
+    return { EC: 3, EM: "Error deleting account and related files" };
   }
 };
 

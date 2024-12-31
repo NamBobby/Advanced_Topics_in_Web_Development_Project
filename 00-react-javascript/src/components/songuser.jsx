@@ -14,6 +14,7 @@ import {
   getMusicInPlaylistApi,
 } from "../services/apiService";
 import { Dropdown } from "antd";
+import SongLogo from "../assets/images/songlogo.png";
 
 const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -133,7 +134,7 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
               />
             ) : (
               <div className="songuser-placeholder">
-                <CaretRightOutlined className="songuser-placeholder-icon" />
+                <img src={SongLogo} alt="Song Logo" className="songuser-placeholder-icon" />
               </div>
             )}
           </div>
@@ -159,7 +160,7 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
               <HeartOutlined
                 className="add-to-playlist-icon"
                 onClick={(e) => {
-                  e.stopPropagation(); // Ngăn sự kiện nổi lên từ icon
+                  e.stopPropagation(); 
                 }}
               />
             </Dropdown>

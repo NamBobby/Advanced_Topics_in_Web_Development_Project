@@ -25,6 +25,7 @@ import {
 import { Link } from "react-router-dom";
 import axios from "../../services/axios.customize";
 import "../../assets/styles/userAccount.css";
+import EmptyImage from "../../assets/images/blackimage.png";
 
 const months = [
   "January",
@@ -49,6 +50,7 @@ const UserAccount = () => {
   const [userData, setUserData] = useState({});
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
 
   // Fetch user data from API
   useEffect(() => {
@@ -60,7 +62,7 @@ const UserAccount = () => {
           const user = res[0]; // Lấy phần tử đầu tiên trong mảng
           setUserData(user);
 
-          // Tách ngày tháng năm từ dateOfBirth
+          // split day-month-year dateOfBirth
           if (user.dateOfBirth) {
             const [year, month, day] = user.dateOfBirth.split("-");
             form.setFieldsValue({
@@ -68,6 +70,7 @@ const UserAccount = () => {
               year: parseInt(year),
               month: parseInt(month),
               day: parseInt(day),
+              gender: user.gender,
             });
           } else {
             form.setFieldsValue(user);
@@ -231,7 +234,7 @@ const UserAccount = () => {
                     ? `${
                         axios.defaults.baseURL
                       }/uploads/${userData.avatarPath.replace(/^src[\\/]/, "")}`
-                    : "https://via.placeholder.com/100")
+                    : EmptyImage)
                 }
                 alt="Avatar"
                 className="avatar-image"
@@ -318,22 +321,16 @@ const UserAccount = () => {
                 </Col>
               </Row>
             </Form.Item>
-            <Form.Item label="Gender" required>
-              <Radio.Group id="gender">
-                <Radio value="Man" id="gender-man">
-                  Man
-                </Radio>
-                <Radio value="Woman" id="gender-woman">
-                  Woman
-                </Radio>
-                <Radio value="Something else" id="gender-other">
-                  Something else
-                </Radio>
-                <Radio value="Prefer not to say" id="gender-prefer-not-to-say">
-                  Prefer not to say
-                </Radio>
+
+            <Form.Item label="Gender" name="gender" required>
+              <Radio.Group>
+                <Radio value="Man">Man</Radio>
+                <Radio value="Woman">Woman</Radio>
+                <Radio value="Something else">Something else</Radio>
+                <Radio value="Prefer not to say">Prefer not to say</Radio>
               </Radio.Group>
             </Form.Item>
+
             <Form.Item>
               <Button
                 type="primary"
@@ -345,80 +342,93 @@ const UserAccount = () => {
           </Form>
 
           <Divider />
-          <Form
-            form={passwordForm}
-            layout="vertical"
-            className="useraccount-form">
-            <Form.Item
-              name="username"
-              initialValue={userData.name}
-              style={{ display: "none" }}>
-              <Input type="text" autoComplete="username" />
-            </Form.Item>
-            <Form.Item
-              label="Current Password"
-              name="currentPassword"
-              rules={[
-                { required: true, message: "Enter your current password!" },
-              ]}>
-              <Input.Password
-                className="currentpassword-input"
-                placeholder="Current Password"
-                autoComplete="current-password"
-                iconRender={(visible) =>
-                  visible ? (
-                    <EyeTwoTone twoToneColor="#ffffff" />
-                  ) : (
-                    <EyeInvisibleOutlined />
-                  )
-                }
-              />
-            </Form.Item>
-            <Form.Item
-              label="New Password"
-              name="newPassword"
-              rules={[{ required: true, message: "Enter a new password!" }]}>
-              <Input.Password
-                className="newpassword-input"
-                placeholder="New Password"
-                autoComplete="new-password" // Thêm thuộc tính này
-                iconRender={(visible) =>
-                  visible ? (
-                    <EyeTwoTone twoToneColor="#ffffff" />
-                  ) : (
-                    <EyeInvisibleOutlined />
-                  )
-                }
-              />
-            </Form.Item>
-            <Form.Item
-              label="Confirm Password"
-              name="confirmPassword"
-              rules={[
-                { required: true, message: "Confirm your new password!" },
-              ]}>
-              <Input.Password
-                className="confirmpassword-input"
-                placeholder="Confirm Password"
-                autoComplete="new-password" // Thêm thuộc tính này
-                iconRender={(visible) =>
-                  visible ? (
-                    <EyeTwoTone twoToneColor="#ffffff" />
-                  ) : (
-                    <EyeInvisibleOutlined />
-                  )
-                }
-              />
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                className="user-account-button"
-                onClick={handlePasswordUpdate}>
-                Change Password
-              </Button>
-            </Form.Item>
-          </Form>
+
+          <div className="change-password-section">
+            <h1
+              onClick={() => setShowPasswordForm(!showPasswordForm)}
+              className="user-account-toggle-password-form"
+            >
+              Change your Password
+            </h1>
+            {showPasswordForm && (
+              <Form
+                form={passwordForm}
+                layout="vertical"
+                className="useraccount-form">
+                <Form.Item
+                  name="username"
+                  initialValue={userData.name}
+                  style={{ display: "none" }}>
+                  <Input type="text" autoComplete="username" />
+                </Form.Item>
+                <Form.Item
+                  label="Current Password"
+                  name="currentPassword"
+                  rules={[
+                    { required: true, message: "Enter your current password!" },
+                  ]}>
+                  <Input.Password
+                    className="currentpassword-input"
+                    placeholder="Current Password"
+                    autoComplete="current-password"
+                    iconRender={(visible) =>
+                      visible ? (
+                        <EyeTwoTone twoToneColor="#ffffff" />
+                      ) : (
+                        <EyeInvisibleOutlined />
+                      )
+                    }
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="New Password"
+                  name="newPassword"
+                  rules={[
+                    { required: true, message: "Enter a new password!" },
+                  ]}>
+                  <Input.Password
+                    className="newpassword-input"
+                    placeholder="New Password"
+                    autoComplete="new-password"
+                    iconRender={(visible) =>
+                      visible ? (
+                        <EyeTwoTone twoToneColor="#ffffff" />
+                      ) : (
+                        <EyeInvisibleOutlined />
+                      )
+                    }
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  rules={[
+                    { required: true, message: "Confirm your new password!" },
+                  ]}>
+                  <Input.Password
+                    className="confirmpassword-input"
+                    placeholder="Confirm Password"
+                    autoComplete="new-password" // Thêm thuộc tính này
+                    iconRender={(visible) =>
+                      visible ? (
+                        <EyeTwoTone twoToneColor="#ffffff" />
+                      ) : (
+                        <EyeInvisibleOutlined />
+                      )
+                    }
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    className="user-account-button"
+                    onClick={handlePasswordUpdate}>
+                    Change Password
+                  </Button>
+                </Form.Item>
+              </Form>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -10,6 +10,9 @@ import { useNavigate } from "react-router-dom";
 import { getFollowedItemsApi, getPlaylistsApi } from "../services/apiService";
 import { AuthContext } from "../components/auth.context";
 import axios from "../services/axios.customize";
+import ArtistLogo from "../assets/images/artistlogo.png";
+import AlbumLogo from "../assets/images/albumlogo.png";
+import PlaylistLogo from "../assets/images/playlistlogo.png";
 
 const SiderBar = () => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -135,7 +138,7 @@ const SiderBar = () => {
                                 /^src[\\/]/,
                                 ""
                               )}`
-                            : "https://via.placeholder.com/400"
+                            : PlaylistLogo
                         }
                         alt="PLaylist thumbnail"
                         className="slider-bar-image"
@@ -176,7 +179,7 @@ const SiderBar = () => {
                                 /^src[\\/]/,
                                 ""
                               )}`
-                            : "https://via.placeholder.com/100"
+                            : ArtistLogo
                         }
                         alt={artist.name}
                         className="slider-bar-artist-image"
@@ -216,7 +219,7 @@ const SiderBar = () => {
                             ? `${
                                 axios.defaults.baseURL
                               }/${album.thumbnailPath.replace(/^src[\\/]/, "")}`
-                            : "https://via.placeholder.com/400"
+                            : AlbumLogo
                         }
                         alt="Album thumbnail"
                         className="slider-bar-image"
@@ -292,7 +295,7 @@ const SiderBar = () => {
                         ? `${
                             axios.defaults.baseURL
                           }/${playlist.thumbnailPath.replace(/^src[\\/]/, "")}`
-                        : "https://via.placeholder.com/400"
+                        : PlaylistLogo
                     }
                     alt="PLaylist thumbnail"
                     className="slider-bar-image"
@@ -329,7 +332,7 @@ const SiderBar = () => {
                             /^src[\\/]/,
                             ""
                           )}`
-                        : "https://via.placeholder.com/100"
+                        : ArtistLogo
                     }
                     alt={artist.name}
                     className="slider-bar-artist-image"
@@ -366,7 +369,7 @@ const SiderBar = () => {
                         ? `${
                             axios.defaults.baseURL
                           }/${album.thumbnailPath.replace(/^src[\\/]/, "")}`
-                        : "https://via.placeholder.com/400"
+                        : AlbumLogo
                     }
                     alt="Album thumbnail"
                     className="slider-bar-image"

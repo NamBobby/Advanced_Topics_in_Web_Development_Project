@@ -15,17 +15,6 @@ const AdminHeader = () => {
   const navigate = useNavigate();
   const { auth, setAuth } = useContext(AuthContext);
   console.log(">>> Check auth", auth);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = () => {
-    navigate(`/search?query=${searchQuery}`);
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
-  };
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");

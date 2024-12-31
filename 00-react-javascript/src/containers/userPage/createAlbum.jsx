@@ -9,6 +9,7 @@ import {
 } from "../../services/apiService";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../assets/styles/uploadmusic.css";
+import EmptyImage from "../../assets/images/blackimage.png";
 
 const CreateAlbum = () => {
   const [form] = Form.useForm();
@@ -76,7 +77,7 @@ const CreateAlbum = () => {
           <div className="thumbnail-wrapper">
             <div className="thumbnail-frame">
               <img
-                src={thumbnailPreview || "https://via.placeholder.com/100"}
+                src={thumbnailPreview || EmptyImage}
                 alt="Thumbnail"
                 className="thumbnail-image"
               />

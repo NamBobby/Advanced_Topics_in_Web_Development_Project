@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteAlbumApi } from "../services/apiService";
 import "../assets/styles/albumuser.css";
 import axios from "../services/axios.customize";
+import AlbumLogo from "../assets/images/albumlogo.png";
 
 const AlbumUser = ({ itemsToShow, albums, onDelete }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -51,7 +52,7 @@ const AlbumUser = ({ itemsToShow, albums, onDelete }) => {
             />
           ) : (
             <div className="albumuser-placeholder">
-              <CaretRightOutlined className="albumuser-placeholder-icon" />
+              <img src={AlbumLogo} alt="Album Logo" className="albumuser-placeholder-icon" />
             </div>
           )}
           <div className="albumuser-info">

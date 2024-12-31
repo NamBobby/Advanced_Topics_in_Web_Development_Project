@@ -11,6 +11,7 @@ import {
 } from "../../services/apiService";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../assets/styles/uploadmusic.css";
+import EmptyImage from "../../assets/images/blackimage.png";
 
 const UploadMusic = () => {
   const [albums, setAlbums] = useState([]);
@@ -120,7 +121,7 @@ const UploadMusic = () => {
           <div className="thumbnail-wrapper">
             <div className="thumbnail-frame">
               <img
-                src={thumbnailPreview || "https://via.placeholder.com/100"}
+                src={thumbnailPreview || EmptyImage}
                 alt="Thumbnail"
                 className="thumbnail-image"
               />
@@ -149,7 +150,7 @@ const UploadMusic = () => {
             <Form.Item name="genre" label="Genre" rules={[{ required: true }]}>
               <Input placeholder="Enter genre" />
             </Form.Item>
-            <Form.Item name="albumId" label="Album">
+            <Form.Item name="albumId" label="Album" rules={[{ required: true }]}>
               <Select placeholder="Select an album or leave blank">
                 <Select.Option value="">None</Select.Option>
                 {albums.map((album) => (

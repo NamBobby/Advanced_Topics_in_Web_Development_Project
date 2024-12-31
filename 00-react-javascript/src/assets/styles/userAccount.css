@@ -59,6 +59,19 @@ p {
   text-align: center;
 }
 
+.user-account-toggle-password-form {
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.user-account-toggle-password-form:hover {
+  color: #1db954;
+}
+
 .avatar-wrapper {
   display: flex;
   justify-content: center;

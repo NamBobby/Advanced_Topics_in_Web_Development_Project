@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { CaretRightOutlined } from "@ant-design/icons";
 import '../assets/styles/song.css';
 import axios from "../services/axios.customize";
+import SongLogo from "../assets/images/songlogo.png";
 
 
 const Song = ({ itemsToShow, songs, handleSongClick }) => {
@@ -24,7 +25,7 @@ const Song = ({ itemsToShow, songs, handleSongClick }) => {
             className="song-image" />
           ) : (
             <div className="song-placeholder">
-              <CaretRightOutlined className="song-placeholder-icon" />
+              <img src={SongLogo} alt="Song Logo" className="song-placeholder-icon" />
             </div>
           )}
           <div className="song-info">

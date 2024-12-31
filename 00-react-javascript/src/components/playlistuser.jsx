@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { CaretRightOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import "../assets/styles/playlistuser.css";
 import axios from "../services/axios.customize";
+import PlaylistLogo from "../assets/images/playlistlogo.png";
 
 const PlaylistUser = ({ itemsToShow, playlists, onDelete }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -50,7 +51,7 @@ const PlaylistUser = ({ itemsToShow, playlists, onDelete }) => {
             className="playlistuser-image" />
           ) : (
             <div className="playlistuser-placeholder">
-              <CaretRightOutlined className="playlistuser-placeholder-icon" />
+              <img src={PlaylistLogo} alt="Playlist Logo" className="playlistuser-placeholder-icon" />
             </div>
           )}
           <div className="playlistuser-info">

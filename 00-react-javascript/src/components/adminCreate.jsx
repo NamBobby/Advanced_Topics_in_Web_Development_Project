@@ -75,7 +75,8 @@ const AdminCreatePage = () => {
         message: "Success",
         description: res.message || "User created successfully!",
       });
-      navigate("/admin");
+
+      window.dispatchEvent(new CustomEvent("authUpdate"));
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Failed to create user.";

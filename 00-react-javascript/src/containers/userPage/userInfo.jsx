@@ -16,6 +16,7 @@ import {
 } from "../../services/apiService";
 import "../../assets/styles/userInfo.css";
 import axios from "../../services/axios.customize";
+import ArtistLogo from "../../assets/images/artistlogo.png";
 
 const getItemsToShow = (width) => {
   if (width < 1100) {
@@ -152,7 +153,7 @@ const UserInfo = () => {
                   /^src[\\/]/,
                   ""
                 )}`
-              : "https://via.placeholder.com/400"
+              : ArtistLogo
           }
           alt={user.name}
           className="avatar-image"

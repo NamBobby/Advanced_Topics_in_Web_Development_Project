@@ -148,6 +148,11 @@
   align-items: center;
 }
 
+.albumsong-placeholder-icon{
+  width: 100%;
+  height: auto;
+}
+
 .albumsong-info {
   flex: 2;
   margin-left: 20px;

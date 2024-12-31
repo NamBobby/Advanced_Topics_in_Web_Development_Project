@@ -8,6 +8,7 @@ import {
   SoundOutlined,
 } from "@ant-design/icons";
 import axios from "../services/axios.customize";
+import SongLogo from "../assets/images/songlogo.png";
 
 
 const Footer = ({ currentSong, songList, setCurrentSong }) => {
@@ -130,7 +131,7 @@ const Footer = ({ currentSong, songList, setCurrentSong }) => {
         <img
           src={currentSong?.thumbnailPath
             ? `${axios.defaults.baseURL}/${currentSong.thumbnailPath.replace(/^src[\\/]/, "")}`
-            : "https://via.placeholder.com/50"}
+            : SongLogo}
           alt={currentSong?.title || "Song Thumbnail"}
           className="song-cover"
         />

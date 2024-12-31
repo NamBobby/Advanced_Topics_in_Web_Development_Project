@@ -4,7 +4,7 @@ import { CaretRightOutlined } from "@ant-design/icons";
 import { getMusicInAlbumApi } from "../services/apiService";
 import "../assets/styles/album.css";
 import axios from "../services/axios.customize";
-
+import AlbumLogo from "../assets/images/albumlogo.png";
 
 const Album = ({ itemsToShow, albums }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -36,7 +36,7 @@ const Album = ({ itemsToShow, albums }) => {
             className="album-image" />
           ) : (
             <div className="album-placeholder">
-              <CaretRightOutlined className="album-placeholder-icon" />
+              <img src={AlbumLogo} alt="Album Logo" className="album-placeholder-icon" />
             </div>
           )}
           <div className="album-info">

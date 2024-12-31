@@ -5,6 +5,9 @@ import "../assets/styles/albumDetail.css";
 import axios from "../services/axios.customize";
 import { getAlbumsApi, getMusicInAlbumApi } from "../services/apiService";
 import FollowButton from "../components/followButton";
+import AlbumLogo from "../assets/images/albumlogo.png";
+import SongLogo from "../assets/images/songlogo.png";
+
 
 const AlbumDetail = () => {
   const { title } = useParams();
@@ -86,7 +89,7 @@ const AlbumDetail = () => {
                   /^src[\\/]/,
                   ""
                 )}`
-              : "https://via.placeholder.com/400"
+              : AlbumLogo
           }
           alt="Album thumbnail"
           className="hidden-image"
@@ -130,7 +133,7 @@ const AlbumDetail = () => {
                 />
               ) : (
                 <div className="albumsong-placeholder">
-                  <CaretRightOutlined className="albumsong-placeholder-icon" />
+                  <img src={SongLogo} alt="Song Logo" className="albumsong-placeholder-icon" />
                 </div>
               )}
             </div>

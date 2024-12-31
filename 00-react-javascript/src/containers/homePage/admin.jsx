@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import AdminHeader from "../../components/adminHeader";
 import { Table, Button, notification } from "antd";
 import { getUserApi, deleteAccountApi } from "../../services/apiService";
@@ -10,8 +10,8 @@ const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [displayedUsers, setDisplayedUsers] = useState([]);
   const [visibleCount, setVisibleCount] = useState(10);
-  const navigate = useNavigate();
   const [isPlusIcon, setIsPlusIcon] = useState(true);
+  const navigate = useNavigate();
 
   // Memo hóa currentUser để không gây re-render liên tục
   const currentUser = useMemo(() => {
@@ -19,30 +19,26 @@ const AdminPage = () => {
     return storedUser ? JSON.parse(storedUser) : null;
   }, []);
 
-  // Fetch users khi component mount hoặc visibleCount thay đổi
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (!currentUser) return; // Nếu currentUser không tồn tại, thoát
-
-      try {
-        const response = await getUserApi();
-        const filteredUsers = response.filter(
-          (user) => user.id !== currentUser.id
-        );
-        setUsers(filteredUsers);
-        setDisplayedUsers(filteredUsers.slice(0, visibleCount));
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        notification.error({
-          message: "Error",
-          description: "Failed to fetch user data.",
-        });
-      }
-    };
-
-    fetchUsers();
-  }, [visibleCount, currentUser]); // currentUser được memo hóa nên không gây re-render
-
+  // Fetch users 
+  const fetchUsers = useCallback(async () => {
+    if (!currentUser) return;
+  
+    try {
+      const response = await getUserApi();
+      const filteredUsers = response.filter(
+        (user) => user.id !== currentUser.id
+      );
+      setUsers(filteredUsers);
+      setDisplayedUsers(filteredUsers.slice(0, visibleCount));
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      notification.error({
+        message: "Error",
+        description: "Failed to fetch user data.",
+      });
+    }
+  }, [currentUser, visibleCount]);
+  
   const handleSeeMore = () => {
     setVisibleCount((prev) => prev + 10);
   };
@@ -92,6 +88,22 @@ const AdminPage = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  useEffect(() => {
+    const handleAuthUpdate = () => {
+      fetchUsers(); 
+    };
+  
+    window.addEventListener("authUpdate", handleAuthUpdate);
+  
+    return () => {
+      window.removeEventListener("authUpdate", handleAuthUpdate);
+    };
+  }, [fetchUsers]);  
 
   return (
     <div className="admin-container">

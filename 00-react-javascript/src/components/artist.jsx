@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { CaretRightOutlined, UserOutlined} from "@ant-design/icons";
+import { CaretRightOutlined} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "../assets/styles/artist.css";
 import axios from "../services/axios.customize";
+import ArtistLogo from "../assets/images/artistlogo.png";
 
 
 const Artist = ({ artists, itemsToShow }) => {
@@ -33,7 +34,7 @@ const Artist = ({ artists, itemsToShow }) => {
               />
             ) : (
               <div className="artist-placeholder">
-                <CaretRightOutlined className="artist-placeholder-icon" />
+                <img src={ArtistLogo} alt="Artist Logo" className="artist-placeholder-icon" />
               </div>
             )}
             <div className="artist-info">

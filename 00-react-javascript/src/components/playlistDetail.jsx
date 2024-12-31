@@ -12,6 +12,8 @@ import {
   getMusicInPlaylistApi,
   removeMusicFromPlaylistApi,
 } from "../services/apiService";
+import PlaylistLogo from "../assets/images/playlistlogo.png";
+import SongLogo from "../assets/images/songlogo.png";
 
 const PlaylistDetail = () => {
   const { title } = useParams();
@@ -96,7 +98,7 @@ const PlaylistDetail = () => {
                   /^src[\\/]/,
                   ""
                 )}`
-              : "https://via.placeholder.com/400"
+              : PlaylistLogo
           }
           alt="Playlist thumbnail"
           className="hidden-image"
@@ -132,7 +134,7 @@ const PlaylistDetail = () => {
                 />
               ) : (
                 <div className="playlistsong-placeholder">
-                  <CaretRightOutlined className="playlistsong-placeholder-icon" />
+                  <img src={SongLogo} alt="Song Logo" className="playlistsong-placeholder-icon" />
                 </div>
               )}
             </div>

@@ -13,6 +13,8 @@ import {
   removeMusicFromAlbumApi,
 } from "../services/apiService";
 import FollowButton from "./followButton";
+import AlbumLogo from "../assets/images/albumlogo.png";
+import SongLogo from "../assets/images/songlogo.png";
 
 const AlbumUserDetail = () => {
   const { title } = useParams();
@@ -103,7 +105,7 @@ const AlbumUserDetail = () => {
                   /^src[\\/]/,
                   ""
                 )}`
-              : "https://via.placeholder.com/400"
+              : AlbumLogo
           }
           alt="Album thumbnail"
           className="hidden-image"
@@ -147,7 +149,7 @@ const AlbumUserDetail = () => {
                 />
               ) : (
                 <div className="albumsong-placeholder">
-                  <CaretRightOutlined className="albumsong-placeholder-icon" />
+                  <img src={SongLogo} alt="Song Logo" className="albumsong-placeholder-icon" />
                 </div>
               )}
             </div>

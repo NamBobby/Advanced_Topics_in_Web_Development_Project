@@ -129,6 +129,11 @@
   align-items: center;
 }
 
+.playlistsong-placeholder-icon{
+  width: 100%;
+  height: auto;
+}
+
 .playlistsong-info {
   flex: 2;
   margin-left: 20px;

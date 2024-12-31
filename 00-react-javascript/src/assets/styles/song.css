@@ -42,8 +42,8 @@
 }
 
 .song-placeholder-icon {
-  font-size: 50px;
-  padding-left: 5px;
+  width: 100%;
+  height: auto;
 }
 
 /* Song info */

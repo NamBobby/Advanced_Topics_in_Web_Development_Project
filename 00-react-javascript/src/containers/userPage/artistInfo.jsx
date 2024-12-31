@@ -11,6 +11,7 @@ import axios from "../../services/axios.customize";
 import { LeftOutlined } from "@ant-design/icons";
 import FollowButton from "../../components/followButton";
 import SongArtist from "../../components/songartist";
+import ArtistLogo from "../../assets/images/artistlogo.png";
 
 const getItemsToShow = (width) => {
   if (width < 1100) {
@@ -141,7 +142,7 @@ const ArtistInfo = () => {
                   /^src[\\/]/,
                   ""
                 )}`
-              : "https://via.placeholder.com/400"
+              : ArtistLogo
           }
           alt={artist?.name}
           className="avatar-image"

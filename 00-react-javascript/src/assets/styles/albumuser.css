@@ -41,8 +41,8 @@
   }
   
   .albumuser-placeholder-icon {
-    font-size: 200px;
-    padding-left: 25px;
+    width: 100%;
+    height: auto;
   }
 
   .albumuser-placeholder-icon svg {

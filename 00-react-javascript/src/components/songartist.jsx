@@ -8,6 +8,7 @@ import {
   addMusicToPlaylistApi,
   getMusicInPlaylistApi,
 } from "../services/apiService";
+import SongLogo from "../assets/images/songlogo.png";
 
 const SongArtist = ({ songs, handleSongClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -112,7 +113,7 @@ const SongArtist = ({ songs, handleSongClick }) => {
               />
             ) : (
               <div className="songuser-placeholder">
-                <CaretRightOutlined className="songuser-placeholder-icon" />
+                <img src={SongLogo} alt="Song Logo" className="songuser-placeholder-icon" />
               </div>
             )}
           </div>
