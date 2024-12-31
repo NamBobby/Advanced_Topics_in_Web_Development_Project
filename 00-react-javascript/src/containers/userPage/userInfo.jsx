@@ -174,6 +174,8 @@ const UserInfo = () => {
               </div>
             </div>
             <SongUser
+              playlists={playlists}
+              albums={albums}
               songs={songs}
               handleSongClick={(song) => {
                 setCurrentSong(song);

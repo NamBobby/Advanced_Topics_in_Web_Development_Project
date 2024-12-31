@@ -7,14 +7,13 @@ import { getAlbumsApi, getMusicInAlbumApi } from "../services/apiService";
 import FollowButton from "../components/followButton";
 
 const AlbumDetail = () => {
-  const { title } = useParams(); // Extract album name from URL
+  const { title } = useParams();
   const navigate = useNavigate();
   const [album, setAlbum] = useState(null);
   const [songs, setSongs] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(5);
   const [durations, setDurations] = useState({});
-  const [loading, setLoading] = useState(true);
   const { setCurrentSong, setSongList } = useOutletContext();
 
   useEffect(() => {
@@ -40,9 +39,7 @@ const AlbumDetail = () => {
       } catch (error) {
         console.error("Error fetching album data:", error);
         navigate("/"); // Redirect to home if the album is not found
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchAlbumData();
@@ -76,14 +73,6 @@ const AlbumDetail = () => {
     navigate(`/artist/${album.accountId}`);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!album) {
-    return <div>Album not found</div>;
-  }
-
   return (
     <div className="albumdetail-overlay">
       <div className="albumdetail-background">
@@ -92,7 +81,7 @@ const AlbumDetail = () => {
         </div>
         <img
           src={
-            album.thumbnailPath
+            album?.thumbnailPath
               ? `${axios.defaults.baseURL}/${album.thumbnailPath.replace(
                   /^src[\\/]/,
                   ""
@@ -103,19 +92,19 @@ const AlbumDetail = () => {
           className="hidden-image"
         />
         <div className="albumdetail-header">
-          <h1>{album.name}</h1>
+          <h1 className="albumdetail-title" >{album?.name}</h1>
           <div className="albumdetail-artist-role">
             <div
               className="albumdetail-artist"
               onClick={() => handleArtistClick(album.artist)}>
-              <h2>{album.artist}</h2>
+              <h2>{album?.artist}</h2>
             </div>
-            <FollowButton followType="Album" followId={album.id} />
+            <FollowButton followType="Album" followId={album?.id} />
           </div>
         </div>
       </div>
       <div className="albumdetail-content">
-        <h2>Album {album.name} List</h2>
+        <h2>Album {album?.name} List</h2>
         {songs.slice(0, itemsToShow).map((song, songid) => (
           <div
             key={songid}

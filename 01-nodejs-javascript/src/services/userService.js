@@ -396,8 +396,7 @@ const getMusicInPlaylistService = async (playlistId) => {
         m.filePath,
         m.description,
         m.thumbnailPath,
-        m.publishedYear,
-        a.name AS album
+        m.publishedYear
       FROM playlistmusics pm
       INNER JOIN music m ON pm.musicId = m.id
       WHERE pm.playlistId = :playlistId

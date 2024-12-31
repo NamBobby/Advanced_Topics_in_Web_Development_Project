@@ -1,22 +1,54 @@
-import React, { useState } from "react";
-import { useLocation, useOutletContext, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { CaretRightOutlined, LeftOutlined } from "@ant-design/icons";
 import "../assets/styles/playlistDetail.css";
 import axios from "../services/axios.customize";
+import { getPlaylistsApi, getMusicInPlaylistApi } from "../services/apiService";
 
 const PlaylistDetail = () => {
-  const location = useLocation();
-  const { playlist, songs } = location.state || {};
+  const { title } = useParams();
+  const navigate = useNavigate();
+  const [playlist, setPlaylist] = useState(null);
+  const [songs, setSongs] = useState([]);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(5);
-  const [expanded, setExpanded] = useState(false);
   const [durations, setDurations] = useState({});
   const { setCurrentSong, setSongList } = useOutletContext();
-  const navigate = useNavigate();
 
-  if (!playlist) {
-    return <div>Playlist not found!</div>;
-  }
+  useEffect(() => {
+    const fetchPlaylistData = async () => {
+      try {
+        const playlistsResponse = await getPlaylistsApi();
+        const matchedPlaylist = playlistsResponse.find(
+          (pl) => pl.name.replace(/\s+/g, "-").toLowerCase() === title
+        );
+
+        if (matchedPlaylist) {
+          setPlaylist(matchedPlaylist);
+
+          const songsResponse = await getMusicInPlaylistApi({
+            playlistId: matchedPlaylist.id,
+          });
+          setSongs(songsResponse);
+        } else {
+          throw new Error("Playlist not found");
+        }
+      } catch (error) {
+        console.error("Error fetching playlist data:", error);
+        navigate("/");
+      }
+    };
+
+    fetchPlaylistData();
+  }, [title, navigate]);
+
+  const handleSeeMore = () => {
+    setItemsToShow((prev) => Math.min(prev + 5, songs.length));
+  };
+
+  const handleSeeLess = () => {
+    setItemsToShow(5);
+  };
 
   const loadSongDuration = (filePath, index) => {
     const audio = new Audio(
@@ -30,17 +62,8 @@ const PlaylistDetail = () => {
     };
   };
 
-  const handleSeeMore = () => {
-    setItemsToShow((prev) => Math.min(prev + 5, songs.length));
-  };
-
-  const handleSeeLess = () => {
-    setItemsToShow(5);
-  };
-
-
   const handleBackClick = () => {
-    navigate(-1); 
+    navigate(-1);
   };
 
   return (
@@ -51,24 +74,22 @@ const PlaylistDetail = () => {
         </div>
         <img
           src={
-            playlist.thumbnailPath
+            playlist?.thumbnailPath
               ? `${axios.defaults.baseURL}/${playlist.thumbnailPath.replace(
                   /^src[\\/]/,
                   ""
                 )}`
               : "https://via.placeholder.com/400"
           }
-          alt="PLaylist thumbnail"
+          alt="Playlist thumbnail"
           className="hidden-image"
         />
         <div className="playlistdetail-header">
-          <h1>{playlist.name}</h1>
-          <p>{playlist.creationDate}</p>
+          <h1 className="playlistdetail-title">{playlist?.name}</h1>
         </div>
       </div>
-
       <div className="playlistdetail-content">
-        <h2>Playlist {playlist.name} List</h2>
+        <h2>Playlist {playlist?.name} List</h2>
         {songs.slice(0, itemsToShow).map((song, songid) => (
           <div
             key={songid}
@@ -115,19 +136,19 @@ const PlaylistDetail = () => {
           </div>
         ))}
         {songs.length > 5 && (
-        <div className="songuser-controls">
-          {itemsToShow < songs.length && (
-            <div className="songuser-see-more" onClick={handleSeeMore}>
-              See More
-            </div>
-          )}
-          {itemsToShow > 5 && (
-            <div className="songuser-see-less" onClick={handleSeeLess}>
-              See Less
-            </div>
-          )}
-        </div>
-      )}
+          <div className="songuser-controls">
+            {itemsToShow < songs.length && (
+              <div className="songuser-see-more" onClick={handleSeeMore}>
+                See More
+              </div>
+            )}
+            {itemsToShow > 5 && (
+              <div className="songuser-see-less" onClick={handleSeeLess}>
+                See Less
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

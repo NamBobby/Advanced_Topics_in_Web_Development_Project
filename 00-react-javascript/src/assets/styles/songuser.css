@@ -12,6 +12,7 @@
   border-radius: 5px;
   transition: background-color 0.3s ease;
   position: relative;
+  cursor: pointer;
 }
 
 .songuser-number {
@@ -102,9 +103,25 @@
   text-decoration: underline;
 }
 
+.songuser-actions{
+  display: flex;
+  width: 50px;
+  height: auto;
+}
+
 .delete-icon {
-  color: red;
   cursor: pointer;
   margin-left: 10px;
+}
+
+.add-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.add-to-playlist-icon {
+  cursor: pointer;
+  margin-right: 10px;
 }
 

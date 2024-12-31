@@ -1,13 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../assets/styles/songuser.css";
 import axios from "../services/axios.customize";
-import { CaretRightOutlined, MinusCircleOutlined } from "@ant-design/icons";
-import { deleteMusicApi } from "../services/apiService";
+import {
+  PlusCircleOutlined,
+  CaretRightOutlined,
+  MinusCircleOutlined,
+  HeartOutlined,
+} from "@ant-design/icons";
+import {
+  deleteMusicApi,
+  addMusicToAlbumApi,
+  addMusicToPlaylistApi,
+  getMusicInPlaylistApi,
+} from "../services/apiService";
+import { Dropdown } from "antd";
 
-const SongUser = ({ songs, handleSongClick, onDelete }) => {
+const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(5);
   const [durations, setDurations] = useState({});
+  const [filteredPlaylists, setFilteredPlaylists] = useState([]);
+  const [playlistSongs, setPlaylistSongs] = useState({});
 
   const handleSeeMore = () => {
     setItemsToShow((prev) => Math.min(prev + 5, songs.length));
@@ -33,12 +46,65 @@ const SongUser = ({ songs, handleSongClick, onDelete }) => {
     try {
       await deleteMusicApi(id);
       if (onDelete) {
-        onDelete(id); 
+        onDelete(id);
       }
       window.dispatchEvent(new CustomEvent("authUpdate"));
     } catch (error) {
       console.error("Error deleting music:", error);
     }
+  };
+
+  const handleAddToAlbum = async (musicId, albumId) => {
+    try {
+      await addMusicToAlbumApi({ musicId, albumId });
+      window.dispatchEvent(new CustomEvent("authUpdate"));
+    } catch (error) {
+      console.error("Error adding music to album:", error);
+    }
+  };
+
+  const handleAddToPlaylist = async (musicId, playlistId) => {
+    try {
+      await addMusicToPlaylistApi({ musicId, playlistId });
+      window.dispatchEvent(new CustomEvent("authUpdate"));
+    } catch (error) {
+      console.error("Error adding music to playlist:", error);
+    }
+  };
+
+  useEffect(() => {
+    const preloadPlaylistData = async () => {
+      try {
+        const results = await Promise.all(
+          playlists.map(async (playlist) => {
+            const musicInPlaylist = await getMusicInPlaylistApi({ playlistId: playlist.id });
+            return { playlistId: playlist.id, musics: musicInPlaylist };
+          })
+        );
+
+        const cache = results.reduce((acc, { playlistId, musics }) => {
+          acc[playlistId] = musics;
+          return acc;
+        }, {});
+        setPlaylistSongs(cache);
+      } catch (error) {
+        console.error("Error preloading playlist data:", error);
+      }
+    };
+
+    if (playlists.length > 0) {
+      preloadPlaylistData();
+    }
+  }, [playlists]);
+
+  // Filter playlists when dropdown opens
+  const handleDropdownClick = (musicId) => {
+    const result = playlists.filter((playlist) => {
+      const musics = playlistSongs[playlist.id] || [];
+      return !musics.some((music) => music.id === musicId);
+    });
+
+    setFilteredPlaylists(result);
   };
 
   return (
@@ -73,14 +139,41 @@ const SongUser = ({ songs, handleSongClick, onDelete }) => {
             <div className="songuser-name">{song.title}</div>
           </div>
           <div className="songuser-description">{song.description}</div>
-          <div className="songuser-duration">
-            {durations[songid]
-              ? `${Math.floor(durations[songid] / 60)}:${String(
-                  durations[songid] % 60
-                ).padStart(2, "0")}`
-              : "Loading..."}
-          </div>
           <div className="songuser-actions">
+            <Dropdown
+              menu={{
+                items: filteredPlaylists.map((playlist) => ({
+                  key: playlist.id,
+                  label: (
+                    <div
+                      onClick={() => handleAddToPlaylist(song.id, playlist.id)}>
+                      {playlist.name}
+                    </div>
+                  ),
+                })),
+              }}
+              trigger={["click"]}
+              onOpenChange={() => handleDropdownClick(song.id)}>
+              <HeartOutlined className="add-to-playlist-icon" />
+            </Dropdown>
+
+            {!song.albumId && (
+              <Dropdown
+                menu={{
+                  items: albums.map((album) => ({
+                    key: album.id,
+                    label: (
+                      <div onClick={() => handleAddToAlbum(song.id, album.id)}>
+                        {album.name}
+                      </div>
+                    ),
+                  })),
+                }}
+                trigger={["click"]}>
+                <PlusCircleOutlined className="add-icon" />
+              </Dropdown>
+            )}
+
             <MinusCircleOutlined
               className="delete-icon"
               onClick={(e) => {
@@ -88,6 +181,13 @@ const SongUser = ({ songs, handleSongClick, onDelete }) => {
                 handleDelete(song.id);
               }}
             />
+          </div>
+          <div className="songuser-duration">
+            {durations[songid]
+              ? `${Math.floor(durations[songid] / 60)}:${String(
+                  durations[songid] % 60
+                ).padStart(2, "0")}`
+              : "Loading..."}
           </div>
           {song.filePath &&
             !durations[songid] &&

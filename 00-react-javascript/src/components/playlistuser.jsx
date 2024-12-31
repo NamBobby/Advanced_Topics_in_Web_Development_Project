@@ -11,9 +11,8 @@ const PlaylistUser = ({ itemsToShow, playlists }) => {
 
   const handlePlaylistClick = async (playlist) => {
     try {
-      const response = await getMusicInPlaylistApi({ playlistId: playlist.id });
       const playlistName = playlist.name.replace(/\s+/g, "-").toLowerCase();
-      navigate(`/playlist/${playlistName}`, { state: { playlist, songs: response } });
+      navigate(`/playlist/${playlistName}`, { state: { playlist } });
     } catch (error) {
       console.error("Error fetching songs for the playlist:", error);
     }

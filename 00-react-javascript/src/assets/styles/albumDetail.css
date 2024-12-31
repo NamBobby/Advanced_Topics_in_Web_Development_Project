@@ -38,7 +38,6 @@
   position: absolute;
   top: 35%; 
   left: 5%;
-  color: #1f1f1f;
   display: flex;
   padding: 20px;
   flex-direction: column;
@@ -75,6 +74,7 @@
 
 .albumdetail-artist{
   text-decoration: none;
+  color: #f0f0f0;
   cursor: pointer;
 }
 
@@ -89,6 +89,13 @@
   background-color: #282c34;
   padding: 30px;
   overflow-y: auto;
+}
+
+.albumdetail-title{
+  font-size: 60px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #1f1f1f;
 }
 
 .albumsong {
