@@ -132,10 +132,11 @@ const getMusicInAlbumApi = async (data) => {
 };
 
 // Search API
-const searchMusicApi = async (query) => {
+const searchAllApi = async (query) => {
   const URL_API = '/v1/api/search/music';
-  return await axios.post(URL_API, query);
+  return await axios.post(URL_API, { searchTerm: query });
 };
+
 
 // Artist APIs
 const uploadMusicApi = async (musicData) => {
@@ -196,7 +197,7 @@ export {
   getMusicInAlbumApi,
 
   // Search API
-  searchMusicApi,
+  searchAllApi,
 
   // Admin APIs
   createUserByAdminApi,

@@ -77,25 +77,6 @@ const AdminHeader = () => {
   return (
     <div className="header-container">
       <div className="logo"></div>
-      <div className="search-box">
-        <div className="logo">
-          <Link to="/">
-            <HomeOutlined className="home-icon" />
-          </Link>
-        </div>
-        <input
-          type="text"
-          className="search-input"
-          placeholder="What do you want to play?"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <div className="logo">
-          <SearchOutlined className="search-icon" onClick={handleSearch} />
-        </div>
-      </div>
-
       <div className="auth-buttons">
         <Dropdown menu={{ items }} trigger={["click"]}>
           <Button icon={<UserOutlined />} />

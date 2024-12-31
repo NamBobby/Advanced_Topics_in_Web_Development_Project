@@ -19,6 +19,7 @@ import ResetPasswordPage from "../containers/auth/resetPassword.jsx";
 import CreateAlbum from "../containers/userPage/createAlbum.jsx";
 import CreatePlaylist from "../containers/userPage/createPlaylist.jsx";
 import AlbumUserDetail from "./albumuserDetail.jsx";
+import NotFoundPage from "../components/notfoundPage.jsx";
 
 // Các route chung cho User và Artist
 const commonRoutes = [
@@ -70,7 +71,7 @@ const RoleBasedRouter = () => {
     { path: "/forgot-password", element: <SendOtpPage /> },
     { path: "/resetpassword", element: <ResetPasswordPage /> },
     { path: "/login", element: <LoginPage /> },
-    { path: "*", element: <Navigate to="/" /> },
+    { path: "*", element: <NotFoundPage /> },
   ]);
 
   return <RouterProvider router={router} />;

@@ -480,40 +480,43 @@ const getMusicInAlbumService = async (albumId) => {
 
 const searchMusicService = async (searchTerm) => {
   try {
-    const results = await Music.findAll({
+    const musicResults = await Music.findAll({
       where: {
         [Op.or]: [
           { title: { [Op.like]: `%${searchTerm}%` } },
-          { artist: { [Op.like]: `%${searchTerm}%` } },
           { genre: { [Op.like]: `%${searchTerm}%` } },
-          { album: { [Op.like]: `%${searchTerm}%` } },
+          { artist: { [Op.like]: `%${searchTerm}%` } },
         ],
       },
-      include: [
-        {
-          model: Album,
-          as: "AlbumDetails",
-          attributes: ["name"],
-          where: { name: { [Op.like]: `%${searchTerm}%` } },
-          required: false,
-        },
-      ],
-      attributes: ["title", "artist", "genre", "album"],
-      raw: true,
     });
 
-    const processedResults = results.map((result) => {
-      if (result["AlbumDetails.name"]) {
-        result.albumName = result["AlbumDetails.name"];
-      }
-      delete result["AlbumDetails.name"];
-      return result;
+    const albumResults = await Album.findAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.like]: `%${searchTerm}%` } },
+          { artist: { [Op.like]: `%${searchTerm}%` } },
+          { publishedYear: { [Op.like]: `%${searchTerm}%` } },
+        ],
+      },
     });
 
-    return processedResults;
+    const artistResults = await User.findAll({
+      where: {
+        [Op.and]: [
+          { name: { [Op.like]: `%${searchTerm}%` } },
+          { role: "Artist" },
+        ],
+      },
+    });
+
+    return {
+      music: musicResults,
+      albums: albumResults,
+      artists: artistResults,
+    };
   } catch (error) {
     console.error("Error in searchMusicService:", error);
-    throw new Error("Error searching music");
+    throw new Error("Error searching");
   }
 };
 

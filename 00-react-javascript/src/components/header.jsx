@@ -3,6 +3,9 @@ import { UserOutlined, HomeOutlined, SearchOutlined, ExportOutlined } from "@ant
 import { Button, Dropdown, notification } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth.context";
+import {
+  searchAllApi
+} from "../services/apiService";
 import "../assets/styles/header.css";
 
 const Header = () => {
@@ -11,9 +14,15 @@ const Header = () => {
   //console.log(">>> Check auth", auth);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSearch = () => {
-    navigate(`/search?query=${searchQuery}`);
+  const handleSearch = async () => {
+    try {
+        const results = await searchAllApi(searchQuery);
+        navigate("/", { state: results });
+    } catch (error) {
+        console.error("Error during search:", error);
+    }
   };
+
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -28,7 +37,6 @@ const Header = () => {
 
     setAuth({ isAuthenticated: false, user: { email: "", name: "" } });
     notification.success({ message: "Logout Successful" });
-    window.location.reload();
     navigate("/");
   };
 

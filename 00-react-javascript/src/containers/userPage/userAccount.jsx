@@ -55,7 +55,7 @@ const UserAccount = () => {
     const fetchUserData = async () => {
       try {
         const res = await getAccountApi();
-        console.log("User data from API:", res);
+        //console.log("User data from API:", res);
         if (res && Array.isArray(res) && res.length > 0) {
           const user = res[0]; // Lấy phần tử đầu tiên trong mảng
           setUserData(user);

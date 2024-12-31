@@ -88,7 +88,11 @@ const SiderBar = () => {
       const playlistName = item.name.replace(/\s+/g, "-").toLowerCase();
       navigate(`/playlist/${playlistName}`, { state: { playlist: item } });
     }
-  };  
+  };
+  
+  const handlePlusClick = () => {
+    navigate("/createplaylist", { state: { user: auth.user } });
+  };
 
   return (
     <div className="slider-bar" style={{ width: `${sidebarWidth}px` }}>
@@ -97,7 +101,7 @@ const SiderBar = () => {
           <div className="library" onClick={handleToggle}>
             <div className="library-content">Your Library</div>
             {/* Toggle Buttons */}
-            <div className="slider-bar-toggle-button">
+            <div className="slider-bar-toggle-button" onClick={handlePlusClick}>
               <div className="slider-bar-toggle-icon">
                 <PlusOutlined />
               </div>

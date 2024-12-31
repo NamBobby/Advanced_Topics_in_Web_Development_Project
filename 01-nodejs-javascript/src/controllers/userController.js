@@ -262,15 +262,15 @@ const getMusicInAlbum = async (req, res) => {
 
 const searchMusic = async (req, res) => {
   try {
-    const { searchTerm } = req.body;
-
-    const results = await searchMusicService(searchTerm);
-    res.status(200).json(results);
+      const { searchTerm } = req.body;
+      const results = await searchMusicService(searchTerm);
+      res.status(200).json(results);
   } catch (error) {
-    console.error("Error in searchMusic:", error);
-    res.status(500).json({ message: "Error searching music" });
+      console.error("Error in searchMusic:", error);
+      res.status(500).json({ message: "Error performing search" });
   }
 };
+
 
 const getUser = async(req, res) => {
   const data = await getUserService();

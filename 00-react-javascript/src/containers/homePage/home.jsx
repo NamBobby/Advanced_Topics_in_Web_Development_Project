@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useLocation } from "react-router-dom";
 import Song from "../../components/song";
 import Artist from "../../components/artist";
 import Album from "../../components/album";
@@ -15,7 +14,7 @@ const getItemsToShow = (width) => {
   if (width < 1200) {
     return { songs: 4, artists: 2, albums: 2 };
   } else if (width < 1330) {
-    return { songs: 4, artists: 3, albums: 3 }; 
+    return { songs: 4, artists: 3, albums: 3 };
   } else if (width < 1430) {
     return { songs: 6, artists: 3, albums: 3 };
   } else if (width < 1800) {
@@ -34,10 +33,20 @@ const HomePage = () => {
   const [artists, setArtists] = useState([]);
   const [songs, setSongs] = useState([]);
   const { setCurrentSong, setSongList } = useOutletContext();
+  const location = useLocation();
 
   const [itemsToShow, setItemsToShow] = useState(() => {
     const mainContent = document.querySelector(".main-content");
-    return mainContent ? getItemsToShow(mainContent.offsetWidth) : { songs: 6, artists: 4, albums: 4 };
+    return mainContent
+      ? getItemsToShow(mainContent.offsetWidth)
+      : { songs: 6, artists: 4, albums: 4 };
+  });
+
+  const [searchMode, setSearchMode] = useState(false);
+  const [searchResults, setSearchResults] = useState({
+    music: [],
+    albums: [],
+    artists: [],
   });
 
   useEffect(() => {
@@ -101,10 +110,6 @@ const HomePage = () => {
       }
     };
 
-    fetchArtists();
-  }, []);
-
-  useEffect(() => {
     const fetchMusics = async () => {
       try {
         const response = await getMusicsApi();
@@ -116,10 +121,6 @@ const HomePage = () => {
       }
     };
 
-    fetchMusics();
-  }, [setSongList]);
-
-  useEffect(() => {
     const fetchAlbums = async () => {
       try {
         const response = await getAlbumsApi();
@@ -130,8 +131,21 @@ const HomePage = () => {
       }
     };
 
-    fetchAlbums();
-  }, []);
+    if (!searchMode) {
+      fetchArtists();
+      fetchMusics();
+      fetchAlbums();
+    }
+  }, [searchMode, setSongList]);
+
+  useEffect(() => {
+    if (location.state) {
+      setSearchResults(location.state);
+      setSearchMode(true);
+    } else {
+      setSearchMode(false);
+    }
+  }, [location.state]);
 
   return (
     <div className="home-content">
@@ -146,7 +160,10 @@ const HomePage = () => {
               See More
             </div>
           )}
-          {itemsToShow.songs > getItemsToShow(document.querySelector(".main-content")?.offsetWidth || 0).songs && (
+          {itemsToShow.songs >
+            getItemsToShow(
+              document.querySelector(".main-content")?.offsetWidth || 0
+            ).songs && (
             <div
               className="see-more-less"
               onClick={() => handleSeeLess("songs")}
@@ -158,10 +175,10 @@ const HomePage = () => {
       </div>
       <Song
         itemsToShow={itemsToShow.songs}
-        songs={songs}
+        songs={searchMode ? searchResults.music : songs}
         handleSongClick={(song) => {
           setCurrentSong(song);
-          setSongList(songs);
+          setSongList(searchMode ? searchResults.music : songs);
         }}
       />
 
@@ -176,7 +193,10 @@ const HomePage = () => {
               See More
             </div>
           )}
-          {itemsToShow.artists > getItemsToShow(document.querySelector(".main-content")?.offsetWidth || 0).artists && (
+          {itemsToShow.artists >
+            getItemsToShow(
+              document.querySelector(".main-content")?.offsetWidth || 0
+            ).artists && (
             <div
               className="see-more-less"
               onClick={() => handleSeeLess("artists")}
@@ -186,7 +206,10 @@ const HomePage = () => {
           )}
         </div>
       </div>
-      <Artist itemsToShow={itemsToShow.artists} artists={artists} />
+      <Artist
+        itemsToShow={itemsToShow.artists}
+        artists={searchMode ? searchResults.artists : artists}
+      />
 
       <div className="title-header">
         <h2 className="title">Popular Albums</h2>
@@ -199,7 +222,10 @@ const HomePage = () => {
               See More
             </div>
           )}
-          {itemsToShow.albums > getItemsToShow(document.querySelector(".main-content")?.offsetWidth || 0).albums && (
+          {itemsToShow.albums >
+            getItemsToShow(
+              document.querySelector(".main-content")?.offsetWidth || 0
+            ).albums && (
             <div
               className="see-more-less"
               onClick={() => handleSeeLess("albums")}
@@ -209,7 +235,10 @@ const HomePage = () => {
           )}
         </div>
       </div>
-      <Album itemsToShow={itemsToShow.albums} albums={albums} />
+      <Album
+        itemsToShow={itemsToShow.albums}
+        albums={searchMode ? searchResults.albums : albums}
+      />
     </div>
   );
 };
