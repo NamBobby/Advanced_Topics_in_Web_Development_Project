@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { CaretRightOutlined } from "@ant-design/icons";
+import { CaretRightOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { getMusicInAlbumApi } from "../services/apiService";
+import { deleteAlbumApi } from "../services/apiService";
 import "../assets/styles/albumuser.css";
 import axios from "../services/axios.customize";
 
-const AlbumUser = ({ itemsToShow, albums }) => {
+const AlbumUser = ({ itemsToShow, albums, onDelete }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const navigate = useNavigate();
 
@@ -15,6 +15,19 @@ const AlbumUser = ({ itemsToShow, albums }) => {
       navigate(`/albumuser/${albumName}`, { state: { album } });
     } catch (error) {
       console.error("Error fetching songs for the album:", error);
+    }
+  };
+
+  const handleDelete = async (albumId, event) => {
+    event.stopPropagation(); 
+    try {
+      await deleteAlbumApi(albumId);
+      if (onDelete) {
+        onDelete(albumId);
+      }
+      window.dispatchEvent(new CustomEvent("authUpdate"));
+    } catch (error) {
+      console.error("Error deleting album:", error);
     }
   };
 
@@ -34,11 +47,11 @@ const AlbumUser = ({ itemsToShow, albums }) => {
                 ""
               )}`}
               alt={album.name}
-              className="album-image"
+              className="albumuser-image"
             />
           ) : (
-            <div className="album-placeholder">
-              <CaretRightOutlined className="album-placeholder-icon" />
+            <div className="albumuser-placeholder">
+              <CaretRightOutlined className="albumuser-placeholder-icon" />
             </div>
           )}
           <div className="albumuser-info">
@@ -46,11 +59,17 @@ const AlbumUser = ({ itemsToShow, albums }) => {
             <div className="albumuser-artist">{album.artist}</div>
           </div>
           {hoveredIndex === albumid && (
-            <div className="albumuser-icon">
-              <div className="albumuser-hover-icon">
-                <CaretRightOutlined />
+            <>
+              <div className="albumuser-icon">
+                <div className="albumuser-hover-icon">
+                  <CaretRightOutlined />
+                </div>
               </div>
-            </div>
+              <MinusCircleOutlined
+                className="albumuser-delete-icon"
+                onClick={(event) => handleDelete(album.id, event)}
+              />
+            </>
           )}
         </div>
       ))}

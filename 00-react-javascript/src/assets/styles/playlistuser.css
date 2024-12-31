@@ -37,13 +37,16 @@
     width: 100%;
     height: 240px;
     background-color: #282828;
-    color: white;
     font-size: 40px;
   }
   
   .playlistuser-placeholder-icon {
     font-size: 200px;
     padding-left: 25px;
+  }
+
+  .playlistuser-placeholder-icon svg {
+    color: #000000 !important; 
   }
   
   /* playlistuser info */
@@ -79,7 +82,7 @@
     margin: 10px 15px auto;
   }
 
-  .playlistuser-wrapper .anticon svg {
+  .playlistuser-hover-icon svg {
     color: #000000 !important; 
   }
 
@@ -88,3 +91,26 @@
     display: block; 
   }
   
+  .playlistuser-delete-icon {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.3s ease;
+  }
+
+  .playlistuser-delete-icon svg{
+    color: red !important;
+  }
+
+  .playlistuser:hover .playlistuser-delete-icon {
+    transform: scale(1.2);
+  }
+  
+  .playlistuser:hover .playlistuser-delete-icon:hover {
+    font-size: 28px;
+  }

@@ -234,7 +234,7 @@ const deletePlaylist = async (req, res) => {
 const getMusicInPlaylist = async (req, res) => {
   try {
     const { playlistId } = req.body;
-    console.log("Playlist ID:", playlistId); 
+    //console.log("Playlist ID:", playlistId); 
 
     const musicList = await getMusicInPlaylistService(playlistId);
     res.status(200).json(musicList);
@@ -250,7 +250,7 @@ const getMusicInAlbum = async (req, res) => {
     if (!albumId) {
       return res.status(400).json({ message: "albumId is required" });
     }
-    console.log("Fetching music for albumId:", albumId);
+    //console.log("Fetching music for albumId:", albumId);
     const musicList = await getMusicInAlbumService(albumId);
     res.status(200).json(musicList);
   } catch (error) {

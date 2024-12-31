@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { getMusicInPlaylistApi } from "../services/apiService";
+import { deletePlaylistApi } from "../services/apiService";
 import { useNavigate } from "react-router-dom";
-import { CaretRightOutlined } from "@ant-design/icons";
+import { CaretRightOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import "../assets/styles/playlistuser.css";
 import axios from "../services/axios.customize";
 
-const PlaylistUser = ({ itemsToShow, playlists }) => {
+const PlaylistUser = ({ itemsToShow, playlists, onDelete }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const navigate = useNavigate();
 
@@ -15,6 +15,19 @@ const PlaylistUser = ({ itemsToShow, playlists }) => {
       navigate(`/playlist/${playlistName}`, { state: { playlist } });
     } catch (error) {
       console.error("Error fetching songs for the playlist:", error);
+    }
+  };
+
+  const handleDelete = async (playlistId, event) => {
+    event.stopPropagation(); 
+    try {
+      await deletePlaylistApi(playlistId);
+      if (onDelete) {
+        onDelete(playlistId);
+      }
+      window.dispatchEvent(new CustomEvent("authUpdate"));
+    } catch (error) {
+      console.error("Error deleting playlist:", error);
     }
   };
 
@@ -44,11 +57,17 @@ const PlaylistUser = ({ itemsToShow, playlists }) => {
             <div className="playlistuser-title">{playlist.name}</div>
           </div>
           {hoveredIndex === playlistid && (
-            <div className="playlistuser-icon">
-              <div className="playlistuser-hover-icon">
-                <CaretRightOutlined />
+            <>
+              <div className="playlistuser-icon">
+                <div className="playlistuser-hover-icon">
+                  <CaretRightOutlined />
+                </div>
               </div>
-            </div>
+              <MinusCircleOutlined
+                className="playlistuser-delete-icon"
+                onClick={(event) => handleDelete(playlist.id, event)}
+              />
+            </>
           )}
         </div>
       ))}
