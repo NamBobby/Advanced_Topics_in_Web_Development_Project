@@ -96,8 +96,26 @@
   transition: background-color 0.2s ease;
 }
 
+.header-logo{
+  display: flex;
+  align-items: center;
+  width: 6vh;
+  height: 6vh;
+  padding-left: 1.2vh;
+  margin-left: 2vh;
+  margin-right: 2vh;
+}
+
+.logo-image{
+  position: absolute;
+  left: 2.9%;
+  width: 6vh;
+  height: 6vh;
+  border-radius: 50%;
+}
+
 .logo:hover{
-  background-color: darkgrey !important;
+  background-color: rgba(145, 145, 145, 0.5) !important;
 }
 
 .search-icon {

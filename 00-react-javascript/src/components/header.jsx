@@ -7,6 +7,7 @@ import {
   searchAllApi
 } from "../services/apiService";
 import "../assets/styles/header.css";
+import MusicLogo from "../assets/images/Musiclogo-backgroundcut.png";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -96,7 +97,9 @@ const Header = () => {
 
   return (
     <div className="header-container">
-      <div className="logo"></div>
+      <div className="header-logo">
+        <img src={MusicLogo} alt="Music Logo" className="logo-image" />
+      </div>
       <div className="search-box">
         <div className="logo">
           <Link to="/">

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { CaretRightOutlined} from "@ant-design/icons";
+import { CaretRightOutlined, UserOutlined} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "../assets/styles/artist.css";
 import axios from "../services/axios.customize";
+
 
 const Artist = ({ artists, itemsToShow }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);

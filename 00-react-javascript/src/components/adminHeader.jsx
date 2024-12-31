@@ -1,9 +1,15 @@
 import React, { useContext, useState } from "react";
-import { UserOutlined, HomeOutlined, SearchOutlined, ExportOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  HomeOutlined,
+  SearchOutlined,
+  ExportOutlined,
+} from "@ant-design/icons";
 import { Button, Dropdown, notification } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth.context";
 import "../assets/styles/header.css";
+import MusicLogo from "../assets/images/Musiclogo-backgroundcut.png";
 
 const AdminHeader = () => {
   const navigate = useNavigate();
@@ -39,8 +45,9 @@ const AdminHeader = () => {
           label: (
             <div
               style={{ cursor: "pointer" }}
-              onClick={() => navigate("/profile", { state: { user: auth.user } })}
-            >
+              onClick={() =>
+                navigate("/profile", { state: { user: auth.user } })
+              }>
               {auth.user.name}
               <ExportOutlined className="export-icon" />
             </div>
@@ -76,7 +83,9 @@ const AdminHeader = () => {
 
   return (
     <div className="header-container">
-      <div className="logo"></div>
+      <div className="header-logo">
+        <img src={MusicLogo} alt="Music Logo" className="logo-image" />
+      </div>
       <div className="auth-buttons">
         <Dropdown menu={{ items }} trigger={["click"]}>
           <Button icon={<UserOutlined />} />
