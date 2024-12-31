@@ -77,7 +77,9 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
       try {
         const results = await Promise.all(
           playlists.map(async (playlist) => {
-            const musicInPlaylist = await getMusicInPlaylistApi({ playlistId: playlist.id });
+            const musicInPlaylist = await getMusicInPlaylistApi({
+              playlistId: playlist.id,
+            });
             return { playlistId: playlist.id, musics: musicInPlaylist };
           })
         );
@@ -154,7 +156,12 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
               }}
               trigger={["click"]}
               onOpenChange={() => handleDropdownClick(song.id)}>
-              <HeartOutlined className="add-to-playlist-icon" />
+              <HeartOutlined
+                className="add-to-playlist-icon"
+                onClick={(e) => {
+                  e.stopPropagation(); // Ngăn sự kiện nổi lên từ icon
+                }}
+              />
             </Dropdown>
 
             {!song.albumId && (
@@ -163,21 +170,30 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
                   items: albums.map((album) => ({
                     key: album.id,
                     label: (
-                      <div onClick={() => handleAddToAlbum(song.id, album.id)}>
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToAlbum(song.id, album.id);
+                        }}>
                         {album.name}
                       </div>
                     ),
                   })),
                 }}
                 trigger={["click"]}>
-                <PlusCircleOutlined className="add-icon" />
+                <PlusCircleOutlined
+                  className="add-icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                />
               </Dropdown>
             )}
 
             <MinusCircleOutlined
               className="delete-icon"
               onClick={(e) => {
-                e.stopPropagation(); 
+                e.stopPropagation();
                 handleDelete(song.id);
               }}
             />

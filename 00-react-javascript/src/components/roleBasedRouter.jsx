@@ -8,7 +8,7 @@ import AdminCreatePage from "../components/adminCreate";
 import RegisterPage from "../containers/auth/register.jsx";
 import LoginPage from "../containers/auth/login.jsx";
 import HomePage from "../containers/homePage/home.jsx";
-import ArtistInfo from "../containers/profileInfoPage/artistInfo.jsx";
+import ArtistInfo from "../containers/userPage/artistInfo.jsx";
 import AlbumDetail from "../components/albumDetail.jsx";
 import PlaylistDetail from "../components/playlistDetail.jsx";
 import UploadMusicPage from "../containers/userPage/uploadmusic.jsx";
@@ -18,7 +18,7 @@ import SendOtpPage from "../containers/auth/sendotp.jsx";
 import ResetPasswordPage from "../containers/auth/resetPassword.jsx";
 import CreateAlbum from "../containers/userPage/createAlbum.jsx";
 import CreatePlaylist from "../containers/userPage/createPlaylist.jsx";
-import AlbumArtistDetail from "./albumartistDetail.jsx";
+import AlbumUserDetail from "./albumuserDetail.jsx";
 
 // Các route chung cho User và Artist
 const commonRoutes = [
@@ -50,7 +50,7 @@ const RoleBasedRouter = () => {
           ? [
             { path: "uploadmusic", element: <UploadMusicPage /> },
             { path: "createalbum", element: <CreateAlbum /> },
-            { path: "albumuser/:title", element: <AlbumArtistDetail /> },
+            { path: "albumuser/:title", element: <AlbumUserDetail /> },
             ] 
           : []),
         ...(role === "User" || role === "Artist"

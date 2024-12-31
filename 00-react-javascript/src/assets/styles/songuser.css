@@ -107,6 +107,12 @@
   display: flex;
   width: 50px;
   height: auto;
+  position: absolute;
+  right: 15%; 
+  top: 50%; 
+  transform: translateY(-50%); 
+  z-index: 10; 
+  padding: 5px;
 }
 
 .delete-icon {
@@ -123,5 +129,29 @@
 .add-to-playlist-icon {
   cursor: pointer;
   margin-right: 10px;
+}
+
+.delete-icon:hover {
+  font-size: 1.2rem;
+}
+
+.add-icon:hover {
+  font-size: 1.2rem;
+}
+
+.add-to-playlist-icon:hover {
+  font-size: 1.2rem;
+}
+
+.add-to-playlist-icon:hover svg {
+  color: #ffff00;
+}
+
+.add-icon:hover svg {
+  color: #1db954;
+}
+
+.delete-icon:hover svg {
+  color: #e22222;
 }
 

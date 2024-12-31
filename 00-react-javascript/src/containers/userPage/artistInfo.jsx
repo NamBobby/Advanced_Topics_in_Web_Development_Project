@@ -35,7 +35,6 @@ const ArtistInfo = () => {
   const [artist, setArtist] = useState(null);
   const [songs, setSongs] = useState([]);
   const [albums, setAlbums] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { setCurrentSong, setSongList } = useOutletContext();
   const [itemsToShow, setItemsToShow] = useState(() => {
       const mainContent = document.querySelector(".main-content");
@@ -98,24 +97,15 @@ const ArtistInfo = () => {
       } catch (error) {
         console.error("Error fetching artist data:", error);
         navigate("/"); // Redirect to home if artist not found
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchArtistData();
   }, [id, navigate]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!artist) {
-    return <div>Artist not found</div>;
-  }
 
   const handleBackClick = () => {
-    navigate(-1); // Navigate back to the previous page
+    navigate(-1); 
   };
 
   const handleSeeMore = (type, totalItems) => {
@@ -146,21 +136,21 @@ const ArtistInfo = () => {
         </div>
         <img
           src={
-            artist.avatarPath
+            artist?.avatarPath
               ? `${axios.defaults.baseURL}/uploads/${artist.avatarPath.replace(
                   /^src[\\/]/,
                   ""
                 )}`
               : "https://via.placeholder.com/400"
           }
-          alt={artist.name}
+          alt={artist?.name}
           className="avatar-image"
         />
         <div className="userinfo-header-background">
           <p className="user-role">Artist</p>
           <div className="user-artist-role">
-            <h3 className="user-name">{artist.name}</h3>
-            <FollowButton followType="Artist" followId={artist.id} />
+            <h3 className="user-name">{artist?.name}</h3>
+            <FollowButton followType="Artist" followId={artist?.id} />
           </div>   
         </div>
       </div>

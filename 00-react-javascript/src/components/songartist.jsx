@@ -3,7 +3,11 @@ import { Dropdown } from "antd";
 import { CaretRightOutlined, HeartOutlined } from "@ant-design/icons";
 import "../assets/styles/songuser.css";
 import axios from "../services/axios.customize";
-import { getPlaylistsApi, addMusicToPlaylistApi, getMusicInPlaylistApi } from "../services/apiService";
+import {
+  getPlaylistsApi,
+  addMusicToPlaylistApi,
+  getMusicInPlaylistApi,
+} from "../services/apiService";
 
 const SongArtist = ({ songs, handleSongClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -24,7 +28,9 @@ const SongArtist = ({ songs, handleSongClick }) => {
         // Preload playlist data
         const results = await Promise.all(
           playlistsResponse.map(async (playlist) => {
-            const musicInPlaylist = await getMusicInPlaylistApi({ playlistId: playlist.id });
+            const musicInPlaylist = await getMusicInPlaylistApi({
+              playlistId: playlist.id,
+            });
             return { playlistId: playlist.id, musics: musicInPlaylist };
           })
         );
@@ -120,7 +126,8 @@ const SongArtist = ({ songs, handleSongClick }) => {
                 items: filteredPlaylists.map((playlist) => ({
                   key: playlist.id,
                   label: (
-                    <div onClick={() => handleAddToPlaylist(song.id, playlist.id)}>
+                    <div
+                      onClick={() => handleAddToPlaylist(song.id, playlist.id)}>
                       {playlist.name}
                     </div>
                   ),
@@ -128,7 +135,12 @@ const SongArtist = ({ songs, handleSongClick }) => {
               }}
               trigger={["click"]}
               onOpenChange={() => handleDropdownClick(song.id)}>
-              <HeartOutlined className="add-to-playlist-icon" />
+              <HeartOutlined
+                className="add-to-playlist-icon"
+                onClick={(e) => {
+                  e.stopPropagation(); // Ngăn sự kiện nổi lên từ icon
+                }}
+              />
             </Dropdown>
           </div>
           <div className="songuser-duration">

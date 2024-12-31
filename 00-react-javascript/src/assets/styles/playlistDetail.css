@@ -171,3 +171,28 @@
 .playlistsong-see-more:hover {
   color: #1db954; 
 }
+
+.playlistsong-actions{
+  display: flex;
+  width: 50px;
+  height: auto;
+  position: absolute;
+  right: 15%; 
+  top: 48%; 
+  transform: translateY(-50%); 
+  z-index: 10; 
+  padding: 5px;
+}
+
+.remove-icon {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.remove-icon:hover {
+  font-size: 1.2rem;
+}
+
+.remove-icon:hover svg {
+  color: #e22222;
+}

@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
-import { CaretRightOutlined, LeftOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import {
+  CaretRightOutlined,
+  LeftOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 import "../assets/styles/albumDetail.css";
 import axios from "../services/axios.customize";
-import { getAlbumsApi, getMusicInAlbumApi, removeMusicFromAlbumApi } from "../services/apiService";
-import FollowButton from "../components/followButton";
+import {
+  getAlbumsApi,
+  getMusicInAlbumApi,
+  removeMusicFromAlbumApi,
+} from "../services/apiService";
+import FollowButton from "./followButton";
 
-const AlbumArtistDetail = () => {
+const AlbumUserDetail = () => {
   const { title } = useParams();
   const navigate = useNavigate();
   const [album, setAlbum] = useState(null);
@@ -39,7 +47,7 @@ const AlbumArtistDetail = () => {
       } catch (error) {
         console.error("Error fetching album data:", error);
         navigate("/"); // Redirect to home if the album is not found
-      } 
+      }
     };
 
     fetchAlbumData();
@@ -101,7 +109,7 @@ const AlbumArtistDetail = () => {
           className="hidden-image"
         />
         <div className="albumdetail-header">
-          <h1 className="albumdetail-title" >{album?.name}</h1>
+          <h1 className="albumdetail-title">{album?.name}</h1>
           <div className="albumdetail-artist-role">
             <div
               className="albumdetail-artist"
@@ -147,13 +155,15 @@ const AlbumArtistDetail = () => {
               <div className="albumsong-name">{song.title}</div>
             </div>
             <div className="albumsong-description">{song.description}</div>
-            <MinusCircleOutlined
+            <div className="albumsong-actions">
+              <MinusCircleOutlined
                 className="remove-icon"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleRemoveSong(song.id);
                 }}
               />
+            </div>
             <div className="albumsong-duration">
               {durations[songid]
                 ? `${Math.floor(durations[songid] / 60)}:${String(
@@ -167,22 +177,22 @@ const AlbumArtistDetail = () => {
           </div>
         ))}
         {songs.length > 5 && (
-        <div className="songuser-controls">
-          {itemsToShow < songs.length && (
-            <div className="songuser-see-more" onClick={handleSeeMore}>
-              See More
-            </div>
-          )}
-          {itemsToShow > 5 && (
-            <div className="songuser-see-less" onClick={handleSeeLess}>
-              See Less
-            </div>
-          )}
-        </div>
-      )}
+          <div className="songuser-controls">
+            {itemsToShow < songs.length && (
+              <div className="songuser-see-more" onClick={handleSeeMore}>
+                See More
+              </div>
+            )}
+            {itemsToShow > 5 && (
+              <div className="songuser-see-less" onClick={handleSeeLess}>
+                See Less
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default AlbumArtistDetail;
+export default AlbumUserDetail;

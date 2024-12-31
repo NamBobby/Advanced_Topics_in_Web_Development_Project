@@ -33,7 +33,6 @@ const HomePage = () => {
   const [albums, setAlbums] = useState([]);
   const [artists, setArtists] = useState([]);
   const [songs, setSongs] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { setCurrentSong, setSongList } = useOutletContext();
 
   const [itemsToShow, setItemsToShow] = useState(() => {
@@ -99,8 +98,6 @@ const HomePage = () => {
       } catch (error) {
         console.error("Error fetching artists:", error);
         setArtists([]);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -135,10 +132,6 @@ const HomePage = () => {
 
     fetchAlbums();
   }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="home-content">
