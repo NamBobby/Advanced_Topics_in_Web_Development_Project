@@ -7,7 +7,7 @@
 }
 
 a {
-  color: #1db954;
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -23,7 +23,7 @@ a:hover {
 .see-more-less {
   display: inline-block;
   margin-left: 10px;
-  color: #1db954;
+  color: var(--color-primary);
   cursor: pointer;
   font-size: 14px;
   text-decoration: none;
@@ -43,7 +43,7 @@ a:hover {
 }
 
 .title {
-  color: white;
+  color: var(--color-text-accent);
   font-size: 24px;
   font-weight: bold;
   margin: 0;

@@ -75,7 +75,7 @@ const seedInitialUsers = async () => {
   try {
     await connectToDatabase();
 
-    const shouldForceSync = true; //set your condition here
+    const shouldForceSync = false; //set your condition here
     if (shouldForceSync) {
       const uploadsPath = path.join(__dirname, "uploads"); 
       const fileTypesToDelete = [".mp3", ".jpeg", ".mpeg", ".png", ".webp", ".aac", ".jpg"];

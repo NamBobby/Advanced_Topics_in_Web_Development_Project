@@ -1,16 +1,38 @@
+/* Định nghĩa các biến màu */
+:root {
+  --color-primary: #FEAE06; /* Màu xanh chính */
+  --color-secondary: #C39B47; /* Màu xám đậm */
+  --color-accent: #5A5956;
+  --color-fouth: #000000;
+  --color-fifth: #ffffff;  /* Màu xám nhạt */
+  --color-hover-primary: rgba(254, 174, 6, 0.5); /* Màu hover xanh chính */
+  --color-hover-secondary: rgba(90, 89, 86, 0.3);
+  --color-hover-accent: rgba(255, 255, 255, 0.3); /* Màu hover nền sáng */
+  --color-error: #e22222; /* Màu đỏ cho trạng thái lỗi */
+  --color-background-primary: #000000;
+  --color-background-secondary: #2C2923;
+  --color-background-accent: rgba(90, 89, 86, 0.2); /* Màu nền tối */
+  --color-placeholder: #282828; /* Màu placeholder */
+  --color-text-primary: #ffffff; /* Màu chữ chính */
+  --color-text-secondary: #888888;
+  --color-text-accent: #FFD783; /* Màu chữ phụ */
+  --color-border: #ffffff; /* Màu đường viền */
+}
+
+/* Reset và định dạng cơ bản */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: black;
-  color: white;
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
   overflow: hidden;
 }
 
 .app-container {
   display: flex;
   flex: 1; /* Ensures this grows to fill available space */
-  background-color: black;
-  width: 100%; 
+  background-color: var(--color-background-primary);
+  width: 100%;
 }
 
 .main-layout {
@@ -19,42 +41,38 @@ body {
   flex-direction: column;
 }
 
-/* Main Content */
 .main-content {
   flex: 1;
-  background-color: #282c34;
+  background-color: var(--color-background-secondary);
   border-radius: 20px;
   box-sizing: border-box;
 }
 
-
 header {
-  background-color: #000;
-  color: white;
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
   z-index: 1000;
 }
 
 footer {
-  background-color: #000;
-  color: white;
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
   z-index: 1000;
 }
-
 
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #888;
+  background-color: var(--color-accent);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
+  background-color: var(--color-hover-primary);
 }
 
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
-
