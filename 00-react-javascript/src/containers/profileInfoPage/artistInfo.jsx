@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
-import SongUser from "../../components/songuser";
-import AlbumUser from "../../components/albumuser";
+import Album from "../../components/album";
 import "../../assets/styles/userInfo.css";
 import {
   getMusicsApi,
@@ -195,7 +194,7 @@ const ArtistInfo = () => {
             )}
           </div>
         </div>
-        <AlbumUser itemsToShow={itemsToShow.albums} albums={albums} />
+        <Album itemsToShow={itemsToShow.albums} albums={albums} />
       </div>
     </div>
   );

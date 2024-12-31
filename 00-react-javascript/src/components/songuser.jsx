@@ -177,7 +177,7 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
             <MinusCircleOutlined
               className="delete-icon"
               onClick={(e) => {
-                e.stopPropagation(); // Prevent triggering parent click
+                e.stopPropagation(); 
                 handleDelete(song.id);
               }}
             />

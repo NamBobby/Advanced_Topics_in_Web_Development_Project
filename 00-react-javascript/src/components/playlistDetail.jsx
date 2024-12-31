@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
-import { CaretRightOutlined, LeftOutlined } from "@ant-design/icons";
+import { CaretRightOutlined, LeftOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import "../assets/styles/playlistDetail.css";
 import axios from "../services/axios.customize";
-import { getPlaylistsApi, getMusicInPlaylistApi } from "../services/apiService";
+import { getPlaylistsApi, getMusicInPlaylistApi,  removeMusicFromPlaylistApi } from "../services/apiService";
 
 const PlaylistDetail = () => {
   const { title } = useParams();
@@ -48,6 +48,15 @@ const PlaylistDetail = () => {
 
   const handleSeeLess = () => {
     setItemsToShow(5);
+  };
+
+  const handleRemoveSong = async (musicId) => {
+    try {
+      await removeMusicFromPlaylistApi({ playlistId: playlist.id, musicId });
+      setSongs((prevSongs) => prevSongs.filter((song) => song.id !== musicId));
+    } catch (error) {
+      console.error("Error removing song from playlist:", error);
+    }
   };
 
   const loadSongDuration = (filePath, index) => {
@@ -123,6 +132,13 @@ const PlaylistDetail = () => {
               <div className="playlistsong-name">{song.title}</div>
             </div>
             <div className="playlistsong-description">{song.description}</div>
+            <MinusCircleOutlined
+              className="remove-icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemoveSong(song.id);
+              }}
+            />
             <div className="playlistsong-duration">
               {durations[songid]
                 ? `${Math.floor(durations[songid] / 60)}:${String(

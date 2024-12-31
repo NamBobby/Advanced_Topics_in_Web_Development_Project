@@ -18,6 +18,7 @@ import SendOtpPage from "../containers/auth/sendotp.jsx";
 import ResetPasswordPage from "../containers/auth/resetPassword.jsx";
 import CreateAlbum from "../containers/userPage/createAlbum.jsx";
 import CreatePlaylist from "../containers/userPage/createPlaylist.jsx";
+import AlbumArtistDetail from "./albumartistDetail.jsx";
 
 // Các route chung cho User và Artist
 const commonRoutes = [
@@ -49,6 +50,7 @@ const RoleBasedRouter = () => {
           ? [
             { path: "uploadmusic", element: <UploadMusicPage /> },
             { path: "createalbum", element: <CreateAlbum /> },
+            { path: "albumuser/:title", element: <AlbumArtistDetail /> },
             ] 
           : []),
         ...(role === "User" || role === "Artist"

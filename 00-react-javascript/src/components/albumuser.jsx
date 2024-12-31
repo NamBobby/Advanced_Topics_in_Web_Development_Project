@@ -12,7 +12,7 @@ const AlbumUser = ({ itemsToShow, albums }) => {
   const handleAlbumClick = async (album) => {
     try {
       const albumName = album.name.replace(/\s+/g, "-").toLowerCase();
-      navigate(`/album/${albumName}`, { state: { album } });
+      navigate(`/albumuser/${albumName}`, { state: { album } });
     } catch (error) {
       console.error("Error fetching songs for the album:", error);
     }

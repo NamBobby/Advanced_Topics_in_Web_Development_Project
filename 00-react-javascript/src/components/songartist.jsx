@@ -1,12 +1,66 @@
-import React, { useState } from "react";
-import { CaretRightOutlined } from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import { Dropdown } from "antd";
+import { CaretRightOutlined, HeartOutlined } from "@ant-design/icons";
 import "../assets/styles/songuser.css";
 import axios from "../services/axios.customize";
+import { getPlaylistsApi, addMusicToPlaylistApi, getMusicInPlaylistApi } from "../services/apiService";
 
 const SongArtist = ({ songs, handleSongClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(5);
   const [durations, setDurations] = useState({});
+  const [playlists, setPlaylists] = useState([]);
+  const [filteredPlaylists, setFilteredPlaylists] = useState([]);
+  const [playlistSongs, setPlaylistSongs] = useState({});
+  const [isLoadingPlaylists, setIsLoadingPlaylists] = useState(false);
+
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      try {
+        setIsLoadingPlaylists(true);
+        const playlistsResponse = await getPlaylistsApi();
+        setPlaylists(playlistsResponse);
+
+        // Preload playlist data
+        const results = await Promise.all(
+          playlistsResponse.map(async (playlist) => {
+            const musicInPlaylist = await getMusicInPlaylistApi({ playlistId: playlist.id });
+            return { playlistId: playlist.id, musics: musicInPlaylist };
+          })
+        );
+
+        const cache = results.reduce((acc, { playlistId, musics }) => {
+          acc[playlistId] = musics;
+          return acc;
+        }, {});
+        setPlaylistSongs(cache);
+      } catch (error) {
+        console.error("Error fetching playlists:", error);
+      } finally {
+        setIsLoadingPlaylists(false);
+      }
+    };
+
+    fetchPlaylists();
+  }, []);
+
+  const handleDropdownClick = (musicId) => {
+    const result = playlists.filter((playlist) => {
+      const musics = playlistSongs[playlist.id] || [];
+      return !musics.some((music) => music.id === musicId);
+    });
+
+    setFilteredPlaylists(result);
+  };
+
+  const handleAddToPlaylist = async (musicId, playlistId) => {
+    try {
+      await addMusicToPlaylistApi({ musicId, playlistId });
+      window.dispatchEvent(new CustomEvent("authUpdate"));
+    } catch (error) {
+      console.error("Error adding music to playlist:", error);
+    }
+  };
 
   const handleSeeMore = () => {
     setItemsToShow((prev) => Math.min(prev + 5, songs.length));
@@ -60,6 +114,23 @@ const SongArtist = ({ songs, handleSongClick }) => {
             <div className="songuser-name">{song.title}</div>
           </div>
           <div className="songuser-description">{song.description}</div>
+          <div className="songuser-actions">
+            <Dropdown
+              menu={{
+                items: filteredPlaylists.map((playlist) => ({
+                  key: playlist.id,
+                  label: (
+                    <div onClick={() => handleAddToPlaylist(song.id, playlist.id)}>
+                      {playlist.name}
+                    </div>
+                  ),
+                })),
+              }}
+              trigger={["click"]}
+              onOpenChange={() => handleDropdownClick(song.id)}>
+              <HeartOutlined className="add-to-playlist-icon" />
+            </Dropdown>
+          </div>
           <div className="songuser-duration">
             {durations[songid]
               ? `${Math.floor(durations[songid] / 60)}:${String(
