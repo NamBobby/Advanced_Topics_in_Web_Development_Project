@@ -7,14 +7,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #000000;
+    background-color: var(--color-background-primary);
     z-index: 9999; 
   }
   
   .loading-message {
     margin-top: 10px;
     margin-left: 20px;
-    color: #fff;
+    color: var(--color-text-primary);
     font-size: 18px;
     font-weight: bold;
   }

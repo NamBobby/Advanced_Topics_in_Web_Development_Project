@@ -17,15 +17,24 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #1f1f1f;
+  background-color: var(--color-background-fouth);
   margin-left: 20px;
   margin-right: 20px;
-  padding-left: 12px;
+  padding-left: 10px;
+  padding-top: 2px;
   transition: background-color 0.2s ease;
 }
 
+.login-logo svg{
+  color: var(--color-text-secondary) !important;
+}
+
 .login-logo:hover{
-  background-color: darkgrey !important;
+  background-color: var(--color-hover-accent) !important;
+}
+
+.login-logo:hover svg{
+  color: var(--color-primary) !important;
 }
 
 .back-icon {
@@ -34,7 +43,7 @@
 }
 
 p {
-  color: #888888;
+  color: var(--color-text-secondary);
   font-size: 18px;
   margin-top: 20px;
 }
@@ -46,7 +55,7 @@ p {
   max-height: 500px;
   display: flex;
   padding: 20px;
-  background-color: #121212;
+  background-color: var(--color-background-secondary);
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
   justify-content: center;
@@ -58,85 +67,83 @@ p {
 }
 
 .login-title {
-  color: #ffffff;
+  color: var(--color-secondary);
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
 }
 
-/* Các quy tắc chung cho Input (Email) và Input.Password */
-.ant-input-outlined,
-.ant-input-outlined:not(:focus) {
+/* Input (Email) & Input.Password */
+.login-form .ant-input-outlined,
+.login-form .ant-input-outlined:not(:focus) {
   background-color: transparent;
-  color: #ffffff;
-  border: 1px solid #ffffff;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-fifth);
   border-radius: 5px;
   font-size: 18px;
   padding: 10px;
-  transition: border 0.3s ease; /* Smooth border transition */
+  transition: border 0.3s ease; 
 }
 
-/* Focus hiệu ứng cho Input và Input.Password */
-.ant-input-outlined:focus {
+/* Focus Input & Input.Password */
+.login-form .ant-input-outlined:focus {
   background-color: transparent;
-  border: 1px solid rgba(30, 215, 96, 0.5); 
+  border: 1px solid var(--color-primary); 
 }
 
-/* Hover hiệu ứng cho cả hai loại Input */
-.ant-input-outlined:hover:not(:focus){
+/* Hover Input */
+.login-form .ant-input-outlined:hover:not(:focus){
   background-color: transparent;
-  border: 1px solid rgba(30, 215, 96, 0.5); 
+  border: 1px solid var(--color-primary); 
 } 
 
 /* Placeholder styling */
-.ant-input-outlined::placeholder,
-.ant-input-affix-wrapper > input.ant-input::placeholder {
-  color: #888888;
+.login-form .ant-input-outlined::placeholder,
+.login-form .ant-input-affix-wrapper > input.ant-input::placeholder {
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
-.anticon svg {
-  color: #ffffff;
+.login-form .anticon svg {
+  color: var(--color-text-primary);
 }
 
-/* Quy tắc lỗi cho các Input */
-.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
-.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
-.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
-.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
-.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus),
-.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus) {
+/* Error Input */
+.login-form .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+.login-form .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+.login-form .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
+.login-form .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
+.login-form .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus),
+.login-form .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus) {
   background: transparent;
-  border: 1px solid #e22222;
+  border: 1px solid var(--color-error);
 }
 
-/* Focus hiệu ứng cho Input có lỗi */
-.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus,
-.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus {
+/* Focus Error Input */
+.login-form .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus,
+.login-form .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus {
   background: transparent;
-  border: 1px solid #e22222 !important;
+  border: 1px solid var(--color-error) !important;
 }
 
-/* Focus hiệu ứng cho Input và Input.Password */
-.ant-input-affix-wrapper.ant-input-password.ant-input-outlined:focus{
+/* Focus Input & Input.Password */
+.login-form .ant-input-affix-wrapper.ant-input-password.ant-input-outlined:focus{
   background-color: transparent;
-  border: 1px solid rgba(30, 215, 96, 0.5)  !important; 
+  border: 1px solid var(--color-primary) !important; 
 }
 
-.ant-form-item .ant-form-item-label >label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+.login-form .ant-form-item .ant-form-item-label >label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
   content: ""
 }
 
-
-/* Giải thích lỗi */
-.ant-form-item-explain-error {
-  color: #e22222;
+.login-form .ant-form-item-explain-error {
+  color: var(--color-error);
   font-size: 16px;
 }
 
 .custom-form .ant-form-item-label > label {
-  color: #ffffff;
+  color: var(--color-text-primary);
   font-size: 16px;
   font-weight: bold;
   content: "";
@@ -147,8 +154,8 @@ p {
   width: 100%;
   height: auto;
   padding: 12px 0;
-  background-color: #1db954 !important;
-  color: #000000 !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-fouth) !important;
   font-size: 18px;
   font-weight: 700;
   margin-top: 20px;
@@ -164,7 +171,7 @@ p {
 
 .forgot-password-link,
 .signup-link {
-  color: #ffffff;
+  color: var(--color-text-primary);
   font-size: 18px;
   text-decoration: none;
   transition: color 0.3s ease;
@@ -172,7 +179,7 @@ p {
 
 .forgot-password-link:hover,
 .signup-link:hover {
-  color: #1db954;
+  color: var(--color-primary);
 }
 
 .login-links {

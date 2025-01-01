@@ -22,7 +22,7 @@ import {
   EyeInvisibleOutlined,
   EyeTwoTone,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../../services/axios.customize";
 import "../../assets/styles/userAccount.css";
 import EmptyImage from "../../assets/images/blackimage.png";
@@ -51,6 +51,7 @@ const UserAccount = () => {
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const navigate = useNavigate();
 
   // Fetch user data from API
   useEffect(() => {
@@ -166,6 +167,8 @@ const UserAccount = () => {
       }
 
       window.dispatchEvent(new CustomEvent("authUpdate"));
+      navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
       notification.error({

@@ -265,7 +265,6 @@ const RegisterPage = () => {
               </Button>
             </Form.Item>
           </Form>
-          <Divider />
           <div className="register-links">
             <p>
               Already have an account?{" "}
@@ -274,6 +273,7 @@ const RegisterPage = () => {
               </Link>
             </p>
           </div>
+          <Divider />
         </div>
       </div>
     </div>

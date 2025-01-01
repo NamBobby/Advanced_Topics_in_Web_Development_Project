@@ -29,15 +29,21 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #1f1f1f;
-  margin-left: 20px;
-  margin-right: 20px;
-  padding-left: 12px;
+  background-color: var(--color-background-fouth);
+  padding-left: 10px;
   transition: background-color 0.2s ease;
 }
 
+.upload-logo svg{
+  color: var(--color-text-secondary) !important;
+}
+
 .upload-logo:hover{
-  background-color: darkgrey !important;
+  background-color: var(--color-hover-accent) !important;
+}
+
+.upload-logo:hover svg{
+  color: var(--color-primary) !important;
 }
 
 .back-icon {
@@ -50,7 +56,7 @@
 }
 
 .upload-title {
-  color: #ffffff;
+  color: var(--color-secondary);
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
@@ -69,8 +75,12 @@
   height: 200px;
   border-radius: 10px;
   overflow: hidden;
-  border: 2px solid rgba(30, 215, 96, 0.8);
+  border: 2px solid var(--color-text-secondary);
   z-index: 1;
+}
+
+.thumbnail-frame:hover {
+  border: 2px solid var(--color-secondary);
 }
 
 .thumbnail-image {
@@ -87,7 +97,7 @@
   display: none;
   width: 100%;
   height: 50px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--color-hover-secondary);
   color: white;
   font-size: 18px;
   text-align: center;
@@ -97,8 +107,8 @@
 }
 
 .thumbnail-upload-button:hover {
-  background-color: rgba(0, 0, 0, 0.5) !important;
-  color: white !important;
+  background-color: var(--color-hover-secondary) !important;
+  color: var(--color-text-primary) !important;
 }
 
 .thumbnail-frame:hover .thumbnail-upload-button {
@@ -108,12 +118,12 @@
 
 .upload-form .ant-input,
 .upload-form .ant-radio-wrapper {
-  color: #ffffff;
+  color: var(--color-text-primary);
 }
 
 
 .custom-upload-form .ant-form-item-label > label {
-  color: #ffffff;
+  color: var(--color-text-primary);
   font-size: 16px;
   font-weight: bold;
   content: "";
@@ -124,8 +134,8 @@
   width: 100%;
   height: auto;
   padding: 12px 0;
-  background-color: #1db954 !important;
-  color: #000000 !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-fouth) !important;
   font-size: 18px;
   font-weight: 700;
   margin-top: 20px;
@@ -135,86 +145,78 @@
   transition: background-color 0.3s ease;
 }
 
-.readonly-input {
-  border: 1px solid #2e2e2e !important;
-  color: #888888 !important;
-  cursor: not-allowed;
-}
-.readonly-input:focus {
-  outline: none;
-  box-shadow: none;
+.upload-form .anticon svg {
+  color: var(--color-text-primary);
 }
 
-
-/* Các quy tắc chung cho Input (Email) và Input.Password */
+/* Input */
 .upload-form .ant-input-outlined,
 .upload-form .ant-input-outlined:not(:focus) {
-  background-color: #1e1e1e !important;
-  color: #ffffff;
-  border: 1px solid #1e1e1e !important; 
+  background-color: var(--color-background-fifth) !important;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-background-fifth) !important; 
   border-radius: 5px;
   font-size: 18px;
   padding: 10px;
-  transition: border 0.3s ease; /* Smooth border transition */
+  transition: border 0.3s ease; 
 }
 
-/* Focus hiệu ứng cho Input và Input.Password */
-.ant-input-outlined:focus {
+.upload-form .ant-input-outlined:focus {
   background-color: transparent;
-  border: 1px solid rgba(30, 215, 96, 0.5); 
+  border: 1px solid var(--color-primary) !important; 
 }
 
-/* Hover hiệu ứng cho cả hai loại Input */
-.ant-input-outlined:hover:not(:focus) {
+/* Hover  Input */
+.upload-form .ant-input-outlined:hover:not(:focus) {
   background-color: transparent;
-  border: 1px solid rgba(30, 215, 96, 0.5); 
+  border: 1px solid var(--color-primary) !important; 
 } 
 
 /* Placeholder styling */
-.ant-input-outlined::placeholder,
-.ant-input-affix-wrapper > input.ant-input::placeholder {
-  color: #888888;
+.upload-form .ant-input-outlined::placeholder,
+.upload-form .ant-input-affix-wrapper > input.ant-input::placeholder {
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
 .upload-form .ant-upload-icon .anticon svg {
-  color: #ffffff;
+  color: var(--color-text-primary);
   font-size: 24px;
 }
 
-/* Quy tắc lỗi cho các Input */
-.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
-.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
-.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
-.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
-.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus),
-.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus) {
+/* Error Input */
+.upload-form .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+.upload-form .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled),
+.upload-form .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
+.upload-form .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus-within,
+.upload-form .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus),
+.upload-form .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled).ant-input:hover:not(:focus) {
   background: transparent;
-  border: 1px solid #e22222;
+  border: 1px solid var(--color-error);
 }
 
-/* Focus hiệu ứng cho Input có lỗi */
-.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus,
-.ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus {
+/* Focus Error Input  */
+.upload-form .ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus,
+.upload-form .ant-input-password.ant-input-outlined.ant-input-status-error:not(.ant-input-disabled):focus {
   background: transparent;
-  border: 1px solid #e22222 !important;
+  border: 1px solid var(--color-error) !important;
 }
 
-/* Focus hiệu ứng cho Input và Input.Password */
-.ant-input-affix-wrapper.ant-input-password.ant-input-outlined:focus {
+/* Focus  Input  */
+.upload-form .ant-input-affix-wrapper.ant-input-password.ant-input-outlined:focus {
   background-color: transparent;
-  border: 1px solid rgba(30, 215, 96, 0.5)  !important; 
+  border: 1px solid var(--color-primary) !important; 
 }
 
-.ant-form-item .ant-form-item-label >label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+.upload-form .ant-form-item .ant-form-item-label >label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
   content: ""
 }
 
-/* Đặt chiều dài của Select */
+/*  Select */
 .upload-form .ant-select {
-  background-color: #1e1e1e !important;
-  color: #ffffff; 
-  border: 1px solid #1e1e1e !important; 
+  background-color: var(--color-background-fifth) !important;
+  color: var(--color-text-primary); 
+  border: 1px solid var(--color-background-fifth) !important; 
   font-size: 18px;
   border-radius: 5px;
   font-weight: 500;
@@ -222,61 +224,40 @@
   transition: border 0.3s ease, box-shadow 0.3s ease; 
 }
 
-.ant-select-single {
+.upload-form .ant-select:hover {
+  border-color: var(--color-primary) !important;
+}
+
+.upload-form .ant-select:focus {
+  border-color: var(--color-primary) !important;
+}
+
+.upload-form .ant-select-single {
   height: auto;
 }
 
-/* Giao diện Selector */
-.ant-select-selector {
+/* Selector */
+.upload-form .ant-select-selector {
   background-color: transparent !important; 
   border: none !important; 
   box-shadow: none !important; 
   height: auto !important;
-  color: #ffffff !important; 
+  color: var(--color-text-primary) !important; 
   display: flex;
   align-items: center; 
   padding: 0 10px; 
 }
 
-.ant-select-selection-item{
+.upload-form .ant-select-selection-item{
   font-size: 18px;
 }
 
-.ant-select-single .ant-select-selector .ant-select-selection-placeholder {
-  color: #888888;
+.upload-form .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+  color: var(--color-text-secondary);
   font-size: 18px;
   font-weight: 500;
 }
 
-/* Dropdown nền và màu chữ */
-.ant-select-dropdown {
-  background-color: #121212 !important; 
-}
-
-.ant-select-item-option{
-  color: #ffffff !important; 
-  font-size: 16px !important; 
-}
-
-/* Hiệu ứng hover cho các tùy chọn */
-.ant-select-item-option-active {
-  background-color: rgba(30, 215, 96, 0.2) !important; /* Nền xanh khi hover */
-}
-
-/* Hiệu ứng cho tùy chọn được chọn */
-.ant-select-item-option-selected {
-  background-color: rgba(30, 215, 96, 0.3) !important; /* Nền xanh đậm */
-}
-
-.ant-select-focused:not(.ant-select-disabled) {
-  border-color: rgba(30, 215, 96, 0.8) !important; 
-}
-
-.ant-select:hover {
-  border-color: rgba(30, 215, 96, 0.5) !important; 
-}
-
-/* Đảm bảo chiều dài Select giống với Input */
 .upload-form .ant-select,
 .upload-form .ant-input {
   width: 100%;
@@ -286,23 +267,21 @@
   padding: 0;
 }
 
-/* Hiệu ứng focus cho các thành phần */
-.ant-select-focused:not(.ant-select-disabled) .ant-select-selector,
-.ant-input:focus {
+
+.upload-form .ant-select-focused:not(.ant-select-disabled) .ant-select-selector,
+.upload-form .ant-input:focus {
   outline: none;
-  border-color: rgba(30, 215, 96, 0.8); 
-  box-shadow: 0 0 5px rgba(30, 215, 96, 0.5); 
+  border-color: var(--color-primary); 
 }
 
 
-/* Giải thích lỗi */
-.ant-form-item-explain-error {
-  color: #e22222;
+.upload-form .ant-form-item-explain-error {
+  color: var(--color-error);
   font-size: 16px;
 }
 
 .upload-form .ant-form-item-label > label {
-  color: #ffffff;
+  color: var(--color-text-primary);
   font-size: 16px;
   font-weight: bold;
   content: "";
@@ -320,7 +299,7 @@
   justify-content: space-between;
   border-radius: 4px;
   background-color: transparent;
-  color: #fff
+  color: var(--color-text-primary)
 }
 
 .ant-upload-list-item-name {

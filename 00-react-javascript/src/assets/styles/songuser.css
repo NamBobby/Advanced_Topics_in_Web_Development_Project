@@ -31,9 +31,7 @@
   width: 60px;
   height: 60px;
   border-radius: 5px;
-  background-color: #282828;
   font-size: 40px;
-  border-bottom: 1px solid #282828;
   object-fit: cover;
 }
 
@@ -42,12 +40,8 @@
   height: auto;
 }
 
-.songuser-placeholder-icon svg {
-  color: #000000 !important;
-}
-
 .songuser:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--color-hover-secondary);
 }
 
 .songuser-image-container {
@@ -71,7 +65,7 @@
   margin-left: 30px;
   font-weight: bold;
   font-size: 18px;
-  color: white;
+  color: var(--color-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -79,14 +73,14 @@
 
 .songuser-description {
   flex: 1.5;
-  color : #aaa;
+  color : var(--color-text-secondary);
 }
 
 .songuser-duration {
   flex: 0.5;
   text-align: right;
   font-size: 14px;
-  color: #aaa;
+  color: var(--color-text-secondary);
 }
 
 .songuser-controls {
@@ -99,7 +93,7 @@
 
 .songuser-see-more, .songuser-see-less {
   cursor: pointer;
-  color: #1db954;
+  color: var(--color-primary);
 }
 
 .songuser-see-more:hover, .songuser-see-less:hover {
@@ -135,26 +129,26 @@
 }
 
 .delete-icon:hover {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .add-icon:hover {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .add-to-playlist-icon:hover {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .add-to-playlist-icon:hover svg {
-  color: #ffff00;
+  color: var(--color-sixth);
 }
 
 .add-icon:hover svg {
-  color: #1db954;
+  color: var(--color-primary);
 }
 
 .delete-icon:hover svg {
-  color: #e22222;
+  color: var(--color-error);
 }
 

@@ -41,7 +41,11 @@ const SendOtpPage = () => {
       <div className="forgotpassword-box">
         <div className="forgotpassword-form">
           <h1 className="forgotpassword-title">Forgot your password?</h1>
-          <Form name="sendOtpForm" onFinish={onFinish} layout="vertical">
+          <Form 
+            name="sendOtpForm"
+            className="forgotpassword-custom-form" 
+            onFinish={onFinish} 
+            layout="vertical">
             <Form.Item
               label="Email"
               name="email"

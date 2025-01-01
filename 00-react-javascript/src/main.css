@@ -1,25 +1,27 @@
-/* Định nghĩa các biến màu */
 :root {
-  --color-primary: #FEAE06; /* Màu xanh chính */
-  --color-secondary: #C39B47; /* Màu xám đậm */
+  --color-primary: #FEAE06; 
+  --color-secondary: #C39B47; 
   --color-accent: #5A5956;
   --color-fouth: #000000;
-  --color-fifth: #ffffff;  /* Màu xám nhạt */
-  --color-hover-primary: rgba(254, 174, 6, 0.5); /* Màu hover xanh chính */
+  --color-fifth: #ffffff;
+  --color-sixth: #FF6F6C;
+  --color-hover-primary: rgba(254, 174, 6, 0.5); 
   --color-hover-secondary: rgba(90, 89, 86, 0.3);
-  --color-hover-accent: rgba(255, 255, 255, 0.3); /* Màu hover nền sáng */
-  --color-error: #e22222; /* Màu đỏ cho trạng thái lỗi */
+  --color-hover-accent: rgba(255, 255, 255, 0.3);
+  --color-error: #e22222; 
   --color-background-primary: #000000;
   --color-background-secondary: #2C2923;
-  --color-background-accent: rgba(90, 89, 86, 0.2); /* Màu nền tối */
-  --color-placeholder: #282828; /* Màu placeholder */
-  --color-text-primary: #ffffff; /* Màu chữ chính */
+  --color-background-accent: rgba(90, 89, 86, 0.2);
+  --color-background-fouth: rgba(255, 255, 255, 0.2);
+  --color-background-fifth: #161512; 
+  --color-placeholder: #282828; 
+  --color-text-primary: #ffffff; 
   --color-text-secondary: #888888;
-  --color-text-accent: #FFD783; /* Màu chữ phụ */
-  --color-border: #ffffff; /* Màu đường viền */
+  --color-text-accent: #FFD783; 
+  --color-border: #888888; 
 }
 
-/* Reset và định dạng cơ bản */
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -30,7 +32,7 @@ body {
 
 .app-container {
   display: flex;
-  flex: 1; /* Ensures this grows to fill available space */
+  flex: 1; 
   background-color: var(--color-background-primary);
   width: 100%;
 }

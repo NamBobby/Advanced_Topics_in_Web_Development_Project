@@ -15,7 +15,7 @@ import AlbumLogo from "../assets/images/albumlogo.png";
 import PlaylistLogo from "../assets/images/playlistlogo.png";
 
 const SiderBar = () => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const sidebarWidth = isExpanded ? 300 : 110;
   const [playlists, setPlaylists] = useState([]);
   const [followedArtists, setFollowedArtists] = useState([]);
@@ -92,7 +92,7 @@ const SiderBar = () => {
       navigate(`/playlist/${playlistName}`, { state: { playlist: item } });
     }
   };
-  
+
   const handlePlusClick = () => {
     navigate("/createplaylist", { state: { user: auth.user } });
   };
@@ -103,10 +103,12 @@ const SiderBar = () => {
         <div className="slider-bar-wrapper">
           <div className="library" onClick={handleToggle}>
             <div className="library-content">Your Library</div>
-            {/* Toggle Buttons */}
-            <div className="slider-bar-toggle-button" onClick={handlePlusClick}>
+            {/* Show PlusOutlined only when the user is authenticated */}
+            <div
+              className="slider-bar-toggle-button"
+              onClick={auth.isAuthenticated ? handlePlusClick : null}>
               <div className="slider-bar-toggle-icon">
-                <PlusOutlined />
+                {auth.isAuthenticated && <PlusOutlined />}
               </div>
             </div>
             <div className="slider-bar-toggle-button" onClick={handleToggle}>
@@ -167,12 +169,10 @@ const SiderBar = () => {
                         handleMouseEnter("followedArtists", artist.followId)
                       }
                       onMouseLeave={handleMouseLeave}
-                      onClick={() =>
-                        handleItemClick("Artist", artist)
-                      }>
+                      onClick={() => handleItemClick("Artist", artist)}>
                       <img
                         src={
-                          artist.thumbnailPath 
+                          artist.thumbnailPath
                             ? `${
                                 axios.defaults.baseURL
                               }/uploads/${artist.thumbnailPath.replace(
@@ -210,9 +210,7 @@ const SiderBar = () => {
                         handleMouseEnter("followedItems", album.followId)
                       }
                       onMouseLeave={handleMouseLeave}
-                      onClick={() =>
-                        handleItemClick("Album", album)
-                      }>
+                      onClick={() => handleItemClick("Album", album)}>
                       <img
                         src={
                           album.thumbnailPath
@@ -320,12 +318,10 @@ const SiderBar = () => {
                     handleMouseEnter("followedArtists", artist.followId)
                   }
                   onMouseLeave={handleMouseLeave}
-                  onClick={() =>
-                    handleItemClick("Artist", artist)
-                  }>
+                  onClick={() => handleItemClick("Artist", artist)}>
                   <img
                     src={
-                      artist.thumbnailPath 
+                      artist.thumbnailPath
                         ? `${
                             axios.defaults.baseURL
                           }/uploads/${artist.thumbnailPath.replace(
@@ -360,9 +356,7 @@ const SiderBar = () => {
                     handleMouseEnter("followedAlbums", album.followId)
                   }
                   onMouseLeave={handleMouseLeave}
-                  onClick={() =>
-                    handleItemClick("Album", album)
-                  }>
+                  onClick={() => handleItemClick("Album", album)}>
                   <img
                     src={
                       album.thumbnailPath

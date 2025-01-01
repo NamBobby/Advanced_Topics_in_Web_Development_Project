@@ -14,20 +14,22 @@
   }
   
   .follow-button.follow {
-    background-color: #333;
-    color: #aaa;
+    background-color: var(--color-background-secondary);
+    color: var(--color-text-secondary);
   }
   
   .follow-button.follow:hover {
-    background-color: #e6e6e6;
+    background-color: var(--color-primary);
+    color: var(--color-text-primary);
   }
   
   .follow-button.following {
-    background-color: #4caf50;
-    color: #fff;
+    background-color: var(--color-primary);
+    color: var(--color-text-secondary);
   }
   
   .follow-button.following:hover {
-    background-color: #45a049;
+    background-color: var(--color-error);
+    color: var(--color-text-primary);
   }
   

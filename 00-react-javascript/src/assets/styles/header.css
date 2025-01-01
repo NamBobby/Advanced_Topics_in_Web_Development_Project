@@ -28,16 +28,21 @@
 
 .ant-btn-icon .anticon svg{
   font-size: 2.8vh;
-  color: #919191 !important;
+  color: var(--color-accent) !important;
+}
+
+.ant-btn-icon .anticon svg:hover{
+  font-size: 2.8vh;
+  color: var(--color-primary) !important;
 }
 
 .auth-buttons .ant-btn:hover{
-  background-color: darkgrey !important;
+  background-color: var(--color-hover-accent) !important;
 }
 
 /* Menu */
 .ant-dropdown-menu, .ant-dropdown-menu-item{
-  background-color: #333 !important;
+  background-color: var(--color-secondary) !important;
 }
 
 .ant-dropdown-menu-item a:hover,
@@ -48,14 +53,19 @@
 
 .ant-dropdown-menu-title-content {
   font-size: 16px;
-  color: rgb(0, 0, 0)
+  color: var(--color-fouth)
+}
+
+.ant-dropdown-menu-title-content:hover {
+  font-size: 16px;
+  color: var(--color-text-primary)
 }
 
 .logout-btn {
   border: none;
   font-size: 16px;
   background-color: transparent;
-  color: red;
+  color: var(--color-error);
 }
 
 /* Login and Sign Up */
@@ -63,14 +73,12 @@
     border: none;
     font-size: 16px;
     background-color: transparent;
-    color: #1f1f1f;
 }
 
 .login-btn {
   border: none;
-    font-size: 16px;
-    background-color: transparent;
-    color: #1f1f1f;
+  font-size: 16px;
+  background-color: transparent;
 }
 
 /* search box */
@@ -129,15 +137,19 @@
 }
 
 .logo .anticon svg{
-  color: #919191 !important; 
+  color: var(--color-accent) !important; 
+}
+
+.logo .anticon svg:hover{
+  color: var(--color-primary) !important; 
 }
 
 .search-input {
   max-width: 600px;
   padding: 1.1vh 1.1vw;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border);
   background-color: #1f1f1f;
-  color: white;
+  color: var(--color-text-primary);
   border-radius: 15px;
   width: 100%;
   box-sizing: border-box;
@@ -147,7 +159,7 @@
 }
 
 .search-input:hover {
-  border: 1px solid rgba(30, 215, 96, 0.5); 
+  border: 1px solid var(--color-primary); 
 }
 
 .export-icon{

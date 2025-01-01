@@ -123,7 +123,6 @@ const AlbumUserDetail = () => {
         </div>
       </div>
       <div className="albumdetail-content">
-        <h2>Album {album?.name} List</h2>
         {songs.slice(0, itemsToShow).map((song, songid) => (
           <div
             key={songid}

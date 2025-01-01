@@ -29,6 +29,10 @@
   margin-right: 10px;
 }
 
+.song-info-play{
+  padding: 1.5vh;
+}
+
 .song-info-play .song-title-play {
   font-size: 1.8vh;
   font-weight: bold;
@@ -36,11 +40,12 @@
   overflow: hidden;
   text-overflow: ellipsis; 
   max-width: 200px;
+  color: var(--color-text-primary);
 }
 
 .song-info-play .song-artist-play {
   font-size: 1.6vh;
-  color: #aaa;
+  color: var(--color-text-secondary);
 }
 
 .footer-center { 
@@ -59,14 +64,10 @@
 .control-btn {
   background: none;
   border: none;
-  color: white;
+  color: var(--color-text-accent);
   font-size: 3.2vh;
   margin: 0 1vh;
   cursor: pointer;
-}
-
-.control-btn:hover {
-  color: #aaa;
 }
 
 .progress-bar {
@@ -84,9 +85,9 @@
 .progress-slider {
   width: 25vw;
   height: 0.75vh;
-  background-color: #444; /* Background of the track */
+  background-color: var(--color-accent); 
   border-radius: 5px;
-  -webkit-appearance: none; /* Remove default styling for WebKit browsers */
+  -webkit-appearance: none; 
   appearance: none;
 }
 
@@ -95,7 +96,7 @@
   appearance: none;
   width: 1.6vh;
   height: 1.6vh;
-  background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
+  background-color: var(--color-primary); 
   border-radius: 50%;
   cursor: pointer;
 }
@@ -103,7 +104,7 @@
 .progress-slider::-moz-range-thumb {
   width: 1.6vh;
   height: 1.6vh;
-  background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
+  background-color: var(--color-primary); 
   border-radius: 50%;
   cursor: pointer;
 }
@@ -111,7 +112,7 @@
 .progress-slider::-ms-thumb {
   width: 1.6vh;
   height: 1.6vh;
-  background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
+  background-color: var(--color-primary); 
   border-radius: 50%;
   cursor: pointer;
 }
@@ -120,7 +121,7 @@
 .volume-slider {
   width: 7vw;
   height: 0.75vh;
-  background-color: #444; /* Background of the track */
+  background-color: var(--color-accent); 
   border-radius: 5px;
   -webkit-appearance: none;
   appearance: none;
@@ -131,7 +132,7 @@
   appearance: none;
   width: 1.6vh;
   height: 1.6vh;
-  background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
+  background-color: var(--color-primary); 
   border-radius: 50%;
   cursor: pointer;
 }
@@ -139,7 +140,7 @@
 .volume-slider::-moz-range-thumb {
   width: 1.6vh;
   height: 1.6vh;
-  background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
+  background-color: var(--color-primary); 
   border-radius: 50%;
   cursor: pointer;
 }
@@ -147,7 +148,7 @@
 .volume-slider::-ms-thumb {
   width: 1.6vh;
   height: 16px;
-  background-color: rgba(30, 215, 96, 1); /* Change color of the thumb */
+  background-color: var(--color-primary); 
   border-radius: 50%;
   cursor: pointer;
 }

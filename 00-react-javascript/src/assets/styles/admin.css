@@ -1,6 +1,6 @@
 .admin-container {
     display: flex;
-    background-color: black;
+    background-color: var(--color-background-primary);
     width: 100%;
     flex-direction: column;
 }
@@ -12,7 +12,7 @@
 }
 
 .admin-content {
-    background-color: #282c34;
+    background-color: var(--color-background-secondary);
     border-radius: 20px;
     box-sizing: border-box;
     padding: 20px;
@@ -21,7 +21,7 @@
 }
 
 .admin-title {
-    color: #ffffff;
+    color: var(--color-secondary);
     font-size: 21px;
     font-weight: bold;
     text-align: center;
@@ -40,15 +40,23 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #1f1f1f;
+    background-color: var(--color-background-fouth);
     margin-left: 20px;
     margin-right: 20px;
-    padding-left: 12px;
+    padding-left: 11.5px;
     transition: background-color 0.2s ease;
+  }
+
+  .admin-logo svg{
+    color: var(--color-text-secondary) !important;
   }
   
   .admin-logo:hover{
-    background-color: darkgrey !important;
+    background-color: var(--color-hover-accent) !important;
+  }
+
+  .admin-logo:hover svg{
+    color: var(--color-primary) !important;
   }
 
   .admin-icon {
@@ -58,56 +66,60 @@
 
   /* Table Container */
 .admin-content .ant-table {
-  background-color: #121212;
+  background-color: var(--color-background-fifth);
   border-radius: 10px;
-  color: #ffffff;
+  color: var(--color-text-primary);
 }
 
 /* Table Header */
 .ant-table-thead > tr > th {
-  background-color: #1f1f1f !important;
-  color: #ffffff !important;
+  background-color: var(--color-background-fifth) !important;
+  color: var(--color-text-primary) !important;
   font-size: 16px;
   font-weight: 600;
   text-align: center;
-  border: 1px solid #333333;
+  border: 1px solid var(--color-border);
 }
 
 /* Table Rows */
 .ant-table-tbody > tr > td {
-  background-color: #282c34;
-  color: #ffffff;
-  border: 1px solid #333333;
+  background-color: var(--color-background-fouth);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
   text-align: center;
   padding: 12px 8px;
   transition: background-color 0.3s ease;
 }
 
+:where(.css-dev-only-do-not-override-161f05s).ant-table-wrapper .ant-table-thead >tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before, :where(.css-dev-only-do-not-override-161f05s).ant-table-wrapper .ant-table-thead >tr>td:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+    background-color: var(--color-background-fifth); 
+}
+
 /* Row Hover Effect */
 .ant-table-tbody > tr:hover > td {
-  background-color: rgba(30, 215, 96, 0.2) !important;
+  background-color: var(--color-hover-accent) !important;
 }
 
 /* Action Button */
 .ant-btn-danger {
-  background-color: #e22222 !important;
-  color: #ffffff !important;
+  background-color: var(--color-error) !important;
+  color: var(--color-text-primary) !important;
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
 
 .ant-btn-danger:hover {
-  background-color: #b81d1d !important;
+  background-color: var(--color-error) !important;
 }
 
 /* Pagination Styling */
 .ant-pagination .ant-pagination-item {
-  background-color: #1f1f1f;
+  background-color: var(--color-background-fifth);
   border: none;
-  color: #ffffff;
+  color: var(--color-text-primary);
 }
 
 .ant-pagination .ant-pagination-item-active {
-  background-color: #1db954;
-  color: #000000;
+  background-color: var(--color-primary);
+  color: var(--color-fouth);
 }

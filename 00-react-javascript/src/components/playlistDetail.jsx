@@ -108,7 +108,6 @@ const PlaylistDetail = () => {
         </div>
       </div>
       <div className="playlistdetail-content">
-        <h2>Playlist {playlist?.name} List</h2>
         {songs.slice(0, itemsToShow).map((song, songid) => (
           <div
             key={songid}

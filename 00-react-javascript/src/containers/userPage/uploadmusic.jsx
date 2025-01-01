@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Input, Upload, Select, notification } from "antd";
+import { Button, Divider, Form, Input, Upload, Select, notification } from "antd";
 import {
   UploadOutlined,
   LeftOutlined,
@@ -220,6 +220,7 @@ const UploadMusic = () => {
               </Button>
             </Form.Item>
           </Form>
+          <Divider />
         </div>
       </div>
     </div>

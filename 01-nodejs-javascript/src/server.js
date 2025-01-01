@@ -80,11 +80,13 @@ const seedInitialUsers = async () => {
       const uploadsPath = path.join(__dirname, "uploads"); 
       const fileTypesToDelete = [".mp3", ".jpeg", ".mpeg", ".png", ".webp", ".aac", ".jpg"];
       deleteSpecificFiles(uploadsPath, fileTypesToDelete);
-      // Tạo lại thư mục uploads
-      await sequelize.sync({ force: true }); // Drop existing tables and recreate
+
+      // Drop existing tables and recreate
+      await sequelize.sync({ force: true }); 
     } else {
       await sequelize.sync();
     } // Sync all Sequelize models with the database
+
     // Seed initial users after tables are created
     await seedInitialUsers();
     app.listen(port, () => {
