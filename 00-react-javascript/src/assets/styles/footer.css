@@ -70,6 +70,10 @@
   cursor: pointer;
 }
 
+.control-btn:hover {
+  color: var(--color-primary);
+}
+
 .progress-bar {
   display: flex;
   align-items: center;
