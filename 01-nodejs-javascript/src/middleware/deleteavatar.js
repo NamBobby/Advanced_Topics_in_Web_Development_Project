@@ -1,5 +1,5 @@
 const fs = require("fs").promises;
-const path = require("path"); // Đảm bảo import path
+const path = require("path"); 
 
 const deleteOldAvatar = async (avatarPath) => {
   try {

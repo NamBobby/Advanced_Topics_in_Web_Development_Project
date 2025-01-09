@@ -30,9 +30,9 @@ const SongArtist = ({ songs, handleSongClick }) => {
         const results = await Promise.all(
           playlistsResponse.map(async (playlist) => {
             const musicInPlaylist = await getMusicInPlaylistApi({
-              playlistId: playlist.id,
+              playlistId: playlist.playlistId,
             });
-            return { playlistId: playlist.id, musics: musicInPlaylist };
+            return { playlistId: playlist.playlistId, musics: musicInPlaylist };
           })
         );
 
@@ -53,8 +53,8 @@ const SongArtist = ({ songs, handleSongClick }) => {
 
   const handleDropdownClick = (musicId) => {
     const result = playlists.filter((playlist) => {
-      const musics = playlistSongs[playlist.id] || [];
-      return !musics.some((music) => music.id === musicId);
+      const musics = playlistSongs[playlist.playlistId] || [];
+      return !musics.some((music) => music.musicId === musicId);
     });
 
     setFilteredPlaylists(result);
@@ -125,21 +125,21 @@ const SongArtist = ({ songs, handleSongClick }) => {
             <Dropdown
               menu={{
                 items: filteredPlaylists.map((playlist) => ({
-                  key: playlist.id,
+                  key: playlist.playlistId,
                   label: (
                     <div
-                      onClick={() => handleAddToPlaylist(song.id, playlist.id)}>
+                      onClick={() => handleAddToPlaylist(song.musicId, playlist.playlistId)}>
                       {playlist.name}
                     </div>
                   ),
                 })),
               }}
               trigger={["click"]}
-              onOpenChange={() => handleDropdownClick(song.id)}>
+              onOpenChange={() => handleDropdownClick(song.musicId)}>
               <HeartOutlined
                 className="add-to-playlist-icon"
                 onClick={(e) => {
-                  e.stopPropagation(); // Ngăn sự kiện nổi lên từ icon
+                  e.stopPropagation(); 
                 }}
               />
             </Dropdown>

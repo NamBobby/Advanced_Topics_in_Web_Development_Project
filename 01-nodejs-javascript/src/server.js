@@ -11,11 +11,14 @@ const { deleteSpecificFiles } = require("./utils/cleanfileutils");
 // Import models with associations
 const {
   User,
+  Artist,
+  Administrator,
   Album,
   Music,
   Playlist,
   PlaylistMusic,
-  UserFollow
+  UserFollow,
+  Account
 } = require("./models/associations");
 
 const app = express();
@@ -37,8 +40,6 @@ webAPI.get("/", getHomepage);
 // Define route
 app.use("/", webAPI);
 app.use("/v1/api/", apiRoutes);
-
-// Cấu hình phục vụ tệp tĩnh
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Seed initial data function
@@ -47,7 +48,7 @@ const seedInitialUsers = async () => {
     {
       name: "bobby",
       email: "bobby@gmail.com",
-      password: "$2b$10$YasRkHlmDIBrXNe12NwvoOpcdw8FPEc3/mQOBzhUCjuC1BhPhTA.6", // Hashed password
+      password: "$2b$10$YasRkHlmDIBrXNe12NwvoOpcdw8FPEc3/mQOBzhUCjuC1BhPhTA.6", 
       dateOfBirth: "2001-05-01",
       gender: "Man",
       role: "Administrator",
@@ -55,15 +56,38 @@ const seedInitialUsers = async () => {
     {
       name: "Son Tung MTP",
       email: "nguyenthanhtung@example.com",
-      password: "$2b$10$9wJS51sjOLp/CSo5d8N0g.ABfydK3q0lsOgRDm8DVCXmc4bfw/XMe", // Hashed password
+      password: "$2b$10$9wJS51sjOLp/CSo5d8N0g.ABfydK3q0lsOgRDm8DVCXmc4bfw/XMe",
       dateOfBirth: "1994-07-05",
       gender: "Man",
       role: "Artist",
     },
     // Add more initial users as needed
   ];
+
   try {
-    await User.bulkCreate(initialUsers, { ignoreDuplicates: true }); // Use ignoreDuplicates to skip existing entries
+    for (const user of initialUsers) {
+      // Check if the account already exists
+      const existingAccount = await Account.findOne({ where: { email: user.email } });
+      if (!existingAccount) {
+        // Create the account
+        const newAccount = await Account.create({
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          dateOfBirth: user.dateOfBirth,
+          gender: user.gender,
+          role: user.role,
+        });
+
+        // Link to the specific role table
+        if (user.role === "Administrator") {
+          await Administrator.create({ accountId: newAccount.accountId });
+        } else if (user.role === "Artist") {
+          await Artist.create({ accountId: newAccount.accountId });
+        }
+      }
+    }
+
     console.log("Initial users seeded successfully.");
   } catch (error) {
     console.error("Error seeding initial users:", error);

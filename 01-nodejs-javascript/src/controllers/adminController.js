@@ -1,27 +1,36 @@
-const { createUserService, deleteUserService, getUserService } = require("../services/adminService");
+const { createAccountService, deleteAccountService } = require("../services/adminService");
 
 const createUser = async (req, res) => {
-  const { name, email, password, dateOfBirth, gender, role } = req.body;
+  try {
+    const { name, email, password, dateOfBirth, gender, role } = req.body;
+    const result = await createAccountService({ name, email, password, dateOfBirth, gender, role });
 
-  const result = await createUserService(name, email, password, dateOfBirth, gender, role);
+    if (result.EC !== 0) {
+      return res.status(400).json({ message: result.EM });
+    }
 
-  if (result.EC === 1) {
-    return res.status(400).json({ message: result.EM }); // Email đã tồn tại
-  } else if (result.EC === 3) {
-    return res.status(500).json({ message: result.EM }); // Lỗi server
+    return res.status(201).json({ message: result.EM, data: result.data });
+  } catch (error) {
+    console.error("Error in createUser:", error);
+    return res.status(500).json({ message: "Error creating user" });
   }
-
-  return res.status(201).json({ message: result.EM, user: result.data });
 };
 
   
 const deleteUser = async (req, res) => {
-  const { email } = req.body;
-  const data = await deleteUserService(email);
-  if (data.EC !== 0) {
-    return res.status(400).json(data);
+  try {
+    const { accountId } = req.body;
+    const result = await deleteAccountService(accountId);
+
+    if (result.EC !== 0) {
+      return res.status(400).json({ message: result.EM });
+    }
+
+    return res.status(200).json({ message: result.EM });
+  } catch (error) {
+    console.error("Error in deleteUser:", error);
+    return res.status(500).json({ message: "Error deleting user" });
   }
-  return res.status(200).json(data);
 };
 
 

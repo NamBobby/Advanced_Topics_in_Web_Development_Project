@@ -201,10 +201,9 @@
   display: flex;
   width: 50px;
   height: auto;
-  position: absolute;
-  right: 15%; 
-  top: 46%; 
-  transform: translateY(-50%); 
+  position: relative;
+  right: 5%; 
+  transform: translateY(-10%); 
   z-index: 10; 
   padding: 5px;
 }

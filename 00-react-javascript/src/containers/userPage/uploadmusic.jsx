@@ -27,7 +27,7 @@ const UploadMusic = () => {
         const albumData = await getAlbumsApi();
         if (albumData) {
           const userAlbums = albumData.filter(
-            (album) => album.accountId === user.id
+            (album) => album.artist === user.name
           );
           setAlbums(userAlbums);
         }
@@ -173,7 +173,7 @@ const UploadMusic = () => {
             >
               <Select placeholder="Select an album">
                 {albums.map((album) => (
-                  <Select.Option key={album.id} value={album.id}>
+                  <Select.Option key={album.albumId} value={album.albumId}>
                     {album.name}
                   </Select.Option>
                 ))}

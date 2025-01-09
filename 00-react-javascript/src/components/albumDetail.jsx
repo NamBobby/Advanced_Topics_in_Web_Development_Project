@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { notification } from "antd";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { CaretRightOutlined, LeftOutlined } from "@ant-design/icons";
 import "../assets/styles/albumDetail.css";
@@ -18,8 +19,11 @@ const AlbumDetail = () => {
   const [itemsToShow, setItemsToShow] = useState(5);
   const [durations, setDurations] = useState({});
   const { setCurrentSong, setSongList } = useOutletContext();
+  const hasNotified = useRef(false);
+  
 
   useEffect(() => {
+
     const fetchAlbumData = async () => {
       try {
         // Fetch all albums and find the one that matches the title
@@ -33,11 +37,17 @@ const AlbumDetail = () => {
 
           // Fetch songs for the album
           const songsResponse = await getMusicInAlbumApi({
-            albumId: matchedAlbum.id,
+            albumId: matchedAlbum.albumId,
           });
           setSongs(songsResponse);
-        } else {
-          throw new Error("Album not found");
+
+          if (songsResponse.length === 0 && !hasNotified.current) {
+            notification.info({
+              message: "Notification",
+              description: "This album is empty.",
+            });
+            hasNotified.current = true; // Mark as notified
+          }
         }
       } catch (error) {
         console.error("Error fetching album data:", error);
@@ -102,7 +112,7 @@ const AlbumDetail = () => {
               onClick={() => handleArtistClick(album.artist)}>
               <h2>{album?.artist}</h2>
             </div>
-            <FollowButton followType="Album" followId={album?.id} />
+            <FollowButton followType="Album" followId={album?.albumId} />
           </div>
         </div>
       </div>

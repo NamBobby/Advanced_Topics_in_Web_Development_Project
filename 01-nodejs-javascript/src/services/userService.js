@@ -6,38 +6,33 @@ const mailService = require("../services/mailService");
 const UserOTPVerification = require("../models/userOTPVerification");
 const { sequelize } = require("../config/database");
 const {
-  Album,
+  Account,
   User,
+  Album,
   Playlist,
   Music,
   PlaylistMusic,
   UserFollow,
+  Artist,
 } = require("../models/associations");
 const fs = require("fs");
 const { Op } = require("sequelize");
 const path = require("path");
 
 // Create user service
-const createUserService = async (
-  name,
-  email,
-  password,
-  dateOfBirth,
-  gender
-) => {
+const createUserService = async ({ name, email, password, dateOfBirth, gender }) => {
   try {
-    // Kiểm tra xem email đã tồn tại hay chưa
-    const user = await User.findOne({ where: { email } });
-    if (user) {
-      console.log(`>>> user exists, use another email: "${email}"`);
-      return { EC: 1, EM: "Email already exists" }; // Trả về lỗi cụ thể
+    if (!email) {
+      throw new Error("Email is required");
     }
 
-    // Hash mật khẩu
-    const hashPassword = await bcrypt.hash(password, saltRounds);
+    const existingAccount = await Account.findOne({ where: { email } });
+    if (existingAccount) {
+      return { EC: 1, EM: "Email already exists" };
+    }
 
-    // Lưu user vào database
-    const result = await User.create({
+    const hashPassword = await bcrypt.hash(password, saltRounds);
+    const newAccount = await Account.create({
       name,
       email,
       password: hashPassword,
@@ -46,7 +41,11 @@ const createUserService = async (
       role: "User",
     });
 
-    return { EC: 0, EM: "User created successfully", data: result };
+    await User.create({
+      accountId: newAccount.accountId,
+    });
+
+    return { EC: 0, EM: "User created successfully", data: newAccount };
   } catch (error) {
     console.error("Error in createUserService:", error);
     return { EC: 3, EM: "Error creating user" };
@@ -57,7 +56,7 @@ const createUserService = async (
 const loginService = async (email, password) => {
   try {
     // Fetch user by email
-    const user = await User.findOne({ where: { email } });
+    const user = await Account.findOne({ where: { email } });
     if (user) {
       // Compare password
       const isMatchPassword = await bcrypt.compare(password, user.password);
@@ -69,7 +68,7 @@ const loginService = async (email, password) => {
       } else {
         // Create an access token
         const payload = {
-          id: user.id,
+          accountId: user.accountId,
           email: user.email,
           name: user.name,
           dateOfBirth: user.dateOfBirth,
@@ -85,7 +84,7 @@ const loginService = async (email, password) => {
           EC: 0,
           access_token,
           user: {
-            id: user.id,
+            accountId: user.accountId,
             email: user.email,
             name: user.name,
             avatarPath: user.avatarPath,
@@ -109,7 +108,9 @@ const loginService = async (email, password) => {
 
 const getUserService = async () => {
   try {
-    let result = await User.findAll({ attributes: { exclude: ["password"] } });
+    let result = await Account.findAll({
+      attributes: { exclude: ["password"] },
+    });
     return result;
   } catch (error) {
     console.log(error);
@@ -118,10 +119,10 @@ const getUserService = async () => {
 };
 
 // Get users service
-const getProfileService = async (id) => {
+const getProfileService = async (accountId) => {
   try {
-    let result = await User.findAll({
-      where: { id },
+    let result = await Account.findAll({
+      where: { accountId },
       attributes: { exclude: ["password"] },
     });
     return result;
@@ -134,22 +135,21 @@ const getProfileService = async (id) => {
 // Update user service
 const updateUserService = async (profileData) => {
   try {
-    const user = await User.findOne({ where: { email: profileData.email } });
+    const user = await Account.findOne({ where: { email: profileData.email } });
     if (!user) {
       return { EC: 6, EM: "User not found" };
     }
 
-    // Kiểm tra thay đổi avatar và xóa avatar cũ nếu cần
     if (
       profileData.avatarPath &&
       user.avatarPath &&
       profileData.avatarPath !== user.avatarPath
     ) {
-      const oldAvatarPath = path.join(__dirname, "../uploads", user.avatarPath); // Không thêm 'src/uploads' nữa
-      console.log("Old Avatar Path:", oldAvatarPath); // Debug đường dẫn avatar cũ
+      const oldAvatarPath = path.join(__dirname, "../uploads", user.avatarPath);
+      console.log("Old Avatar Path:", oldAvatarPath);
 
       if (fs.existsSync(oldAvatarPath)) {
-        fs.unlinkSync(oldAvatarPath); // Xóa file avatar cũ
+        fs.unlinkSync(oldAvatarPath);
         console.log("Old avatar deleted successfully.");
       } else {
         console.log("Old avatar does not exist.");
@@ -162,7 +162,9 @@ const updateUserService = async (profileData) => {
       ...(profileData.avatarPath && { avatarPath: profileData.avatarPath }),
     };
 
-    await User.update(updatedFields, { where: { email: profileData.email } });
+    await Account.update(updatedFields, {
+      where: { email: profileData.email },
+    });
     return { EC: 0, EM: "Profile updated successfully" };
   } catch (error) {
     console.error("Error in updateUserService:", error);
@@ -172,18 +174,17 @@ const updateUserService = async (profileData) => {
 
 // Update password service
 const updatePasswordService = async (
-  id,
+  accountId,
   currentPassword,
   newPassword,
   confirmPassword
 ) => {
   try {
-    const user = await User.findByPk(id);
+    const user = await Account.findByPk(accountId);
     if (!user) {
       return { EC: 6, EM: "User not found" };
     }
 
-    // Kiểm tra mật khẩu hiện tại
     const isValidPassword = await bcrypt.compare(
       currentPassword,
       user.password
@@ -192,14 +193,12 @@ const updatePasswordService = async (
       return { EC: 7, EM: "Invalid current password" };
     }
 
-    // Kiểm tra mật khẩu mới và xác nhận mật khẩu
     if (newPassword !== confirmPassword) {
       return { EC: 8, EM: "New password and confirmation do not match" };
     }
 
-    // Hash mật khẩu mới và cập nhật
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await User.update({ password: hashedPassword }, { where: { id } });
+    await Account.update({ password: hashedPassword }, { where: { accountId } });
 
     return { EC: 0, EM: "Password updated successfully" };
   } catch (error) {
@@ -211,7 +210,7 @@ const updatePasswordService = async (
 // Generate OTP service
 const generateOtp = async (email) => {
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await Account.findOne({ where: { email } });
     if (!user) {
       return { EC: 1, EM: "User not found" };
     }
@@ -219,30 +218,27 @@ const generateOtp = async (email) => {
     const otp = Math.floor(100000 + Math.random() * 900000); // Generate OTP
     const hashedOTP = await bcrypt.hash(otp.toString(), saltRounds);
 
-    // Hủy các OTP trước đó của người dùng
     await UserOTPVerification.update(
       { status: false },
       { where: { email, status: true } }
     );
 
-    // Tạo OTP mới
     const newOTP = await UserOTPVerification.create({
       email,
       otp: hashedOTP,
-      userId: user.id,
-      status: true, // Kích hoạt trạng thái ban đầu là true
+      accountId: user.accountId,
+      status: true,
     });
 
-    // Gửi OTP qua email
     await mailService.sendOTP(email, otp);
 
-    // Thiết lập tự động hủy sau 10 phút
+    // Cancel after 10 minutes
     setTimeout(async () => {
       await UserOTPVerification.update(
         { status: false },
-        { where: { id: newOTP.id } }
+        { where: { otpId: newOTP.otpId } }
       );
-    }, 10 * 60 * 1000); // 10 phút
+    }, 10 * 60 * 1000);
 
     return { EC: 0, EM: "OTP sent successfully" };
   } catch (error) {
@@ -254,35 +250,33 @@ const generateOtp = async (email) => {
 // Verify OTP and update password service
 const verifyOtpAndUpdatePassword = async (email, otp, newPassword) => {
   try {
-    // Tìm user trong bảng users
-    const user = await User.findOne({ where: { email } });
+    const user = await Account.findOne({ where: { email } });
     if (!user) {
       return { EC: 1, EM: "User not found" };
     }
 
-    // Tìm OTP còn hiệu lực
     const existingOTP = await UserOTPVerification.findOne({
-      where: { email, status: true }, // Chỉ lấy OTP có status = true
+      where: { email, status: true },
     });
 
     if (!existingOTP) {
       return { EC: 2, EM: "No valid OTP found" };
     }
 
-    // Kiểm tra OTP
     const isMatchOtp = await bcrypt.compare(otp.toString(), existingOTP.otp);
     if (!isMatchOtp) {
       return { EC: 2, EM: "Invalid OTP" };
     }
 
-    // Cập nhật mật khẩu
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await User.update({ password: hashedPassword }, { where: { id: user.id } });
+    await Account.update(
+      { password: hashedPassword },
+      { where: { accountId: user.accountId } }
+    );
 
-    // Cập nhật trạng thái OTP
     await UserOTPVerification.update(
       { status: false },
-      { where: { id: existingOTP.id } }
+      { where: { otpId: existingOTP.otpId } }
     );
 
     return { EC: 0, EM: "Password updated successfully" };
@@ -369,13 +363,11 @@ const deletePlaylistService = async (playlistId) => {
     const playlist = await Playlist.findByPk(playlistId);
     if (!playlist) throw new Error("Playlist not found");
 
-    // Xóa tệp thumbnail của playlist nếu tồn tại
     if (playlist.thumbnailPath && fs.existsSync(playlist.thumbnailPath)) {
       fs.unlinkSync(playlist.thumbnailPath);
     }
 
-    // Xóa playlist khỏi cơ sở dữ liệu
-    await Playlist.destroy({ where: { id: playlistId } });
+    await Playlist.destroy({ where: { playlistId: playlistId } });
 
     return { message: "Playlist deleted successfully" };
   } catch (error) {
@@ -388,7 +380,7 @@ const getMusicInPlaylistService = async (playlistId) => {
   try {
     const query = `
       SELECT
-        m.id,
+        m.musicId,
         m.title,
         m.artist,
         m.genre,
@@ -398,7 +390,7 @@ const getMusicInPlaylistService = async (playlistId) => {
         m.thumbnailPath,
         m.publishedYear
       FROM playlistmusics pm
-      INNER JOIN music m ON pm.musicId = m.id
+      INNER JOIN music m ON pm.musicId = m.musicId
       WHERE pm.playlistId = :playlistId
     `;
 
@@ -407,12 +399,7 @@ const getMusicInPlaylistService = async (playlistId) => {
       type: sequelize.QueryTypes.SELECT,
     });
 
-    if (musicList.length === 0) {
-      console.log("No music found for playlistId:", playlistId);
-      throw new Error("No music found");
-    }
-
-    return musicList;
+    return musicList || [];
   } catch (error) {
     console.error("Error in getMusicInPlaylistService:", error);
     throw new Error("Error fetching music in playlist");
@@ -435,18 +422,17 @@ const getMusicInAlbumService = async (albumId) => {
   try {
     // Fetch album to verify its existence
     const album = await Album.findOne({
-      where: { id: albumId },
-      attributes: ["id", "name", "artist"], // Lấy tên và nghệ sĩ của album
+      where: { albumId: albumId },
+      attributes: ["albumId", "name", "artist"],
     });
 
     if (!album) {
       throw new Error("Album not found");
     }
 
-    // Query để lấy dữ liệu bài hát kèm thông tin chi tiết
     const query = `
       SELECT 
-        m.id,
+        m.musicId,
         m.title,
         m.artist,
         m.genre,
@@ -457,7 +443,7 @@ const getMusicInAlbumService = async (albumId) => {
         m.publishedYear,
         a.name AS album
       FROM music m
-      JOIN albums a ON m.albumId = a.id
+      JOIN albums a ON m.albumId = a.albumId
       WHERE m.albumId = :albumId
     `;
 
@@ -466,12 +452,7 @@ const getMusicInAlbumService = async (albumId) => {
       type: sequelize.QueryTypes.SELECT,
     });
 
-    if (musicList.length === 0) {
-      console.log("No music found for albumId:", albumId);
-      throw new Error("No music found in this album");
-    }
-
-    return musicList;
+    return musicList || [];
   } catch (error) {
     console.error("Error in getMusicInAlbumService:", error.message || error);
     throw new Error("Error fetching music in album");
@@ -500,7 +481,7 @@ const searchMusicService = async (searchTerm) => {
       },
     });
 
-    const artistResults = await User.findAll({
+    const artistResults = await Account.findAll({
       where: {
         [Op.and]: [
           { name: { [Op.like]: `%${searchTerm}%` } },
@@ -521,10 +502,10 @@ const searchMusicService = async (searchTerm) => {
 };
 
 // Follow an item
-const followItemService = async (userId, followType, followId) => {
+const followItemService = async (accountId, followType, followId) => {
   try {
     const follow = await UserFollow.create({
-      userId,
+      accountId,
       followType,
       followId,
     });
@@ -536,9 +517,9 @@ const followItemService = async (userId, followType, followId) => {
 };
 
 // Get followed items
-const getFollowedItemsService = async (userId) => {
+const getFollowedItemsService = async (accountId) => {
   try {
-    //console.log("Fetching followed items for userId:", userId);
+    //console.log("Fetching followed items for accountId:", accountId);
 
     const query = `
     SELECT 
@@ -546,20 +527,20 @@ const getFollowedItemsService = async (userId) => {
       uf.followId, 
       CASE 
         WHEN uf.followType = 'Album' THEN a.name 
-        WHEN uf.followType = 'Artist' THEN u.name 
+        WHEN uf.followType = 'Artist' THEN ac.name 
       END AS name,
       CASE 
         WHEN uf.followType = 'Album' THEN a.thumbnailPath 
-        WHEN uf.followType = 'Artist' THEN u.avatarPath 
+        WHEN uf.followType = 'Artist' THEN ac.avatarPath 
       END AS thumbnailPath
     FROM userfollows uf
-    LEFT JOIN albums a ON uf.followId = a.id AND uf.followType = 'Album'
-    LEFT JOIN users u ON uf.followId = u.id AND uf.followType = 'Artist'
-    WHERE uf.userId = :userId
+    LEFT JOIN albums a ON uf.followId = a.albumId AND uf.followType = 'Album'
+    LEFT JOIN accounts ac ON uf.followId = ac.accountId AND uf.followType = 'Artist'
+    WHERE uf.accountId = :accountId
     `;
 
     const followedItems = await sequelize.query(query, {
-      replacements: { userId },
+      replacements: { accountId },
       type: sequelize.QueryTypes.SELECT,
     });
 
@@ -577,10 +558,10 @@ const getFollowedItemsService = async (userId) => {
 };
 
 // Unfollow an item
-const unfollowItemService = async (userId, followType, followId) => {
+const unfollowItemService = async (accountId, followType, followId) => {
   try {
     const unfollow = await UserFollow.destroy({
-      where: { userId, followType, followId },
+      where: { accountId, followType, followId },
     });
     if (!unfollow) {
       return { EC: 1, EM: "Item not followed" };

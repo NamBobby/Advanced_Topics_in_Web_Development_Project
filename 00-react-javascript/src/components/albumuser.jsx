@@ -68,7 +68,7 @@ const AlbumUser = ({ itemsToShow, albums, onDelete }) => {
               </div>
               <MinusCircleOutlined
                 className="albumuser-delete-icon"
-                onClick={(event) => handleDelete(album.id, event)}
+                onClick={(event) => handleDelete(album.albumId, event)}
               />
             </>
           )}

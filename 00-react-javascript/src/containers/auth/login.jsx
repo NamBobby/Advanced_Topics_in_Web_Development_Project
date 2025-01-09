@@ -23,7 +23,7 @@ const LoginPage = () => {
 
         // Lưu token và thông tin người dùng vào localStorage
         localStorage.setItem("access_token", access_token);
-        localStorage.setItem("role", user.role); // Lưu role của user
+        localStorage.setItem("role", user.role); 
         localStorage.setItem("user", JSON.stringify(user));
 
         // Cập nhật context Auth

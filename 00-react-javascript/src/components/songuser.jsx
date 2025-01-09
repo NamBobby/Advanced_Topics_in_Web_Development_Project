@@ -79,9 +79,9 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
         const results = await Promise.all(
           playlists.map(async (playlist) => {
             const musicInPlaylist = await getMusicInPlaylistApi({
-              playlistId: playlist.id,
+              playlistId: playlist.playlistId,
             });
-            return { playlistId: playlist.id, musics: musicInPlaylist };
+            return { playlistId: playlist.playlistId, musics: musicInPlaylist };
           })
         );
 
@@ -103,8 +103,8 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
   // Filter playlists when dropdown opens
   const handleDropdownClick = (musicId) => {
     const result = playlists.filter((playlist) => {
-      const musics = playlistSongs[playlist.id] || [];
-      return !musics.some((music) => music.id === musicId);
+      const musics = playlistSongs[playlist.playlistId] || [];
+      return !musics.some((music) => music.musicId === musicId);
     });
 
     setFilteredPlaylists(result);
@@ -146,17 +146,17 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
             <Dropdown
               menu={{
                 items: filteredPlaylists.map((playlist) => ({
-                  key: playlist.id,
+                  key: playlist.playlistId,
                   label: (
                     <div
-                      onClick={() => handleAddToPlaylist(song.id, playlist.id)}>
+                      onClick={() => handleAddToPlaylist(song.musicId, playlist.playlistId)}>
                       {playlist.name}
                     </div>
                   ),
                 })),
               }}
               trigger={["click"]}
-              onOpenChange={() => handleDropdownClick(song.id)}>
+              onOpenChange={() => handleDropdownClick(song.musicId)}>
               <HeartOutlined
                 className="add-to-playlist-icon"
                 onClick={(e) => {
@@ -169,12 +169,12 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
               <Dropdown
                 menu={{
                   items: albums.map((album) => ({
-                    key: album.id,
+                    key: album.albumId,
                     label: (
                       <div
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleAddToAlbum(song.id, album.id);
+                          handleAddToAlbum(song.musicId, album.albumId);
                         }}>
                         {album.name}
                       </div>
@@ -195,7 +195,7 @@ const SongUser = ({ songs, handleSongClick, onDelete, albums, playlists }) => {
               className="delete-icon"
               onClick={(e) => {
                 e.stopPropagation();
-                handleDelete(song.id);
+                handleDelete(song.musicId);
               }}
             />
           </div>

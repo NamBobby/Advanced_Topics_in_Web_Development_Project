@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import {
   CaretRightOutlined,
   LeftOutlined,
   MinusCircleOutlined,
 } from "@ant-design/icons";
+import { notification } from "antd";
 import "../assets/styles/albumDetail.css";
 import axios from "../services/axios.customize";
 import {
@@ -25,8 +26,11 @@ const AlbumUserDetail = () => {
   const [itemsToShow, setItemsToShow] = useState(5);
   const [durations, setDurations] = useState({});
   const { setCurrentSong, setSongList } = useOutletContext();
+  const hasNotified = useRef(false);
+
 
   useEffect(() => {
+
     const fetchAlbumData = async () => {
       try {
         // Fetch all albums and find the one that matches the title
@@ -40,11 +44,17 @@ const AlbumUserDetail = () => {
 
           // Fetch songs for the album
           const songsResponse = await getMusicInAlbumApi({
-            albumId: matchedAlbum.id,
+            albumId: matchedAlbum.albumId,
           });
           setSongs(songsResponse);
-        } else {
-          throw new Error("Album not found");
+
+          if (songsResponse.length === 0 && !hasNotified.current) {
+            notification.info({
+              message: "Notification",
+              description: "This album is empty.",
+            });
+            hasNotified.current = true; // Mark as notified
+          }
         }
       } catch (error) {
         console.error("Error fetching album data:", error);
@@ -77,8 +87,8 @@ const AlbumUserDetail = () => {
 
   const handleRemoveSong = async (musicId) => {
     try {
-      await removeMusicFromAlbumApi({ albumId: album.id, musicId });
-      setSongs((prevSongs) => prevSongs.filter((song) => song.id !== musicId));
+      await removeMusicFromAlbumApi({ albumId: album.albumId, musicId });
+      setSongs((prevSongs) => prevSongs.filter((song) => song.musicId !== musicId));
     } catch (error) {
       console.error("Error removing song from album:", error);
     }
@@ -118,7 +128,7 @@ const AlbumUserDetail = () => {
               onClick={() => handleArtistClick(album.artist)}>
               <h2>{album?.artist}</h2>
             </div>
-            <FollowButton followType="Album" followId={album?.id} />
+            <FollowButton followType="Album" followId={album?.albumId} />
           </div>
         </div>
       </div>
@@ -161,7 +171,7 @@ const AlbumUserDetail = () => {
                 className="remove-icon"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleRemoveSong(song.id);
+                  handleRemoveSong(song.musicId);
                 }}
               />
             </div>

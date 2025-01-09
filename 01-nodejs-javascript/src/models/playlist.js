@@ -1,11 +1,10 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
-const Account = require("./user");
 
 const Playlist = sequelize.define(
   "playlists",
   {
-    id: {
+    playlistId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -29,8 +28,8 @@ const Playlist = sequelize.define(
     accountId: {
       type: DataTypes.INTEGER,
       references: {
-        model: Account,
-        key: "id",
+        model: "accounts",
+        key: "accountId",
       },
       allowNull: false,
     },
@@ -39,8 +38,5 @@ const Playlist = sequelize.define(
     timestamps: false,
   }
 );
-
-Account.hasMany(Playlist, { foreignKey: "accountId" });
-Playlist.belongsTo(Account, { foreignKey: "accountId" });
 
 module.exports = Playlist;

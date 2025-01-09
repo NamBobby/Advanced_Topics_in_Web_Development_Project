@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import {
   CaretRightOutlined,
@@ -12,6 +12,7 @@ import {
   getMusicInPlaylistApi,
   removeMusicFromPlaylistApi,
 } from "../services/apiService";
+import { notification } from "antd";
 import PlaylistLogo from "../assets/images/playlistlogo.png";
 import SongLogo from "../assets/images/songlogo.png";
 
@@ -24,8 +25,10 @@ const PlaylistDetail = () => {
   const [itemsToShow, setItemsToShow] = useState(5);
   const [durations, setDurations] = useState({});
   const { setCurrentSong, setSongList } = useOutletContext();
+  const hasNotified = useRef(false);
 
   useEffect(() => {
+
     const fetchPlaylistData = async () => {
       try {
         const playlistsResponse = await getPlaylistsApi();
@@ -37,11 +40,17 @@ const PlaylistDetail = () => {
           setPlaylist(matchedPlaylist);
 
           const songsResponse = await getMusicInPlaylistApi({
-            playlistId: matchedPlaylist.id,
+            playlistId: matchedPlaylist.playlistId,
           });
           setSongs(songsResponse);
-        } else {
-          throw new Error("Playlist not found");
+
+          if (songsResponse.length === 0 && !hasNotified.current) {
+            notification.info({
+              message: "Notification",
+              description: "This album is empty.",
+            });
+            hasNotified.current = true; // Mark as notified
+          }
         }
       } catch (error) {
         console.error("Error fetching playlist data:", error);
@@ -62,8 +71,13 @@ const PlaylistDetail = () => {
 
   const handleRemoveSong = async (musicId) => {
     try {
-      await removeMusicFromPlaylistApi({ playlistId: playlist.id, musicId });
-      setSongs((prevSongs) => prevSongs.filter((song) => song.id !== musicId));
+      await removeMusicFromPlaylistApi({
+        playlistId: playlist.playlistId,
+        musicId,
+      });
+      setSongs((prevSongs) =>
+        prevSongs.filter((song) => song.musicId !== musicId)
+      );
     } catch (error) {
       console.error("Error removing song from playlist:", error);
     }
@@ -133,7 +147,11 @@ const PlaylistDetail = () => {
                 />
               ) : (
                 <div className="playlistsong-placeholder">
-                  <img src={SongLogo} alt="Song Logo" className="playlistsong-placeholder-icon" />
+                  <img
+                    src={SongLogo}
+                    alt="Song Logo"
+                    className="playlistsong-placeholder-icon"
+                  />
                 </div>
               )}
             </div>
@@ -146,7 +164,7 @@ const PlaylistDetail = () => {
                 className="remove-icon"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleRemoveSong(song.id);
+                  handleRemoveSong(song.musicId);
                 }}
               />
             </div>
@@ -162,6 +180,7 @@ const PlaylistDetail = () => {
               loadSongDuration(song.filePath, songid)}
           </div>
         ))}
+
         {songs.length > 5 && (
           <div className="songuser-controls">
             {itemsToShow < songs.length && (

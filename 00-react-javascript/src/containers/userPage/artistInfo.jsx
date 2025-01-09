@@ -17,13 +17,13 @@ const getItemsToShow = (width) => {
   if (width < 1100) {
     return { albums: 2 };
   } else if (width < 1407) {
-    return { albums: 3 };   
+    return { albums: 3 };
   } else if (width < 1430) {
     return { albums: 4 };
   } else if (width < 1630) {
     return { albums: 4 };
   } else if (width < 2100) {
-    return {  albums: 5 };
+    return { albums: 5 };
   } else {
     return { albums: 6 };
   }
@@ -38,72 +38,76 @@ const ArtistInfo = () => {
   const [albums, setAlbums] = useState([]);
   const { setCurrentSong, setSongList } = useOutletContext();
   const [itemsToShow, setItemsToShow] = useState(() => {
-      const mainContent = document.querySelector(".main-content");
-      return mainContent ? getItemsToShow(mainContent.offsetWidth) : { songs: 6, artists: 4, albums: 4 };
-    });
+    const mainContent = document.querySelector(".main-content");
+    return mainContent ? getItemsToShow(mainContent.offsetWidth) : { songs: 6, artists: 4, albums: 4 };
+  });
 
   useEffect(() => {
-      const handleResize = () => {
-        const mainContent = document.querySelector(".main-content");
-        if (mainContent) {
-          const width = mainContent.offsetWidth;
-          setItemsToShow(getItemsToShow(width));
-        }
-      };
-  
-      const resizeObserver = new ResizeObserver(handleResize);
+    const handleResize = () => {
       const mainContent = document.querySelector(".main-content");
-  
       if (mainContent) {
-        resizeObserver.observe(mainContent);
+        const width = mainContent.offsetWidth;
+        setItemsToShow(getItemsToShow(width));
       }
-  
-      handleResize();
-  
-      return () => {
-        if (mainContent) {
-          resizeObserver.unobserve(mainContent);
-        }
-        resizeObserver.disconnect();
-      };
-    }, []);
+    };
+
+    const resizeObserver = new ResizeObserver(handleResize);
+    const mainContent = document.querySelector(".main-content");
+
+    if (mainContent) {
+      resizeObserver.observe(mainContent);
+    }
+
+    handleResize();
+
+    return () => {
+      if (mainContent) {
+        resizeObserver.unobserve(mainContent);
+      }
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchArtistData = async () => {
       try {
-        // Fetch artist details
         const usersResponse = await getUserApi();
+        //console.log("Users Response:", usersResponse);
+  
         const foundArtist = usersResponse.find(
-          (user) => user.id.toString() === id && user.role === "Artist"
+          (user) => user.accountId.toString() === id && user.role === "Artist"
         );
-
-        if (foundArtist) {
-          setArtist(foundArtist);
-        } else {
+  
+        if (!foundArtist) {
+          console.error(`Artist with ID ${id} not found. Response:`, usersResponse);
           throw new Error("Artist not found");
         }
-
-        // Fetch songs and albums for the artist
+  
+        setArtist(foundArtist);
+  
         const songsResponse = await getMusicsApi();
+        //console.log("Songs Response:", songsResponse);
+  
         const artistSongs = songsResponse.filter(
-          (song) => song.accountId.toString() === id
+          (song) => song.artist === foundArtist.name
         );
         setSongs(artistSongs);
-
+  
         const albumsResponse = await getAlbumsApi();
+        //console.log("Albums Response:", albumsResponse);
+  
         const artistAlbums = albumsResponse.filter(
-          (album) => album.accountId.toString() === id
+          (album) => album.artist === foundArtist.name
         );
         setAlbums(artistAlbums);
       } catch (error) {
         console.error("Error fetching artist data:", error);
-        navigate("/"); // Redirect to home if artist not found
-      } 
+        navigate("/"); 
+      }
     };
-
+  
     fetchArtistData();
-  }, [id, navigate]);
-
+  }, [id, navigate]);  
 
   const handleBackClick = () => {
     navigate(-1); 
@@ -151,7 +155,7 @@ const ArtistInfo = () => {
           <p className="user-role">Artist</p>
           <div className="user-artist-role">
             <h3 className="user-name">{artist?.name}</h3>
-            <FollowButton followType="Artist" followId={artist?.id} />
+            <FollowButton followType="Artist" followId={artist?.accountId} />
           </div>   
         </div>
       </div>

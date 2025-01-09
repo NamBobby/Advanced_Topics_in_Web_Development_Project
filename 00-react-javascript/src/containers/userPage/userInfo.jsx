@@ -80,25 +80,25 @@ const UserInfo = () => {
   const fetchUserData = useCallback(async () => {
     try {
       const songsResponse = await getMusicsApi();
-      const userSongs = songsResponse.filter((song) => song.accountId === user.id);
+      const userSongs = songsResponse.filter((song) => song.artist === user.name);
       setSongs(userSongs);
 
       const albumsResponse = await getAlbumsApi();
-      const userAlbums = albumsResponse.filter((album) => album.accountId === user.id);
+      const userAlbums = albumsResponse.filter((album) => album.artist === user.name);
       setAlbums(userAlbums);
 
       const playlistsResponse = await getPlaylistsApi();
       const userPlaylists = playlistsResponse.filter(
-        (playlist) => playlist.accountId === user.id
+        (playlist) => playlist.accountId === user.accountId
       );
       setPlaylists(userPlaylists);
     } catch (error) {
       console.error("Error fetching user-related data:", error);
     }
-  }, [user.id]);
+  }, [user.name , user.accountId]);
 
   useEffect(() => {
-    if (user.id) {
+    if (user.accountId) {
       fetchUserData();
     }
   }, [user, fetchUserData]);

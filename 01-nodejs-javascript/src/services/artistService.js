@@ -6,6 +6,11 @@ const fs = require("fs");
 // Upload music service
 const uploadMusicService = async (musicData) => {
   try {
+    const { title, genre, filePath, artistId } = musicData;
+    if (!title || !genre || !filePath || !artistId) {
+      throw new Error("Missing required fields for uploading music");
+    }
+
     const music = await Music.create(musicData);
     console.log("Music uploaded:", music);
     return music;
@@ -18,6 +23,11 @@ const uploadMusicService = async (musicData) => {
 // Create album
 const createAlbumService = async (albumData) => {
   try {
+    const { name, artistId } = albumData;
+    if (!name || !artistId) {
+      throw new Error("Missing required fields for creating album");
+    }
+
     const album = await Album.create(albumData);
     console.log("Album created:", album);
     return album;
@@ -36,7 +46,7 @@ const addMusicToAlbumService = async (albumId, musicId) => {
       throw new Error("Music not found");
     }
 
-    if (music.album || music.albumId) {
+    if (music.albumId) {
       throw new Error("Music is already associated with an album");
     }
 
@@ -45,7 +55,7 @@ const addMusicToAlbumService = async (albumId, musicId) => {
 
     await Music.update(
       { albumId: albumId },
-      { where: { id: musicId } }
+      { where: { musicId: musicId } }
     );
 
     const updatedMusic = await Music.findByPk(musicId);
@@ -73,7 +83,7 @@ const deleteMusicService = async (musicId) => {
       fs.unlinkSync(music.thumbnailPath);
     }
 
-    await Music.destroy({ where: { id: musicId } });
+    await Music.destroy({ where: { musicId: musicId } });
 
     return { message: "Music deleted successfully" };
   } catch (error) {
@@ -88,10 +98,12 @@ const removeMusicFromAlbumService = async (albumId, musicId) => {
     const music = await Music.findByPk(musicId);
     if (!music) throw new Error("Music not found");
 
-    // Cập nhật albumIdvà album cho music thành null
+    const album = await Album.findByPk(albumId);
+    if (!album) throw new Error("Album not found");
+
     await Music.update(
-      { albumId: null, album: null },
-      { where: { id: musicId } }
+      { albumId: null },
+      { where: { musicId: musicId } }
     );
 
     const updatedMusic = await Music.findByPk(musicId);
@@ -111,15 +123,13 @@ const deleteAlbumService = async (albumId) => {
       throw new Error("Album not found");
     }
 
-    // Xóa tệp thumbnail của album nếu tồn tại
     if (album.thumbnailPath && fs.existsSync(album.thumbnailPath)) {
       fs.unlinkSync(album.thumbnailPath);
     }
 
-    await Music.update({ albumId: null, album: null }, { where: { albumId } });
+    await Music.update({ albumId: null }, { where: { albumId } });
 
-    // Xóa album khỏi cơ sở dữ liệu
-    await Album.destroy({ where: { id: albumId } });
+    await Album.destroy({ where: { albumId: albumId } });
 
     return { message: "Album deleted successfully" };
   } catch (error) {

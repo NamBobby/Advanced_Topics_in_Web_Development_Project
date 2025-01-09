@@ -124,10 +124,10 @@ const SiderBar = () => {
                 <div className="slider-bar-lists">
                   {playlists.map((playlist) => (
                     <div
-                      key={playlist.id}
+                      key={playlist.playlistId}
                       className="slider-bar-list"
                       onMouseEnter={() =>
-                        handleMouseEnter("playlists", playlist.id)
+                        handleMouseEnter("playlists", playlist.playlistId)
                       }
                       onMouseLeave={handleMouseLeave}
                       onClick={() => handleItemClick("Playlist", playlist)}>
@@ -149,7 +149,7 @@ const SiderBar = () => {
                         <div className="slider-bar-name">{playlist.name}</div>
                         <div className="slider-bar-role">Playlist</div>
                       </div>
-                      {isHovered("playlists", playlist.id) && (
+                      {isHovered("playlists", playlist.playlistId) && (
                         <div className="slider-bar-icon">
                           <div className="slider-bar-hover-icon">
                             <CaretRightOutlined />
@@ -279,11 +279,11 @@ const SiderBar = () => {
             <div className="slider-bar-lists">
               {playlists.map((playlist) => (
                 <div
-                  key={playlist.id}
+                  key={playlist.playlistId}
                   className="slider-bar-list"
                   style={{ width: "70px" }}
                   onMouseEnter={() =>
-                    handleMouseEnter("playlists", playlist.id)
+                    handleMouseEnter("playlists", playlist.playlistId)
                   }
                   onMouseLeave={handleMouseLeave}
                   onClick={() => handleItemClick("Playlist", playlist)}>
@@ -298,7 +298,7 @@ const SiderBar = () => {
                     alt="PLaylist thumbnail"
                     className="slider-bar-image"
                   />
-                  {isHovered("playlists", playlist.id) && (
+                  {isHovered("playlists", playlist.playlistId) && (
                     <div className="slider-bar-icon" style={{ left: "50%" }}>
                       <div className="slider-bar-hover-icon">
                         <CaretRightOutlined />

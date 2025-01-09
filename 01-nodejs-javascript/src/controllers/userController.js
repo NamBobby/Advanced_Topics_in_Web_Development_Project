@@ -17,27 +17,39 @@ const {
   getMusicInAlbumService,
   searchMusicService,
   getAlbumsService,
-  followItemService, 
+  followItemService,
   getFollowedItemsService,
-  unfollowItemService
+  unfollowItemService,
 } = require("../services/userService");
-const User = require("../models/user");
+const { Account } = require("../models/associations");
 const { upload, checkThumbnailSize } = require("../config/multerConfig");
-const fs = require("fs");
-const path = require("path");
 
 const UserRegister = async (req, res) => {
-  const { name, email, password, dateOfBirth, gender } = req.body;
+  try {
+    const { name, email, password, dateOfBirth, gender } = req.body;
 
-  const data = await createUserService(name, email, password, dateOfBirth, gender);
+    if (!name || !email || !password || !dateOfBirth || !gender) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
-  if (data.EC !== 0) {
-    return res.status(400).json({ message: data.EM }); 
+    const result = await createUserService({
+      name,
+      email,
+      password,
+      dateOfBirth,
+      gender,
+    });
+
+    if (result.EC !== 0) {
+      return res.status(400).json({ message: result.EM });
+    }
+
+    return res.status(201).json({ message: result.EM, data: result.data });
+  } catch (error) {
+    console.error("Error in UserRegister:", error);
+    return res.status(500).json({ message: "Error registering user" });
   }
-
-  return res.status(201).json({ message: "User created successfully", user: data.data });
 };
-
 
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -48,22 +60,20 @@ const handleLogin = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const avatarFile = req.files?.avatar?.[0] || null; // Tệp avatar mới
+    const avatarFile = req.files?.avatar?.[0] || null;
     const { dateOfBirth, gender } = req.body;
 
-    const account = await User.findOne({ where: { email: req.user.email } });
+    const account = await Account.findOne({ where: { email: req.user.email } });
     if (!account) {
       return res.status(400).json({ message: "Account not found" });
     }
 
     let avatarPath = account.avatarPath;
 
-    // Nếu có avatar mới, chuẩn bị avatar mới
     if (avatarFile) {
       avatarPath = `avatars/${avatarFile.filename}`;
     }
 
-    // Chuẩn bị dữ liệu cập nhật
     const profileData = {
       email: req.user.email,
       dateOfBirth,
@@ -79,22 +89,22 @@ const updateUser = async (req, res) => {
   }
 };
 
-
-
 const updatePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;
-    const userId = req.user.id;
+    const accountId = req.user.accountId;
 
     const updateResult = await updatePasswordService(
-      userId,
+      accountId,
       currentPassword,
       newPassword,
       confirmPassword
     );
 
     if (updateResult.EC === 0) {
-      return res.status(200).json({ message: "Password updated successfully!" });
+      return res
+        .status(200)
+        .json({ message: "Password updated successfully!" });
     } else {
       return res.status(400).json({ message: updateResult.EM });
     }
@@ -103,8 +113,6 @@ const updatePassword = async (req, res) => {
     return res.status(500).json({ message: "Error updating password." });
   }
 };
-
-
 
 const sendOtp = async (req, res) => {
   try {
@@ -134,9 +142,8 @@ const verifyOtp = async (req, res) => {
   }
 };
 
-
 const getAccount = async (req, res) => {
-  const data = await getProfileService(req.user.id);
+  const data = await getProfileService(req.user.accountId);
   return res.status(200).json(data);
 };
 
@@ -146,7 +153,7 @@ const createPlaylist = [
   checkThumbnailSize,
   async (req, res) => {
     try {
-      const account = await User.findOne({
+      const account = await Account.findOne({
         where: { email: req.user.email },
       });
       if (!account) {
@@ -154,16 +161,20 @@ const createPlaylist = [
       }
 
       const { name } = req.body;
-      const thumbnailPath = req.files.playlistThumbnail ? req.files.playlistThumbnail[0].path : null;
+      const thumbnailPath = req.files.playlistThumbnail
+        ? req.files.playlistThumbnail[0].path
+        : null;
 
       const playlist = await createPlaylistService({
         name,
         thumbnailPath,
-        accountId: account.id,
+        accountId: account.accountId,
         creationDate: new Date(),
       });
 
-      res.status(201).json({ message: "Playlist created successfully", playlist });
+      res
+        .status(201)
+        .json({ message: "Playlist created successfully", playlist });
     } catch (error) {
       console.error("Error in createPlaylist:", error);
       res.status(500).json({ message: "Error creating playlist" });
@@ -188,7 +199,7 @@ const addMusicToPlaylist = async (req, res) => {
 
 // Controller function to get playlists for a user
 const getPlaylists = async (req, res) => {
-  const playlists = await getPlaylistService(req.user.id);
+  const playlists = await getPlaylistService(req.user.accountId);
   res.status(200).json(playlists);
 };
 
@@ -209,9 +220,7 @@ const removeMusicFromPlaylist = async (req, res) => {
   try {
     const { playlistId, musicId } = req.body;
     const response = await removeMusicFromPlaylistService(playlistId, musicId);
-    res
-      .status(200)
-      .json(response);
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error in removeMusicFromPlaylist:", error);
     res.status(500).json({ message: "Error removing music from playlist" });
@@ -234,7 +243,7 @@ const deletePlaylist = async (req, res) => {
 const getMusicInPlaylist = async (req, res) => {
   try {
     const { playlistId } = req.body;
-    //console.log("Playlist ID:", playlistId); 
+    //console.log("Playlist ID:", playlistId);
 
     const musicList = await getMusicInPlaylistService(playlistId);
     res.status(200).json(musicList);
@@ -246,7 +255,7 @@ const getMusicInPlaylist = async (req, res) => {
 
 const getMusicInAlbum = async (req, res) => {
   try {
-    const { albumId } = req.body; 
+    const { albumId } = req.body;
     if (!albumId) {
       return res.status(400).json({ message: "albumId is required" });
     }
@@ -259,31 +268,29 @@ const getMusicInAlbum = async (req, res) => {
   }
 };
 
-
 const searchMusic = async (req, res) => {
   try {
-      const { searchTerm } = req.body;
-      const results = await searchMusicService(searchTerm);
-      res.status(200).json(results);
+    const { searchTerm } = req.body;
+    const results = await searchMusicService(searchTerm);
+    res.status(200).json(results);
   } catch (error) {
-      console.error("Error in searchMusic:", error);
-      res.status(500).json({ message: "Error performing search" });
+    console.error("Error in searchMusic:", error);
+    res.status(500).json({ message: "Error performing search" });
   }
 };
 
-
-const getUser = async(req, res) => {
+const getUser = async (req, res) => {
   const data = await getUserService();
-  return res.status(200).json(data)
-}
+  return res.status(200).json(data);
+};
 
 // Follow an item
 const followItem = async (req, res) => {
   try {
     const { followType, followId } = req.body;
-    const userId = req.user.id;
+    const accountId = req.user.accountId;
 
-    const response = await followItemService(userId, followType, followId);
+    const response = await followItemService(accountId, followType, followId);
     if (response.EC !== 0) {
       return res.status(500).json({ message: response.EM });
     }
@@ -297,13 +304,15 @@ const followItem = async (req, res) => {
 // Get followed items
 const getFollowedItems = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const accountId = req.user.accountId;
 
-    const response = await getFollowedItemsService(userId);
+    const response = await getFollowedItemsService(accountId);
     if (response.EC !== 0) {
       return res.status(500).json({ message: response.EM });
     }
-    res.status(200).json({ message: response.EM, followedItems: response.data });
+    res
+      .status(200)
+      .json({ message: response.EM, followedItems: response.data });
   } catch (error) {
     console.error("Error in getFollowedItems:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -313,9 +322,9 @@ const getFollowedItems = async (req, res) => {
 const unfollowItem = async (req, res) => {
   try {
     const { followType, followId } = req.body;
-    const userId = req.user.id;
+    const accountId = req.user.accountId;
 
-    const response = await unfollowItemService(userId, followType, followId);
+    const response = await unfollowItemService(accountId, followType, followId);
     if (response.EC !== 0) {
       return res.status(400).json({ message: response.EM });
     }
@@ -347,5 +356,5 @@ module.exports = {
   getAlbums,
   followItem,
   getFollowedItems,
-  unfollowItem
+  unfollowItem,
 };

@@ -60,7 +60,7 @@ const UserAccount = () => {
         const res = await getAccountApi();
         //console.log("User data from API:", res);
         if (res && Array.isArray(res) && res.length > 0) {
-          const user = res[0]; // Lấy phần tử đầu tiên trong mảng
+          const user = res[0]; 
           setUserData(user);
 
           // split day-month-year dateOfBirth

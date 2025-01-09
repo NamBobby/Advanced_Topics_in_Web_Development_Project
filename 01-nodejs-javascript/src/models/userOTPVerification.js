@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
-const User = require('./user');
+const Account = require('./account');
 
-const UserOTPVerification = sequelize.define('userotpverification', {
-  id: {
+const UserOTPVerification = sequelize.define('otps', {
+  otpId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
@@ -31,17 +31,14 @@ const UserOTPVerification = sequelize.define('userotpverification', {
     allowNull: false,
     defaultValue: DataTypes.NOW,
   },
-  userId: {
+  accountId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: User,
-      key: 'id'
+      model: Account,
+      key: 'accountId'
     }
   }
 });
-
-User.hasMany(UserOTPVerification, { foreignKey: 'userId' });
-UserOTPVerification.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = UserOTPVerification;

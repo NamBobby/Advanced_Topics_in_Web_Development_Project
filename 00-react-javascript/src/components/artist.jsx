@@ -11,7 +11,7 @@ const Artist = ({ artists, itemsToShow }) => {
   const navigate = useNavigate();
 
   const handleArtistClick = (artist) => {
-    navigate(`artist/${artist.id}`, { state: { artist } });
+    navigate(`artist/${artist.accountId}`, { state: { artist } });
   };
 
 

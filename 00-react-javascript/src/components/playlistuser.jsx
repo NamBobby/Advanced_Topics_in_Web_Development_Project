@@ -66,7 +66,7 @@ const PlaylistUser = ({ itemsToShow, playlists, onDelete }) => {
               </div>
               <MinusCircleOutlined
                 className="playlistuser-delete-icon"
-                onClick={(event) => handleDelete(playlist.id, event)}
+                onClick={(event) => handleDelete(playlist.playlistId, event)}
               />
             </>
           )}

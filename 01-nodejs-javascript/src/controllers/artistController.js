@@ -7,7 +7,7 @@ const {
   deleteMusicService,
 } = require("../services/artistService");
 const { upload, checkThumbnailSize } = require("../config/multerConfig");
-const User = require("../models/user");
+const { Artist, Account } = require("../models/associations");
 
 // Upload music function
 const uploadMusical = [
@@ -22,15 +22,22 @@ const uploadMusical = [
         return res.status(400).json({ message: "No music file uploaded" });
       }
 
+      const { accountId, role } = req.user;
+      if (role !== "Artist") {
+        return res.status(403).json({ message: "Only artists can upload music" });
+      }
+
+      const artist = await Artist.findOne({ where: { accountId } });
+      const account = await Account.findOne({ where: { accountId } });
+
+      if (!artist) {
+        return res.status(400).json({ message: "Artist account not found" });
+      }
+
       const { title, genre, publishedYear, description, albumId } = req.body;
 
       if (!title || !genre || !publishedYear) {
-        return res.status(400).json({ message: "Please fill in all required fields" });
-      }
-
-      const account = await User.findOne({ where: { email: req.user.email } });
-      if (!account) {
-        return res.status(400).json({ message: "Account not found" });
+        return res.status(400).json({ message: "Missing required fields" });
       }
 
       const filePath = musicFile.path;
@@ -45,7 +52,7 @@ const uploadMusical = [
         description,
         thumbnailPath,
         uploadDate: new Date(),
-        accountId: account.id,
+        artistId: artist.artistId,
         albumId: albumId || null,
       };
 
@@ -76,27 +83,34 @@ const createAlbum = [
   checkThumbnailSize,
   async (req, res) => {
     try {
-      const { name, publishedYear } = req.body;
       const thumbnailFile = req.files.albumThumbnail ? req.files.albumThumbnail[0] : null;
 
-      const account = await User.findOne({
-        where: { email: req.user.email },
-      });
-      if (!account) {
-        return res.status(400).json({ message: "Account not found" });
+      const { accountId, role } = req.user;
+      if (role !== "Artist") {
+        return res.status(403).json({ message: "Only artists can upload music" });
       }
 
-      const thumbnailPath = thumbnailFile ? thumbnailFile.path : null;
+      const artist = await Artist.findOne({ where: { accountId } });
+      const account = await Account.findOne({ where: { accountId } });
+      if (!artist || !account) {
+        return res.status(400).json({ message: "Artist account not found" });
+      }
+      
+      const { name, publishedYear } = req.body;
+      if (!name) {
+        return res.status(400).json({ message: "Album name is required" });
+      }
 
-      const album = await createAlbumService({
+      const albumData = {
         name,
         artist: account.name,
-        thumbnailPath,
-        publishedYear,
-        accountId: account.id,
+        thumbnailPath: thumbnailFile ? thumbnailFile.path : null,
+        publishedYear: publishedYear || null,
+        artistId: artist.artistId,
         creationDate: new Date(),
-      });
+      };
 
+      const album = await createAlbumService(albumData);
       res.status(201).json({ message: "Album created successfully", album });
     } catch (error) {
       console.error("Error in createAlbum:", error);

@@ -26,7 +26,7 @@ const AdminPage = () => {
     try {
       const response = await getUserApi();
       const filteredUsers = response.filter(
-        (user) => user.id !== currentUser.id
+        (user) => user.accountId !== currentUser.accountId
       );
       setUsers(filteredUsers);
       setDisplayedUsers(filteredUsers.slice(0, visibleCount));
@@ -47,16 +47,16 @@ const AdminPage = () => {
     setVisibleCount(10);
   };
 
-  const handleDelete = async (email) => {
+  const handleDelete = async (accountId) => {
     try {
-      await deleteAccountApi({ email });
+      await deleteAccountApi({ accountId });
       notification.success({
         message: "Success",
         description: "Account deleted successfully.",
       });
 
       // Cập nhật lại danh sách người dùng
-      const updatedUsers = users.filter((user) => user.email !== email);
+      const updatedUsers = users.filter((user) => user.accountId !== accountId);
       setUsers(updatedUsers);
       setDisplayedUsers(updatedUsers.slice(0, visibleCount));
     } catch (error) {
@@ -73,7 +73,7 @@ const AdminPage = () => {
   };
 
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id" },
+    { title: "ID", dataIndex: "accountId", key: "accountId" },
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "Email", dataIndex: "email", key: "email" },
     { title: "Gender", dataIndex: "gender", key: "gender" },
@@ -82,7 +82,7 @@ const AdminPage = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Button type="danger" onClick={() => handleDelete(record.email)}>
+        <Button type="danger" onClick={() => handleDelete(record.accountId)}>
           Delete
         </Button>
       ),
