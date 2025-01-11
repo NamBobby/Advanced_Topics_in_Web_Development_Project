@@ -47,6 +47,7 @@ Account.init(
   {
     sequelize,
     modelName: "Account",
+    tableName: "accounts",
     timestamps: false,
   }
 );

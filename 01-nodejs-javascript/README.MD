@@ -6,6 +6,3 @@ Các bước cài đặt: (chế độ development)
 2. Update file .env (nếu cần thiết)
 3. Chạy dự án: npm run dev
 
-
-#delete the space between the char 'o' and '1' like this in .env file
-TOKEN=ghp_'....'o1

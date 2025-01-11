@@ -36,22 +36,53 @@ const processAndRunSQLFile = async (filePath) => {
     let sql = fs.readFileSync(filePath, "utf8");
 
     sql = sql
-      .replace(/\\r\\n/g, "\n") 
+      .replace(/\\r\\n/g, "\n")
       .replace(/\\\\/g, "\\")
-      .replace(/\\/g, "/") 
+      .replace(/\\/g, "/")
       .replace(/--.*?(\r?\n|$)/g, "")
       .replace(/\/\*.*?\*\//gs, "");
 
     sql = `SET FOREIGN_KEY_CHECKS = 0;\n${sql}\nSET FOREIGN_KEY_CHECKS = 1;`;
 
-    const statements = sql.split(";").filter((stmt) => stmt.trim()); 
+    const statements = sql.split(";").filter((stmt) => stmt.trim());
 
     for (const stmt of statements) {
-      await sequelize.query(stmt); 
+      await sequelize.query(stmt);
     }
     console.log("Database initialized successfully.");
   } catch (error) {
     console.error("Error initializing database:", error);
+  }
+};
+
+const checkAndInitializeDatabase = async (sqlFilePath) => {
+  try {
+    const tables = ["accounts", "administrators", "albums", "artists", "music"];
+    const missingTables = [];
+
+    for (const table of tables) {
+      const result = await sequelize.query(
+        `SHOW TABLES LIKE '${table}'`,
+        { type: sequelize.QueryTypes.SHOWTABLES }
+      );
+      if (result.length === 0) {
+        missingTables.push(table);
+      }
+    }
+
+    if (missingTables.length > 0) {
+      console.warn(
+        `Missing tables detected: ${missingTables.join(
+          ", "
+        )}. Reinitializing database...`
+      );
+      await processAndRunSQLFile(sqlFilePath);
+    } else {
+      console.log("All required tables are present.");
+    }
+  } catch (error) {
+    console.error("Error checking database tables:", error);
+    throw error;
   }
 };
 
@@ -60,12 +91,13 @@ const processAndRunSQLFile = async (filePath) => {
     await connectToDatabase();
 
     const shouldForceSync = false;
+    const sqlFilePath = path.join(__dirname, "config", "Database.sql");
+
     if (shouldForceSync) {
       await sequelize.sync({ force: true });
-      const sqlFilePath = path.join(__dirname, "config", "Database.sql");
       await processAndRunSQLFile(sqlFilePath);
     } else {
-      await sequelize.sync();
+      await checkAndInitializeDatabase(sqlFilePath);
     }
 
     app.listen(port, () => {

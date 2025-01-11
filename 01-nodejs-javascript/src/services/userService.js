@@ -555,7 +555,7 @@ const getFollowedItemsService = async (accountId) => {
       type: sequelize.QueryTypes.SELECT,
     });
 
-    console.log("Followed Items Query Result:", followedItems);
+    //console.log("Followed Items Query Result:", followedItems);
     return { EC: 0, EM: "Fetched followed items successfully", data: followedItems };
   } catch (error) {
     console.error("Error in getFollowedItemsService:", error);
