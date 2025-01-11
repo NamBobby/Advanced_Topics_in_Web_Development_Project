@@ -11,7 +11,8 @@ const Artist = ({ artists, itemsToShow }) => {
   const navigate = useNavigate();
 
   const handleArtistClick = (artist) => {
-    navigate(`artist/${artist.accountId}`, { state: { artist } });
+    const artistName = artist.name.replace(/\s+/g, "-").toLowerCase();
+    navigate(`artist/${artistName}`, { state: { artist } });
   };
 
 

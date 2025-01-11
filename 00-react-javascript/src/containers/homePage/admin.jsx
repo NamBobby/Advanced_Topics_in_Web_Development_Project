@@ -73,7 +73,6 @@ const AdminPage = () => {
   };
 
   const columns = [
-    { title: "ID", dataIndex: "accountId", key: "accountId" },
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "Email", dataIndex: "email", key: "email" },
     { title: "Gender", dataIndex: "gender", key: "gender" },

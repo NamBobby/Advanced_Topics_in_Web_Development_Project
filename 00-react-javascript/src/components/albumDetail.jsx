@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { notification } from "antd";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { CaretRightOutlined, LeftOutlined } from "@ant-design/icons";
@@ -8,9 +8,10 @@ import { getAlbumsApi, getMusicInAlbumApi } from "../services/apiService";
 import FollowButton from "../components/followButton";
 import AlbumLogo from "../assets/images/albumlogo.png";
 import SongLogo from "../assets/images/songlogo.png";
-
+import { AuthContext } from "../components/auth.context";
 
 const AlbumDetail = () => {
+  const { auth } = useContext(AuthContext);
   const { title } = useParams();
   const navigate = useNavigate();
   const [album, setAlbum] = useState(null);
@@ -83,7 +84,8 @@ const AlbumDetail = () => {
   };
 
   const handleArtistClick = () => {
-    navigate(`/artist/${album.accountId}`);
+    const artistName = album.artist.replace(/\s+/g, "-").toLowerCase();
+    navigate(`/artist/${artistName}`);
   };
 
   return (
@@ -112,7 +114,9 @@ const AlbumDetail = () => {
               onClick={() => handleArtistClick(album.artist)}>
               <h2>{album?.artist}</h2>
             </div>
-            <FollowButton followType="Album" followId={album?.albumId} />
+            {auth.isAuthenticated && (
+              <FollowButton followType="Album" followId={album?.albumId} />
+            )}
           </div>
         </div>
       </div>

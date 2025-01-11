@@ -21,6 +21,16 @@ export const AuthWrapper = (props) => {
   const [appLoading, setAppLoading] = useState(true);
 
   useEffect(() => {
+    // Xóa dữ liệu nếu ứng dụng khởi động lần đầu
+    const isFirstLoad = sessionStorage.getItem("firstLoad") === null;
+    if (isFirstLoad) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("role");
+      sessionStorage.setItem("firstLoad", "false");
+    }
+
+    // Kiểm tra xem đã có token chưa
     const access_token = localStorage.getItem("access_token");
     const userData = localStorage.getItem("user");
 
@@ -29,9 +39,18 @@ export const AuthWrapper = (props) => {
         isAuthenticated: true,
         user: JSON.parse(userData),
       });
+    } else {
+      setAuth({
+        isAuthenticated: false,
+        user: {
+          email: "",
+          name: "",
+        },
+      });
     }
     setAppLoading(false);
 
+    // Dispatch sự kiện auth update
     window.dispatchEvent(new Event("authUpdate"));
   }, []);
 

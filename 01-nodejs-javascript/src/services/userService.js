@@ -504,39 +504,50 @@ const searchMusicService = async (searchTerm) => {
 // Follow an item
 const followItemService = async (accountId, followType, followId) => {
   try {
-    const follow = await UserFollow.create({
-      accountId,
-      followType,
-      followId,
-    });
-    return { EC: 0, EM: "Followed successfully", data: follow };
+    if (followType === "Artist") {
+      const artist = await Account.findOne({ where: { accountId: followId, role: "Artist" } });
+      if (!artist) throw new Error("Artist not found");
+
+
+      await UserFollow.create({ accountId, followType, artistId: followId });
+    } else if (followType === "Album") {
+
+      const album = await Album.findByPk(followId);
+      if (!album) throw new Error("Album not found");
+
+      await UserFollow.create({ accountId, followType, albumId: followId });
+    } else {
+      throw new Error("Invalid followType");
+    }
+
+    return { EC: 0, EM: "Followed successfully" };
   } catch (error) {
     console.error("Error in followItemService:", error);
     return { EC: 1, EM: "Error following item" };
   }
 };
 
+
 // Get followed items
 const getFollowedItemsService = async (accountId) => {
   try {
-    //console.log("Fetching followed items for accountId:", accountId);
-
     const query = `
-    SELECT 
-      uf.followType, 
-      uf.followId, 
-      CASE 
-        WHEN uf.followType = 'Album' THEN a.name 
-        WHEN uf.followType = 'Artist' THEN ac.name 
-      END AS name,
-      CASE 
-        WHEN uf.followType = 'Album' THEN a.thumbnailPath 
-        WHEN uf.followType = 'Artist' THEN ac.avatarPath 
-      END AS thumbnailPath
-    FROM userfollows uf
-    LEFT JOIN albums a ON uf.followId = a.albumId AND uf.followType = 'Album'
-    LEFT JOIN accounts ac ON uf.followId = ac.accountId AND uf.followType = 'Artist'
-    WHERE uf.accountId = :accountId
+      SELECT 
+        uf.followType, 
+        uf.artistId, 
+        uf.albumId, 
+        CASE 
+          WHEN uf.followType = 'Album' THEN a.name 
+          WHEN uf.followType = 'Artist' THEN ac.name 
+        END AS name,
+        CASE 
+          WHEN uf.followType = 'Album' THEN a.thumbnailPath 
+          WHEN uf.followType = 'Artist' THEN ac.avatarPath 
+        END AS thumbnailPath
+      FROM userfollows uf
+      LEFT JOIN albums a ON uf.albumId = a.albumId AND uf.followType = 'Album'
+      LEFT JOIN accounts ac ON uf.artistId = ac.accountId AND uf.followType = 'Artist'
+      WHERE uf.accountId = :accountId
     `;
 
     const followedItems = await sequelize.query(query, {
@@ -544,34 +555,43 @@ const getFollowedItemsService = async (accountId) => {
       type: sequelize.QueryTypes.SELECT,
     });
 
-    //console.log("Followed items fetched:", followedItems);
-
-    return {
-      EC: 0,
-      EM: "Fetched followed items successfully",
-      data: followedItems,
-    };
+    console.log("Followed Items Query Result:", followedItems);
+    return { EC: 0, EM: "Fetched followed items successfully", data: followedItems };
   } catch (error) {
     console.error("Error in getFollowedItemsService:", error);
     return { EC: 1, EM: "Error fetching followed items" };
   }
 };
 
+
 // Unfollow an item
 const unfollowItemService = async (accountId, followType, followId) => {
   try {
-    const unfollow = await UserFollow.destroy({
-      where: { accountId, followType, followId },
-    });
+    let unfollow;
+
+    if (followType === "Artist") {
+      unfollow = await UserFollow.destroy({
+        where: { accountId, followType, artistId: followId },
+      });
+    } else if (followType === "Album") {
+      unfollow = await UserFollow.destroy({
+        where: { accountId, followType, albumId: followId },
+      });
+    } else {
+      throw new Error("Invalid followType");
+    }
+
     if (!unfollow) {
       return { EC: 1, EM: "Item not followed" };
     }
+
     return { EC: 0, EM: "Unfollowed successfully" };
   } catch (error) {
     console.error("Error in unfollowItemService:", error);
     return { EC: 1, EM: "Error unfollowing item" };
   }
 };
+
 
 module.exports = {
   createUserService,

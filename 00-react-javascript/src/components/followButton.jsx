@@ -14,30 +14,53 @@ const FollowButton = ({ followType, followId }) => {
         await followApi({ followType, followId });
         setIsFollowing(true);
       }
-    
-    // Dispatch event to notify other components
-    window.dispatchEvent(new CustomEvent("authUpdate"));
+
+      const response = await getFollowedItemsApi();
+      const isFollowed = response.followedItems.some((item) => {
+        if (followType === "Artist") {
+          return item.followType === "Artist" && item.artistId === followId;
+        } else if (followType === "Album") {
+          return item.followType === "Album" && item.albumId === followId;
+        }
+        return false;
+      });
+      setIsFollowing(isFollowed);
+
+      window.dispatchEvent(new CustomEvent("authUpdate"));
     } catch (error) {
-      console.error("Error toggling follow:", error);
+      console.error("Error toggling follow:", error.response?.data || error.message);
     }
   };
-  
 
   useEffect(() => {
     const fetchFollowStatus = async () => {
       try {
         const response = await getFollowedItemsApi();
-        const isFollowed = response.followedItems.some(
-          (item) => item.followType === followType && item.followId === followId
-        );
+        console.log("Followed Items Response:", response.followedItems);
+        const isFollowed = response.followedItems.some((item) => {
+          if (followType === "Artist") {
+            return item.followType === "Artist" && item.artistId === followId;
+          } else if (followType === "Album") {
+            return item.followType === "Album" && item.albumId === followId;
+          }
+          return false;
+        });
         setIsFollowing(isFollowed);
       } catch (error) {
         console.error("Error fetching follow status:", error);
       }
     };
-    fetchFollowStatus();
+
+    if (followId) {
+      fetchFollowStatus();
+    } else {
+      console.warn("Follow ID is undefined:", { followType, followId });
+    }
   }, [followType, followId]);
-  
+
+  if (!followId) {
+    return null; 
+  }
 
   return (
     <div

@@ -99,7 +99,8 @@ const AlbumUserDetail = () => {
   };
 
   const handleArtistClick = () => {
-    navigate(`/artist/${album.accountId}`);
+    const artistName = album.artist.replace(/\s+/g, "-").toLowerCase();
+    navigate(`/artist/${artistName}`);
   };
 
   return (

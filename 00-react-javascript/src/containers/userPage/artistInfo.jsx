@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
-import Album from "../../components/album";
+import AlbumArtist from "../../components/albumartist";
 import "../../assets/styles/userInfo.css";
 import {
   getMusicsApi,
@@ -12,6 +12,7 @@ import { LeftOutlined } from "@ant-design/icons";
 import FollowButton from "../../components/followButton";
 import SongArtist from "../../components/songartist";
 import ArtistLogo from "../../assets/images/artistlogo.png";
+import { AuthContext } from "../../components/auth.context";
 
 const getItemsToShow = (width) => {
   if (width < 1100) {
@@ -30,9 +31,9 @@ const getItemsToShow = (width) => {
 };
 
 const ArtistInfo = () => {
-  const { id } = useParams(); 
+  const { name } = useParams();
   const navigate = useNavigate();
-
+  const { auth } = useContext(AuthContext);
   const [artist, setArtist] = useState(null);
   const [songs, setSongs] = useState([]);
   const [albums, setAlbums] = useState([]);
@@ -74,12 +75,13 @@ const ArtistInfo = () => {
         const usersResponse = await getUserApi();
         //console.log("Users Response:", usersResponse);
   
-        const foundArtist = usersResponse.find(
-          (user) => user.accountId.toString() === id && user.role === "Artist"
-        );
+      const formattedName = name.replace(/\s+/g, "-").toLowerCase();
+      const foundArtist = usersResponse.find(
+        (user) => user.name.replace(/\s+/g, "-").toLowerCase() === formattedName && user.role === "Artist"
+      );
   
         if (!foundArtist) {
-          console.error(`Artist with ID ${id} not found. Response:`, usersResponse);
+          console.error(`Artist with name ${name} not found. Response:`, usersResponse);
           throw new Error("Artist not found");
         }
   
@@ -107,7 +109,7 @@ const ArtistInfo = () => {
     };
   
     fetchArtistData();
-  }, [id, navigate]);  
+  }, [name, navigate]);  
 
   const handleBackClick = () => {
     navigate(-1); 
@@ -155,7 +157,9 @@ const ArtistInfo = () => {
           <p className="user-role">Artist</p>
           <div className="user-artist-role">
             <h3 className="user-name">{artist?.name}</h3>
-            <FollowButton followType="Artist" followId={artist?.accountId} />
+            {auth.isAuthenticated && (
+              <FollowButton followType="Artist" followId={artist?.accountId} />
+            )}
           </div>   
         </div>
       </div>
@@ -189,7 +193,7 @@ const ArtistInfo = () => {
             )}
           </div>
         </div>
-        <Album itemsToShow={itemsToShow.albums} albums={albums} />
+        <AlbumArtist itemsToShow={itemsToShow.albums} albums={albums} />
       </div>
     </div>
   );

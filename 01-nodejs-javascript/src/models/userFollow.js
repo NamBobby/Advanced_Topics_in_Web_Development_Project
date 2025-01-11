@@ -21,12 +21,36 @@ const UserFollow = sequelize.define(
       type: DataTypes.ENUM("Album", "Artist"),
       allowNull: false,
     },
-    followId: {
+    artistId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      references: {
+        model: "accounts", 
+        key: "accountId",
+      },
+    },
+    albumId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "albums",
+        key: "albumId",
+      },
     },
   },
-  { timestamps: false }
+  {
+    timestamps: false,
+    validate: {
+      onlyOneFollowId() {
+        if (!this.artistId && !this.albumId) {
+          throw new Error("Either artistId or albumId must be provided");
+        }
+        if (this.artistId && this.albumId) {
+          throw new Error("Only one of artistId or albumId should be provided");
+        }
+      },
+    },
+  }
 );
 
 module.exports = UserFollow;

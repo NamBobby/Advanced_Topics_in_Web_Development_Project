@@ -55,6 +55,8 @@ const RegisterPage = () => {
       2,
       "0"
     )}-${String(day).padStart(2, "0")}`;
+    // console.log("Formatted Date of Birth:", formattedDateOfBirth);
+    // console.log("Form Data:", { name, email, password, formattedDateOfBirth, gender });
 
     try {
       const res = await createUserApi(
@@ -235,27 +237,21 @@ const RegisterPage = () => {
 
             <Form.Item
               label="Gender"
+              name="gender"
               rules={[
                 {
                   required: true,
                   message: "Please select your gender!",
                 },
               ]}>
-              <Radio.Group id="gender">
-                <Radio value="Man" id="gender-man">
-                  Man
-                </Radio>
-                <Radio value="Woman" id="gender-woman">
-                  Woman
-                </Radio>
-                <Radio value="Something else" id="gender-other">
-                  Something else
-                </Radio>
-                <Radio value="Prefer not to say" id="gender-prefer-not-to-say">
-                  Prefer not to say
-                </Radio>
+              <Radio.Group>
+                <Radio value="Man">Man</Radio>
+                <Radio value="Woman">Woman</Radio>
+                <Radio value="Something else">Something else</Radio>
+                <Radio value="Prefer not to say">Prefer not to say</Radio>
               </Radio.Group>
             </Form.Item>
+
             <Form.Item>
               <Button
                 type="primary"

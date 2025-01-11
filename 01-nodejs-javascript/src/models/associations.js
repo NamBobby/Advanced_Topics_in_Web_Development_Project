@@ -14,8 +14,15 @@ User.belongsTo(Account, { foreignKey: "accountId" });
 Artist.belongsTo(Account, { foreignKey: "accountId" });
 Administrator.belongsTo(Account, { foreignKey: "accountId" });
 
+// UserFollow associations
 Account.hasMany(UserFollow, { foreignKey: "accountId", onDelete: "CASCADE" });
 UserFollow.belongsTo(Account, { foreignKey: "accountId", onDelete: "CASCADE" });
+
+Account.hasMany(UserFollow, { foreignKey: "artistId", constraints: false });
+UserFollow.belongsTo(Account, { foreignKey: "artistId", constraints: false });
+
+Album.hasMany(UserFollow, { foreignKey: "albumId", constraints: false });
+UserFollow.belongsTo(Album, { foreignKey: "albumId", constraints: false });
 
 // Associations for Administrator (No additional associations)
 
@@ -46,10 +53,6 @@ Music.belongsToMany(Playlist, {
   through: PlaylistMusic,
   foreignKey: "musicId",
 });
-
-// Associations for Follow (Artist and Album)
-Album.hasMany(UserFollow, { foreignKey: "followId", constraints: false, onDelete: "CASCADE" });
-UserFollow.belongsTo(Album, { foreignKey: "followId", constraints: false, onDelete: "CASCADE" });
 
 // Associations for OTP Verification
 Account.hasMany(UserOTPVerification, { foreignKey: "accountId" , onDelete: "CASCADE"});

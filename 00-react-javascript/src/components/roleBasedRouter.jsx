@@ -32,7 +32,7 @@ const RoleBasedRouter = () => {
   // Các route chung cho User và Artist
   const commonRoutes = [
     { index: true, element: <HomePage /> },
-    { path: "artist/:id", element: <ArtistInfo /> },
+    { path: "artist/:name", element: <ArtistInfo /> },
     { path: "userInfo", element: <UserInfo />, state: { user: auth.user }, },
     { path: "album/:title", element: <AlbumDetail /> },
     { path: "playlist/:title", element: <PlaylistDetail /> },
@@ -62,7 +62,7 @@ const RoleBasedRouter = () => {
         ...(role === "Guest"
           ? [
               { index: true, element: <HomePage /> },
-              { path: "artist/:id", element: <ArtistInfo /> },
+              { path: "artist/:name", element: <ArtistInfo /> },
               { path: "album/:title", element: <AlbumDetail /> },
             ]
           : []),

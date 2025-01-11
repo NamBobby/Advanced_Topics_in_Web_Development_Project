@@ -290,7 +290,12 @@ const followItem = async (req, res) => {
     const { followType, followId } = req.body;
     const accountId = req.user.accountId;
 
+    //console.log("Follow API Input:", { accountId, followType, followId });
+
     const response = await followItemService(accountId, followType, followId);
+
+    //console.log("Follow API Response:", response);
+
     if (response.EC !== 0) {
       return res.status(500).json({ message: response.EM });
     }

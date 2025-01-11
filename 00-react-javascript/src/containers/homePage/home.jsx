@@ -9,6 +9,7 @@ import {
   getAlbumsApi,
 } from "../../services/apiService";
 import "../../assets/styles/home.css";
+import { shuffleArray } from "../../utils/shuffle";
 
 const getItemsToShow = (width) => {
   if (width < 1200) {
@@ -20,7 +21,7 @@ const getItemsToShow = (width) => {
   } else if (width < 1800) {
     return { songs: 6, artists: 4, albums: 4 };
   } else if (width < 1820) {
-    return { songs: 8, artists: 4, albums: 4 };
+    return { songs: 8, artists: 5, albums: 5 };
   } else if (width < 2100) {
     return { songs: 8, artists: 5, albums: 5 };
   } else {
@@ -100,9 +101,9 @@ const HomePage = () => {
       try {
         const response = await getUserApi();
         const data = response?.data || response;
-        const filteredArtists = data.filter(
+        const filteredArtists = shuffleArray(data.filter(
           (user) => user.role && user.role === "Artist"
-        );
+        ));
         setArtists(filteredArtists);
       } catch (error) {
         console.error("Error fetching artists:", error);
@@ -113,8 +114,8 @@ const HomePage = () => {
     const fetchMusics = async () => {
       try {
         const response = await getMusicsApi();
-        setSongs(response || []);
-        setSongList(response || []);
+        setSongs(shuffleArray(response || []));
+        setSongList(shuffleArray(response || []));
       } catch (error) {
         console.error("Error fetching musics:", error);
         setSongs([]);
@@ -124,7 +125,7 @@ const HomePage = () => {
     const fetchAlbums = async () => {
       try {
         const response = await getAlbumsApi();
-        setAlbums(response || []);
+        setAlbums(shuffleArray(response || []));
       } catch (error) {
         console.error("Error fetching albums:", error);
         setAlbums([]);

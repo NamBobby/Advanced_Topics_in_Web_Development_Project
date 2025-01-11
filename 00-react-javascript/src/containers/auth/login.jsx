@@ -20,13 +20,11 @@ const LoginPage = () => {
 
       if (response.EC === 0) {
         const { access_token, user } = response;
-
-        // Lưu token và thông tin người dùng vào localStorage
+        
         localStorage.setItem("access_token", access_token);
         localStorage.setItem("role", user.role); 
         localStorage.setItem("user", JSON.stringify(user));
 
-        // Cập nhật context Auth
         setAuth({
           isAuthenticated: true,
           user: {
@@ -39,19 +37,14 @@ const LoginPage = () => {
         // Notify sidebar to refresh followed items
         window.dispatchEvent(new Event("authUpdate"));
         
-
-        // Thông báo thành công
         notification.success({
           message: "Login Successful",
           description: `Welcome back, ${user.name}!`,
         });
 
-        // Điều hướng về "/"
         navigate("/");
-
         window.location.reload();
       } else {
-        // Xử lý lỗi từ server
         notification.error({
           message: "Login Failed",
           description: response.EM || "Invalid credentials",

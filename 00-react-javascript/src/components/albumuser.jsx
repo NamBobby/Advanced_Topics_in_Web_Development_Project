@@ -57,7 +57,7 @@ const AlbumUser = ({ itemsToShow, albums, onDelete }) => {
           )}
           <div className="albumuser-info">
             <div className="albumuser-title">{album.name}</div>
-            <div className="albumuser-artist">{album.artist}</div>
+            <div className="albumuser-artist">{album.publishedYear}</div>
           </div>
           {hoveredIndex === albumid && (
             <>

@@ -53,15 +53,6 @@ const seedInitialUsers = async () => {
       gender: "Man",
       role: "Administrator",
     },
-    {
-      name: "Son Tung MTP",
-      email: "nguyenthanhtung@example.com",
-      password: "$2b$10$9wJS51sjOLp/CSo5d8N0g.ABfydK3q0lsOgRDm8DVCXmc4bfw/XMe",
-      dateOfBirth: "1994-07-05",
-      gender: "Man",
-      role: "Artist",
-    },
-    // Add more initial users as needed
   ];
 
   try {

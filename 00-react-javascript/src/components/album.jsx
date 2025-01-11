@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate  } from "react-router-dom";
 import { CaretRightOutlined } from "@ant-design/icons";
-import { getMusicInAlbumApi } from "../services/apiService";
 import "../assets/styles/album.css";
 import axios from "../services/axios.customize";
 import AlbumLogo from "../assets/images/albumlogo.png";

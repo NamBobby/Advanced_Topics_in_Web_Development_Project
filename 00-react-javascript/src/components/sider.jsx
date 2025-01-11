@@ -46,10 +46,18 @@ const SiderBar = () => {
         const followedItems = followedItemsResponse.followedItems || [];
 
         setFollowedArtists(
-          followedItems.filter((item) => item.followType === "Artist")
+          followedItems.filter((item) => item.followType === "Artist").map((item) => ({
+            id: item.artistId, 
+            name: item.name,
+            thumbnailPath: item.thumbnailPath,
+          }))
         );
         setFollowedAlbums(
-          followedItems.filter((item) => item.followType === "Album")
+          followedItems.filter((item) => item.followType === "Album").map((item) => ({
+            id: item.albumId, 
+            name: item.name,
+            thumbnailPath: item.thumbnailPath,
+          }))
         );
       } catch (error) {
         console.error("Error fetching sidebar data:", error);
@@ -86,7 +94,8 @@ const SiderBar = () => {
       const albumName = item.name.replace(/\s+/g, "-").toLowerCase();
       navigate(`/album/${albumName}`, { state: { album: item } });
     } else if (type === "Artist") {
-      navigate(`/artist/${item.followId}`, { state: { artist: item } });
+      const artistName = item.name.replace(/\s+/g, "-").toLowerCase();
+      navigate(`/artist/${artistName}`, { state: { artist: item } });
     } else if (type === "Playlist") {
       const playlistName = item.name.replace(/\s+/g, "-").toLowerCase();
       navigate(`/playlist/${playlistName}`, { state: { playlist: item } });
@@ -124,7 +133,7 @@ const SiderBar = () => {
                 <div className="slider-bar-lists">
                   {playlists.map((playlist) => (
                     <div
-                      key={playlist.playlistId}
+                      key={`playlist-${playlist.playlistId}`}
                       className="slider-bar-list"
                       onMouseEnter={() =>
                         handleMouseEnter("playlists", playlist.playlistId)
@@ -163,10 +172,10 @@ const SiderBar = () => {
                 <div className="slider-bar-lists">
                   {followedArtists.map((artist) => (
                     <div
-                      key={artist.followId}
+                      key={`artist-${artist.id || artist.name}`}
                       className="slider-bar-list"
                       onMouseEnter={() =>
-                        handleMouseEnter("followedArtists", artist.followId)
+                        handleMouseEnter("followedArtists", artist.id)
                       }
                       onMouseLeave={handleMouseLeave}
                       onClick={() => handleItemClick("Artist", artist)}>
@@ -190,7 +199,7 @@ const SiderBar = () => {
                         </div>
                         <div className="slider-bar-artist-role">Artist</div>
                       </div>
-                      {isHovered("followedArtists", artist.followId) && (
+                      {isHovered("followedArtists", artist.id) && (
                         <div className="slider-bar-artist-icon">
                           <div className="slider-bar-artist-hover-icon">
                             <CaretRightOutlined />
@@ -204,10 +213,10 @@ const SiderBar = () => {
                 <div className="slider-bar-lists">
                   {followedAlbums.map((album) => (
                     <div
-                      key={album.followId}
+                      key={`album-${album.id || album.name}`}
                       className="slider-bar-list"
                       onMouseEnter={() =>
-                        handleMouseEnter("followedItems", album.followId)
+                        handleMouseEnter("followedItems", album.id)
                       }
                       onMouseLeave={handleMouseLeave}
                       onClick={() => handleItemClick("Album", album)}>
@@ -226,7 +235,7 @@ const SiderBar = () => {
                         <div className="slider-bar-name">{album.name}</div>
                         <div className="slider-bar-role">Album</div>
                       </div>
-                      {isHovered("followedAlbums", album.followId) && (
+                      {isHovered("followedAlbums", album.id) && (
                         <div className="slider-bar-icon">
                           <div className="slider-bar-hover-icon">
                             <CaretRightOutlined />
@@ -279,7 +288,7 @@ const SiderBar = () => {
             <div className="slider-bar-lists">
               {playlists.map((playlist) => (
                 <div
-                  key={playlist.playlistId}
+                  key={`playlist-${playlist.playlistId}`}
                   className="slider-bar-list"
                   style={{ width: "70px" }}
                   onMouseEnter={() =>
@@ -311,11 +320,11 @@ const SiderBar = () => {
             <div className="slider-bar-lists">
               {followedArtists.map((artist) => (
                 <div
-                  key={artist.followId}
+                  key={`artist-${artist.id}`}
                   className="slider-bar-list"
                   style={{ width: "70px" }}
                   onMouseEnter={() =>
-                    handleMouseEnter("followedArtists", artist.followId)
+                    handleMouseEnter("followedArtists", artist.id)
                   }
                   onMouseLeave={handleMouseLeave}
                   onClick={() => handleItemClick("Artist", artist)}>
@@ -333,7 +342,7 @@ const SiderBar = () => {
                     alt={artist.name}
                     className="slider-bar-artist-image"
                   />
-                  {isHovered("followedArtists", artist.followId) && (
+                  {isHovered("followedArtists", artist.id) && (
                     <div
                       className="slider-bar-artist-icon"
                       style={{ left: "50%" }}>
@@ -349,11 +358,11 @@ const SiderBar = () => {
             <div className="slider-bar-lists">
               {followedAlbums.map((album) => (
                 <div
-                  key={album.followId}
+                  key={`album-${album.id}`}
                   className="slider-bar-list"
                   style={{ width: "70px" }}
                   onMouseEnter={() =>
-                    handleMouseEnter("followedAlbums", album.followId)
+                    handleMouseEnter("followedAlbums", album.id)
                   }
                   onMouseLeave={handleMouseLeave}
                   onClick={() => handleItemClick("Album", album)}>
@@ -368,7 +377,7 @@ const SiderBar = () => {
                     alt="Album thumbnail"
                     className="slider-bar-image"
                   />
-                  {isHovered("followedAlbums", album.followId) && (
+                  {isHovered("followedAlbums", album.id) && (
                     <div className="slider-bar-icon" style={{ left: "50%" }}>
                       <div className="slider-bar-hover-icon">
                         <CaretRightOutlined />
