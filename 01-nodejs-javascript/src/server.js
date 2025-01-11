@@ -6,20 +6,9 @@ const { connectToDatabase, sequelize } = require("./config/database");
 const { getHomepage } = require("./controllers/homeController");
 const cors = require("cors");
 const path = require("path");
-const { deleteSpecificFiles } = require("./utils/cleanfileutils");
+const fs = require("fs");
 
-// Import models with associations
-const {
-  User,
-  Artist,
-  Administrator,
-  Album,
-  Music,
-  Playlist,
-  PlaylistMusic,
-  UserFollow,
-  Account
-} = require("./models/associations");
+require("./models/associations");
 
 const app = express();
 const port = process.env.PORT || 8888;
@@ -40,74 +29,49 @@ webAPI.get("/", getHomepage);
 // Define route
 app.use("/", webAPI);
 app.use("/v1/api/", apiRoutes);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Seed initial data function
-const seedInitialUsers = async () => {
-  const initialUsers = [
-    {
-      name: "bobby",
-      email: "bobby@gmail.com",
-      password: "$2b$10$YasRkHlmDIBrXNe12NwvoOpcdw8FPEc3/mQOBzhUCjuC1BhPhTA.6", 
-      dateOfBirth: "2001-05-01",
-      gender: "Man",
-      role: "Administrator",
-    },
-  ];
-
+const processAndRunSQLFile = async (filePath) => {
   try {
-    for (const user of initialUsers) {
-      // Check if the account already exists
-      const existingAccount = await Account.findOne({ where: { email: user.email } });
-      if (!existingAccount) {
-        // Create the account
-        const newAccount = await Account.create({
-          name: user.name,
-          email: user.email,
-          password: user.password,
-          dateOfBirth: user.dateOfBirth,
-          gender: user.gender,
-          role: user.role,
-        });
+    let sql = fs.readFileSync(filePath, "utf8");
 
-        // Link to the specific role table
-        if (user.role === "Administrator") {
-          await Administrator.create({ accountId: newAccount.accountId });
-        } else if (user.role === "Artist") {
-          await Artist.create({ accountId: newAccount.accountId });
-        }
-      }
+    sql = sql
+      .replace(/\\r\\n/g, "\n") 
+      .replace(/\\\\/g, "\\")
+      .replace(/\\/g, "/") 
+      .replace(/--.*?(\r?\n|$)/g, "")
+      .replace(/\/\*.*?\*\//gs, "");
+
+    sql = `SET FOREIGN_KEY_CHECKS = 0;\n${sql}\nSET FOREIGN_KEY_CHECKS = 1;`;
+
+    const statements = sql.split(";").filter((stmt) => stmt.trim()); 
+
+    for (const stmt of statements) {
+      await sequelize.query(stmt); 
     }
-
-    console.log("Initial users seeded successfully.");
+    console.log("Database initialized successfully.");
   } catch (error) {
-    console.error("Error seeding initial users:", error);
+    console.error("Error initializing database:", error);
   }
 };
 
-// Sync models and connect to the database
 (async () => {
   try {
     await connectToDatabase();
 
-    const shouldForceSync = false; //set your condition here
+    const shouldForceSync = false;
     if (shouldForceSync) {
-      const uploadsPath = path.join(__dirname, "uploads"); 
-      const fileTypesToDelete = [".mp3", ".jpeg", ".mpeg", ".png", ".webp", ".aac", ".jpg"];
-      deleteSpecificFiles(uploadsPath, fileTypesToDelete);
-
-      // Drop existing tables and recreate
-      await sequelize.sync({ force: true }); 
+      await sequelize.sync({ force: true });
+      const sqlFilePath = path.join(__dirname, "config", "Database.sql");
+      await processAndRunSQLFile(sqlFilePath);
     } else {
       await sequelize.sync();
-    } // Sync all Sequelize models with the database
+    }
 
-    // Seed initial users after tables are created
-    await seedInitialUsers();
     app.listen(port, () => {
       console.log(`Backend Nodejs App listening on port ${port}`);
     });
   } catch (error) {
-    console.log(">>> Error connecting to DB: ", error);
+    console.error(">>> Error connecting to DB:", error);
   }
 })();
