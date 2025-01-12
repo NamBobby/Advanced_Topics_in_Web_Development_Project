@@ -11,11 +11,13 @@ const UserFollow = sequelize.define(
     },
     accountId: {
       type: DataTypes.INTEGER,
+      primaryKey: true,
       allowNull: false,
       references: {
         model: "accounts",
         key: "accountId",
       },
+      onDelete: "CASCADE",
     },
     followType: {
       type: DataTypes.ENUM("Album", "Artist"),
@@ -25,9 +27,10 @@ const UserFollow = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: "accounts", 
+        model: "artists", 
         key: "accountId",
       },
+      onDelete: "CASCADE",
     },
     albumId: {
       type: DataTypes.INTEGER,
@@ -36,6 +39,7 @@ const UserFollow = sequelize.define(
         model: "albums",
         key: "albumId",
       },
+      onDelete: "CASCADE",
     },
   },
   {

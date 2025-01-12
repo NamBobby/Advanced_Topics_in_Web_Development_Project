@@ -54,13 +54,16 @@ const Music = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    artistId: {
+    accountId: {
       type: DataTypes.INTEGER,
+      primaryKey: true,
       references: {
         model: "artists",
-        key: "artistId",
+        key: "accountId",
       },
       allowNull: false,
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
     albumId: {
       type: DataTypes.INTEGER,

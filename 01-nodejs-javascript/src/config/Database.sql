@@ -25,16 +25,14 @@ INSERT INTO `accounts` VALUES (1,'bobby','bobby@gmail.com',NULL,'$2b$10$YasRkHlm
 DROP TABLE IF EXISTS `administrators`;
 
 CREATE TABLE `administrators` (
-  `adminId` int NOT NULL AUTO_INCREMENT,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
-  `accountId` int DEFAULT NULL,
-  PRIMARY KEY (`adminId`),
-  KEY `accountId` (`accountId`),
-  CONSTRAINT `administrators_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`accountId`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `accountId` INT NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NOT NULL,
+  PRIMARY KEY (`accountId`),
+  CONSTRAINT `administrators_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`accountId`) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
-INSERT INTO `administrators` VALUES (1,'2025-01-09 18:02:19','2025-01-09 18:02:19',1);
+INSERT INTO `administrators` VALUES (1,'2025-01-09 18:02:19','2025-01-09 18:02:19');
 
 --
 -- Table structure for table `albums`
@@ -48,10 +46,9 @@ CREATE TABLE `albums` (
   `thumbnailPath` varchar(255) DEFAULT NULL,
   `createdDate` datetime NOT NULL,
   `publishedYear` int DEFAULT NULL,
-  `artistId` int NOT NULL,
-  PRIMARY KEY (`albumId`),
-  KEY `artistId` (`artistId`),
-  CONSTRAINT `albums_ibfk_1` FOREIGN KEY (`artistId`) REFERENCES `artists` (`artistId`) ON DELETE CASCADE ON UPDATE CASCADE
+  `accountId` int NOT NULL,
+  PRIMARY KEY (`albumId`, `accountId`), 
+  FOREIGN KEY (`accountId`) REFERENCES `artists` (`accountId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `albums` VALUES (1,'An Evening With Silk Sonic','Bruno Mars','src\\uploads\\albums\\1736591317548-9f35744bb114.jpg','2025-01-11 17:28:37',2021,2),(2,'My World 2.0','Justin Bieber','src\\uploads\\albums\\1736605867698-30ef57381aef.jpg','2025-01-11 21:31:07',2010,3),(3,'Purpose','Justin Bieber','src\\uploads\\albums\\1736605894856-f4a818357977.jpg','2025-01-11 21:31:34',2015,3),(4,'Lover','Taylor Swift','src\\uploads\\albums\\1736607695194-f214d02045ae.jpg','2025-01-11 22:01:35',2019,4),(5,'Songs About Jane','Maroon 5','src\\uploads\\albums\\1736608718716-e3445fcb99dc.jpg','2025-01-11 22:18:38',2002,5),(6,'V','Maroon 5','src\\uploads\\albums\\1736608743606-ff015003964a.jpg','2025-01-11 22:19:03',2015,5),(7,'Overexposed','Maroon 5','src\\uploads\\albums\\1736608786820-c07d5deaa106.jpg','2025-01-11 22:19:46',2012,5),(8,'FOUR','One Direction','src\\uploads\\albums\\1736609802322-b180214addce.jpg','2025-01-11 22:36:42',2014,6),(9,'Made In The A.M.','One Direction','src\\uploads\\albums\\1736609847901-7187fff3903e.jpg','2025-01-11 22:37:27',2015,6),(10,'Midnight Memories','One Direction','src\\uploads\\albums\\1736609905349-7c2ff199aed0.jpg','2025-01-11 22:38:25',2013,6),(11,'Up All Night','One Direction','src\\uploads\\albums\\1736609930188-4862966f219a.jpg','2025-01-11 22:38:50',2012,6);
@@ -63,16 +60,14 @@ INSERT INTO `albums` VALUES (1,'An Evening With Silk Sonic','Bruno Mars','src\\u
 DROP TABLE IF EXISTS `artists`;
 
 CREATE TABLE `artists` (
-  `artistId` int NOT NULL AUTO_INCREMENT,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
-  `accountId` int DEFAULT NULL,
-  PRIMARY KEY (`artistId`),
-  KEY `accountId` (`accountId`),
-  CONSTRAINT `artists_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`accountId`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `accountId` INT NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NOT NULL,
+  PRIMARY KEY (`accountId`),
+  CONSTRAINT `artists_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`accountId`) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
-INSERT INTO `artists` VALUES (2,'2025-01-11 17:19:27','2025-01-11 17:19:27',3),(3,'2025-01-11 17:20:50','2025-01-11 17:20:50',4),(4,'2025-01-11 17:22:53','2025-01-11 17:22:53',5),(5,'2025-01-11 17:24:35','2025-01-11 17:24:35',6),(6,'2025-01-11 17:25:47','2025-01-11 17:25:47',7);
+INSERT INTO `artists` VALUES (3,'2025-01-11 17:19:27','2025-01-11 17:19:27'),(4,'2025-01-11 17:20:50','2025-01-11 17:20:50'),(5,'2025-01-11 17:22:53','2025-01-11 17:22:53'),(6,'2025-01-11 17:24:35','2025-01-11 17:24:35'),(7,'2025-01-11 17:25:47','2025-01-11 17:25:47');
 
 --
 -- Table structure for table `music`
@@ -89,13 +84,11 @@ CREATE TABLE `music` (
   `thumbnailPath` varchar(255) DEFAULT NULL,
   `uploadDate` datetime NOT NULL,
   `publishedYear` int DEFAULT NULL,
-  `artistId` int NOT NULL,
+  `accountId` int NOT NULL,
   `albumId` int DEFAULT NULL,
-  PRIMARY KEY (`musicId`),
-  KEY `artistId` (`artistId`),
-  KEY `albumId` (`albumId`),
-  CONSTRAINT `music_ibfk_1` FOREIGN KEY (`artistId`) REFERENCES `artists` (`artistId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `music_ibfk_2` FOREIGN KEY (`albumId`) REFERENCES `albums` (`albumId`) ON DELETE SET NULL ON UPDATE CASCADE
+  PRIMARY KEY (`musicId`, `accountId`), 
+  FOREIGN KEY (`accountId`) REFERENCES `artists` (`accountId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`albumId`) REFERENCES `albums` (`albumId`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `music` VALUES 
@@ -157,8 +150,7 @@ CREATE TABLE `otps` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `accountId` int NOT NULL,
-  PRIMARY KEY (`otpId`),
-  KEY `accountId` (`accountId`),
+  PRIMARY KEY (`otpId`, `accountId`),
   CONSTRAINT `otps_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`accountId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -190,8 +182,7 @@ CREATE TABLE `playlists` (
   `thumbnailPath` varchar(255) DEFAULT NULL,
   `creationDate` datetime NOT NULL,
   `accountId` int NOT NULL,
-  PRIMARY KEY (`playlistId`),
-  KEY `accountId` (`accountId`),
+  PRIMARY KEY (`playlistId`, `accountId`),
   CONSTRAINT `playlists_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`accountId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -212,12 +203,11 @@ CREATE TABLE `userfollows` (
   `followType` enum('Album','Artist') NOT NULL,
   `artistId` int DEFAULT NULL,
   `albumId` int DEFAULT NULL,
-  PRIMARY KEY (`userfollowId`),
-  KEY `accountId` (`accountId`),
+  PRIMARY KEY (`userfollowId`, `accountId`),
   KEY `artistId` (`artistId`),
   KEY `albumId` (`albumId`),
   CONSTRAINT `userfollows_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`accountId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `userfollows_ibfk_2` FOREIGN KEY (`artistId`) REFERENCES `accounts` (`accountId`),
+  CONSTRAINT `userfollows_ibfk_2` FOREIGN KEY (`artistId`) REFERENCES `artists` (`accountId`),
   CONSTRAINT `userfollows_ibfk_3` FOREIGN KEY (`albumId`) REFERENCES `albums` (`albumId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -233,14 +223,12 @@ INSERT INTO `userfollows` VALUES (30,9,'Artist',3,NULL),(31,9,'Album',NULL,4);
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `userId` int NOT NULL AUTO_INCREMENT,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
-  `accountId` int DEFAULT NULL,
-  PRIMARY KEY (`userId`),
-  KEY `accountId` (`accountId`),
-  CONSTRAINT `users_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`accountId`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `accountId` INT NOT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` DATETIME NOT NULL,
+  PRIMARY KEY (`accountId`),
+  CONSTRAINT `users_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`accountId`) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
-INSERT INTO `users` VALUES (2,'2025-01-11 23:29:23','2025-01-11 23:29:23',9);
+INSERT INTO `users` VALUES (9,'2025-01-11 23:29:23','2025-01-11 23:29:23');
 

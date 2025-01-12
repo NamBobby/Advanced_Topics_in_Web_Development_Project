@@ -94,7 +94,7 @@ const checkAndInitializeDatabase = async (sqlFilePath) => {
     const sqlFilePath = path.join(__dirname, "config", "Database.sql");
 
     if (shouldForceSync) {
-      await sequelize.sync({ force: true });
+      await sequelize.sync({ alter: true });
       await processAndRunSQLFile(sqlFilePath);
     } else {
       await checkAndInitializeDatabase(sqlFilePath);

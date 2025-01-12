@@ -10,6 +10,7 @@ const {
   Playlist,
   Album,
   Music,
+  UserFollow,
 } = require("../models/associations");
 const saltRounds = 10;
 
@@ -65,21 +66,18 @@ const createAccountService = async ({
 
 const deleteAccountService = async (accountId) => {
   try {
-    // Find the user by email
     const user = await Account.findOne({ where: { accountId } });
     if (!user) {
       return { EC: 1, EM: "Account not found" };
     }
 
-    // Delete user avatar
     if (
       user.avatarPath &&
       fs.existsSync(path.resolve(__dirname, "../uploads", user.avatarPath))
     ) {
-      const avatarPath = path.resolve(__dirname, "../uploads", user.avatarPath); // Đảm bảo đường dẫn chính xác
+      const avatarPath = path.resolve(__dirname, "../uploads", user.avatarPath);
       try {
         fs.unlinkSync(avatarPath);
-        //console.log(`Deleted avatar file at ${avatarPath}`);
       } catch (error) {
         console.error("Error deleting avatar:", error);
       }
@@ -87,35 +85,27 @@ const deleteAccountService = async (accountId) => {
       console.log("Avatar file not found or already deleted:", user.avatarPath);
     }
 
-    // Find and delete playlists and their thumbnails
-    const playlists = await Playlist.findAll({
-      where: { accountId: user.accountId },
-    });
-    for (const playlist of playlists) {
-      if (playlist.thumbnailPath && fs.existsSync(playlist.thumbnailPath)) {
-        fs.unlinkSync(playlist.thumbnailPath);
-      }
-    }
-
-    // Finally, delete the user account
-
-    if (user.role === "Administrator") {
-      await Administrator.destroy({ where: { accountId: accountId } });
-    } else if (user.role === "Artist") {
+    if (user.role === "Artist") {
       const artist = await Artist.findOne({ where: { accountId } });
-      // Find and delete albums and their thumbnails
+
+      // Delete all userfollows referencing this artist
+      await UserFollow.destroy({ where: { artistId: artist.accountId } });
+
+      // Delete all albums and their thumbnails
       const albums = await Album.findAll({
-        where: { artistId: artist.artistId },
+        where: { accountId: artist.accountId },
       });
       for (const album of albums) {
+        await UserFollow.destroy({ where: { albumId: album.albumId } });
         if (album.thumbnailPath && fs.existsSync(album.thumbnailPath)) {
           fs.unlinkSync(album.thumbnailPath);
         }
+        await Album.destroy({ where: { albumId: album.albumId } });
       }
 
-      // Find and delete music files
+      // Delete all music and their files
       const musics = await Music.findAll({
-        where: { artistId: artist.artistId },
+        where: { accountId: artist.accountId },
       });
       for (const music of musics) {
         if (music.filePath && fs.existsSync(music.filePath)) {
@@ -124,17 +114,31 @@ const deleteAccountService = async (accountId) => {
         if (music.thumbnailPath && fs.existsSync(music.thumbnailPath)) {
           fs.unlinkSync(music.thumbnailPath);
         }
+        await Music.destroy({ where: { musicId: music.musicId } });
       }
 
-      await Artist.destroy({ where: { accountId: accountId } });
-    } 
-    
+      // Delete the artist record
+      await Artist.destroy({ where: { accountId: artist.accountId } });
+    }
+
+    // Delete playlists if the user has any
+    const playlists = await Playlist.findAll({
+      where: { accountId: user.accountId },
+    });
+    for (const playlist of playlists) {
+      if (playlist.thumbnailPath && fs.existsSync(playlist.thumbnailPath)) {
+        fs.unlinkSync(playlist.thumbnailPath);
+      }
+      await Playlist.destroy({ where: { playlistId: playlist.playlistId } });
+    }
+
+    // Finally, delete the account
     await Account.destroy({ where: { accountId } });
 
-    return { EC: 0, EM: "Account and related files deleted successfully" };
+    return { EC: 0, EM: "Account and related data deleted successfully" };
   } catch (error) {
-    console.error("Error in deleteUserService:", error);
-    return { EC: 3, EM: "Error deleting account and related files" };
+    console.error("Error in deleteAccountService:", error);
+    return { EC: 3, EM: "Error deleting account and related data" };
   }
 };
 

@@ -6,8 +6,8 @@ const fs = require("fs");
 // Upload music service
 const uploadMusicService = async (musicData) => {
   try {
-    const { title, genre, filePath, artistId } = musicData;
-    if (!title || !genre || !filePath || !artistId) {
+    const { title, genre, filePath, accountId } = musicData;
+    if (!title || !genre || !filePath || !accountId) {
       throw new Error("Missing required fields for uploading music");
     }
 
@@ -23,8 +23,8 @@ const uploadMusicService = async (musicData) => {
 // Create album
 const createAlbumService = async (albumData) => {
   try {
-    const { name, artistId } = albumData;
-    if (!name || !artistId) {
+    const { name, accountId } = albumData;
+    if (!name || !accountId) {
       throw new Error("Missing required fields for creating album");
     }
 

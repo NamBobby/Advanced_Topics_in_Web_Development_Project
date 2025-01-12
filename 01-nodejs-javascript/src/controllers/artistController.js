@@ -52,7 +52,7 @@ const uploadMusical = [
         description,
         thumbnailPath,
         uploadDate: new Date(),
-        artistId: artist.artistId,
+        accountId: artist.accountId,
         albumId: albumId || null,
       };
 
@@ -106,7 +106,7 @@ const createAlbum = [
         artist: account.name,
         thumbnailPath: thumbnailFile ? thumbnailFile.path : null,
         publishedYear: publishedYear || null,
-        artistId: artist.artistId,
+        accountId: artist.accountId,
         creationDate: new Date(),
       };
 

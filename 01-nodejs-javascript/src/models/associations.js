@@ -6,20 +6,22 @@ const PlaylistMusic = require("./playlistMusic");
 const UserFollow = require("./userFollow");
 const UserOTPVerification = require("./userOTPVerification");
 
-Account.hasOne(User, { foreignKey: "accountId" });
-Account.hasOne(Artist, { foreignKey: "accountId" });
-Account.hasOne(Administrator, { foreignKey: "accountId" });
+Account.hasOne(User, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
+User.belongsTo(Account, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
 
-User.belongsTo(Account, { foreignKey: "accountId" });
-Artist.belongsTo(Account, { foreignKey: "accountId" });
-Administrator.belongsTo(Account, { foreignKey: "accountId" });
+Account.hasOne(Artist, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
+Artist.belongsTo(Account, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
+
+Account.hasOne(Administrator, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
+Administrator.belongsTo(Account, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
+
 
 // UserFollow associations
 Account.hasMany(UserFollow, { foreignKey: "accountId", onDelete: "CASCADE" });
 UserFollow.belongsTo(Account, { foreignKey: "accountId", onDelete: "CASCADE" });
 
-Account.hasMany(UserFollow, { foreignKey: "artistId", constraints: false });
-UserFollow.belongsTo(Account, { foreignKey: "artistId", constraints: false });
+Account.hasMany(UserFollow, { foreignKey: "accountId", constraints: false });
+UserFollow.belongsTo(Account, { foreignKey: "accountId", constraints: false });
 
 Album.hasMany(UserFollow, { foreignKey: "albumId", constraints: false });
 UserFollow.belongsTo(Album, { foreignKey: "albumId", constraints: false });
@@ -27,19 +29,23 @@ UserFollow.belongsTo(Album, { foreignKey: "albumId", constraints: false });
 // Associations for Administrator (No additional associations)
 
 // Associations for Artist
-Artist.hasMany(Music, { foreignKey: "artistId", onDelete: "CASCADE" });
-Music.belongsTo(Artist, { foreignKey: "artistId", onDelete: "CASCADE" });
+Artist.hasMany(Music, { foreignKey: "accountId", onDelete: "CASCADE" });
+Music.belongsTo(Artist, { foreignKey: "accountId", onDelete: "CASCADE" });
 
-Artist.hasMany(Album, { foreignKey: "artistId", onDelete: "CASCADE" });
-Album.belongsTo(Artist, { foreignKey: "artistId", onDelete: "CASCADE" });
+Artist.hasMany(Album, { foreignKey: "accountId", onDelete: "CASCADE" });
+Album.belongsTo(Artist, { foreignKey: "accountId", onDelete: "CASCADE" });
 
-Artist.hasMany(Playlist, { foreignKey: "accountId", onDelete: "CASCADE" });
-Playlist.belongsTo(Artist, { foreignKey: "accountId", onDelete: "CASCADE" });
+Account.hasMany(Playlist, { foreignKey: "accountId", onDelete: "CASCADE" });
+Playlist.belongsTo(Account, { foreignKey: "accountId", onDelete: "CASCADE" });
 
-// Associations for User
-User.hasMany(Playlist, { foreignKey: "accountId", onDelete: "CASCADE" });
-Playlist.belongsTo(User, { foreignKey: "accountId", onDelete: "CASCADE" });
-
+Artist.hasMany(UserFollow, {
+  foreignKey: { name: "artistId", allowNull: false },
+  onDelete: "CASCADE",
+});
+UserFollow.belongsTo(Artist, {
+  foreignKey: { name: "artistId", allowNull: false },
+  onDelete: "CASCADE",
+});
 
 // Associations for Music with Album and Playlist
 Album.hasMany(Music, { foreignKey: "albumId", as: "MusicTracks" });

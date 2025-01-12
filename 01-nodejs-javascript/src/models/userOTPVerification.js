@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
-const Account = require('./account');
 
 const UserOTPVerification = sequelize.define('otps', {
   otpId: {
@@ -33,11 +32,13 @@ const UserOTPVerification = sequelize.define('otps', {
   },
   accountId: {
     type: DataTypes.INTEGER,
+    primaryKey: true,
     allowNull: false,
     references: {
-      model: Account,
+      model: "accounts",
       key: 'accountId'
-    }
+    },
+    onDelete: "CASCADE",
   }
 });
 

@@ -55,36 +55,78 @@ Account.init(
 // Tự động gán role cho lớp con
 class User extends Account {}
 User.init({
-  userId: {
+  accountId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true,
+    allowNull: false,
+    references: {
+      model: Account,
+      key: "accountId",
+    },
   },
-}, { sequelize, modelName: "User", tableName: "users" });
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+}, { sequelize, modelName: "User", tableName: "users", timestamps: false });
 User.addHook("beforeCreate", (user) => {
   user.role = "User";
 });
 
 class Artist extends Account {}
 Artist.init({
-  artistId: {
+  accountId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true,
+    allowNull: false,
+    references: {
+      model: Account,
+      key: "accountId",
+    },
   },
-}, { sequelize, modelName: "Artist", tableName: "artists" });
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+}, { sequelize, modelName: "Artist", tableName: "artists", timestamps: false });
 Artist.addHook("beforeCreate", (artist) => {
   artist.role = "Artist";
 });
 
 class Administrator extends Account {}
 Administrator.init({
-  adminId: {
+  accountId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true,
+    allowNull: false,
+    references: {
+      model: Account,
+      key: "accountId",
+    },
   },
-}, { sequelize, modelName: "Administrator", tableName: "administrators" });
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+}, { sequelize, modelName: "Administrator", tableName: "administrators", timestamps: false });
 Administrator.addHook("beforeCreate", (admin) => {
   admin.role = "Administrator";
 });
