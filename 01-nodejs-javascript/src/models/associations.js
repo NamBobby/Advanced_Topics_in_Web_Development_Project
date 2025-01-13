@@ -6,22 +6,36 @@ const PlaylistMusic = require("./playlistMusic");
 const UserFollow = require("./userFollow");
 const UserOTPVerification = require("./userOTPVerification");
 
-Account.hasOne(User, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
-User.belongsTo(Account, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
+Account.hasOne(User, {
+  foreignKey: { name: "accountId", allowNull: false, unique: true },
+  onDelete: "CASCADE",
+});
+User.belongsTo(Account, {
+  foreignKey: { name: "accountId", allowNull: false },
+  onDelete: "CASCADE",
+});
 
-Account.hasOne(Artist, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
-Artist.belongsTo(Account, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
+Account.hasOne(Artist, {
+  foreignKey: { name: "accountId", allowNull: false, unique: true },
+  onDelete: "CASCADE",
+});
+Artist.belongsTo(Account, {
+  foreignKey: { name: "accountId", allowNull: false },
+  onDelete: "CASCADE",
+});
 
-Account.hasOne(Administrator, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
-Administrator.belongsTo(Account, { foreignKey: { name: "accountId", allowNull: false }, onDelete: "CASCADE" });
-
+Account.hasOne(Administrator, {
+  foreignKey: { name: "accountId", allowNull: false, unique: true },
+  onDelete: "CASCADE",
+});
+Administrator.belongsTo(Account, {
+  foreignKey: { name: "accountId", allowNull: false },
+  onDelete: "CASCADE",
+});
 
 // UserFollow associations
 Account.hasMany(UserFollow, { foreignKey: "accountId", onDelete: "CASCADE" });
 UserFollow.belongsTo(Account, { foreignKey: "accountId", onDelete: "CASCADE" });
-
-Account.hasMany(UserFollow, { foreignKey: "accountId", constraints: false });
-UserFollow.belongsTo(Account, { foreignKey: "accountId", constraints: false });
 
 Album.hasMany(UserFollow, { foreignKey: "albumId", constraints: false });
 UserFollow.belongsTo(Album, { foreignKey: "albumId", constraints: false });
@@ -61,8 +75,14 @@ Music.belongsToMany(Playlist, {
 });
 
 // Associations for OTP Verification
-Account.hasMany(UserOTPVerification, { foreignKey: "accountId" , onDelete: "CASCADE"});
-UserOTPVerification.belongsTo(Account, { foreignKey: "accountId" , onDelete: "CASCADE"});
+Account.hasMany(UserOTPVerification, {
+  foreignKey: "accountId",
+  onDelete: "CASCADE",
+});
+UserOTPVerification.belongsTo(Account, {
+  foreignKey: "accountId",
+  onDelete: "CASCADE",
+});
 
 module.exports = {
   User,
