@@ -26,7 +26,7 @@ const AdminHeader = () => {
     navigate("/");
   };
 
-  // Menu items cho dropdown
+  // Menu items for dropdown
   const items = auth.isAuthenticated
     ? [
         {
@@ -50,7 +50,7 @@ const AdminHeader = () => {
             </button>
           ),
         },
-      ].filter(Boolean) // Lọc bỏ các giá trị null nếu role không khớp
+      ].filter(Boolean) 
     : [
         {
           key: "login",

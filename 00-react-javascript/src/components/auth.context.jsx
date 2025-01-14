@@ -21,7 +21,7 @@ export const AuthWrapper = (props) => {
   const [appLoading, setAppLoading] = useState(true);
 
   useEffect(() => {
-    // Xóa dữ liệu nếu ứng dụng khởi động lần đầu
+
     const isFirstLoad = sessionStorage.getItem("firstLoad") === null;
     if (isFirstLoad) {
       localStorage.removeItem("access_token");
@@ -30,7 +30,6 @@ export const AuthWrapper = (props) => {
       sessionStorage.setItem("firstLoad", "false");
     }
 
-    // Kiểm tra xem đã có token chưa
     const access_token = localStorage.getItem("access_token");
     const userData = localStorage.getItem("user");
 

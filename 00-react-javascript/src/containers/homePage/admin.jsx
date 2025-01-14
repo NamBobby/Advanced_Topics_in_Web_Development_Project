@@ -13,7 +13,7 @@ const AdminPage = () => {
   const [isPlusIcon, setIsPlusIcon] = useState(true);
   const navigate = useNavigate();
 
-  // Memo hóa currentUser để không gây re-render liên tục
+  // Memo currentUser avoid re-render 
   const currentUser = useMemo(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -55,7 +55,7 @@ const AdminPage = () => {
         description: "Account deleted successfully.",
       });
 
-      // Cập nhật lại danh sách người dùng
+      // Update accounts list
       const updatedUsers = users.filter((user) => user.accountId !== accountId);
       setUsers(updatedUsers);
       setDisplayedUsers(updatedUsers.slice(0, visibleCount));

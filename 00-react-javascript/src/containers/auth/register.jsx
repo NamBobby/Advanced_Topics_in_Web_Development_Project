@@ -110,7 +110,7 @@ const RegisterPage = () => {
                   message: "Please input your email!",
                 },
                 {
-                  type: "email", // Ant Design đã có sẵn type=email để check định dạng
+                  type: "email", 
                   message: "The input is not a valid email!",
                 },
                 {

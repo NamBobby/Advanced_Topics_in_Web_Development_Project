@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter to check for allowed MIME types
+// File filter
 const fileFilter = (req, file, cb) => {
   const allowedMusicTypes = ["audio/mp3", "audio/mpeg", "audio/aac"];
   const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
@@ -44,7 +44,6 @@ const fileFilter = (req, file, cb) => {
     return cb(error, false);
   }
 
-  // All other files are valid
   cb(null, true);
 };
 

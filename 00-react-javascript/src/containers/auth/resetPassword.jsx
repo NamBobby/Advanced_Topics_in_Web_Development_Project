@@ -7,22 +7,22 @@ import "../../assets/styles/resetpassword.css";
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
-  const { state } = useLocation(); // Nhận state từ SendOtpPage
-  const email = state?.email; // Lấy email từ state
-  const [countdown, setCountdown] = useState(600); // 10 phút = 600 giây
+  const { state } = useLocation(); 
+  const email = state?.email; 
+  const [countdown, setCountdown] = useState(600); 
 
-  // Nếu không có email, điều hướng ngay lập tức trước khi render component
+  
   useEffect(() => {
     if (!email) {
       notification.error({
         message: "Error",
         description: "Invalid access. Redirecting to Forgot Password page.",
       });
-      navigate("/forgot-password"); // Điều hướng ngay nếu không có email
+      navigate("/forgot-password"); 
     }
   }, [email, navigate]);
 
-  // Bộ đếm ngược thời gian
+  // countdown time
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -32,13 +32,13 @@ const ResetPasswordPage = () => {
             message: "Session Expired",
             description: "Your session has expired. Please request a new OTP.",
           });
-          navigate("/login"); // Điều hướng về trang login sau khi hết thời gian
+          navigate("/login"); 
           return 0;
         }
         return prev - 1;
       });
-    }, 1000); // Giảm 1 giây mỗi lần
-    return () => clearInterval(timer); // Xóa timer khi component bị unmount
+    }, 1000); 
+    return () => clearInterval(timer); 
   }, [navigate]);
 
   const onFinish = async (values) => {
@@ -58,7 +58,7 @@ const ResetPasswordPage = () => {
         message: "Success",
         description: response?.message || "Password reset successfully!",
       });
-      navigate("/login"); // Điều hướng về trang login
+      navigate("/login"); 
     } catch (error) {
       notification.error({
         message: "Error",
@@ -68,12 +68,12 @@ const ResetPasswordPage = () => {
     }
   };
 
-  // Hiển thị thời gian đếm ngược
+  // display countdown time
   const formattedCountdown = `${Math.floor(countdown / 60)
     .toString()
     .padStart(2, "0")}:${(countdown % 60).toString().padStart(2, "0")}`;
 
-  // Nếu email không tồn tại, không render gì cả
+
   if (!email) return null;
 
   return (

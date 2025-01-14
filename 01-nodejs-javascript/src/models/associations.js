@@ -40,8 +40,6 @@ UserFollow.belongsTo(Account, { foreignKey: "accountId", onDelete: "CASCADE" });
 Album.hasMany(UserFollow, { foreignKey: "albumId", constraints: false });
 UserFollow.belongsTo(Album, { foreignKey: "albumId", constraints: false });
 
-// Associations for Administrator (No additional associations)
-
 // Associations for Artist
 Artist.hasMany(Music, { foreignKey: "accountId", onDelete: "CASCADE" });
 Music.belongsTo(Artist, { foreignKey: "accountId", onDelete: "CASCADE" });

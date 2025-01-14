@@ -13,7 +13,6 @@ const {
   Music,
   PlaylistMusic,
   UserFollow,
-  Artist,
 } = require("../models/associations");
 const fs = require("fs");
 const { Op } = require("sequelize");

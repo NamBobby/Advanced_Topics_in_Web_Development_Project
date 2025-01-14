@@ -111,7 +111,7 @@ const UserAccount = () => {
         // Generate preview
         const reader = new FileReader();
         reader.onload = (e) => {
-          console.log("Preview URL:", e.target.result); // Debug preview URL
+          console.log("Preview URL:", e.target.result); 
           setAvatarPreview(e.target.result); // Update state with preview URL
         };
         reader.readAsDataURL(file); // Convert file to base64 URL
@@ -413,7 +413,7 @@ const UserAccount = () => {
                   <Input.Password
                     className="confirmpassword-input"
                     placeholder="Confirm Password"
-                    autoComplete="new-password" // Thêm thuộc tính này
+                    autoComplete="new-password" 
                     iconRender={(visible) =>
                       visible ? (
                         <EyeTwoTone twoToneColor="#ffffff" />

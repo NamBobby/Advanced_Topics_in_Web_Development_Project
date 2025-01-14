@@ -26,7 +26,6 @@ import NotFoundPage from "../components/notfoundPage.jsx";
 const RoleBasedRouter = () => {
   const { auth } = useContext(AuthContext);
 
-  // Xác định role
   const role = auth.isAuthenticated ? auth.user.role : "Guest";
 
   // Các route chung cho User và Artist

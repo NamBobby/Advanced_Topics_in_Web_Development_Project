@@ -52,7 +52,6 @@ Account.init(
   }
 );
 
-// Tự động gán role cho lớp con
 class User extends Account {}
 User.init({
   accountId: {

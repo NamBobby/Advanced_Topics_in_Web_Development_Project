@@ -53,10 +53,10 @@ const UserInfo = () => {
   useEffect(() => {
     const fetchUpdatedUserData = async () => {
       try {
-        const userResponse = await getAccountApi(); // Lấy thông tin user mới từ API
+        const userResponse = await getAccountApi(); 
         if (userResponse && Array.isArray(userResponse) && userResponse.length > 0) {
           const updatedUser = userResponse[0];
-          setUser(updatedUser); // Cập nhật state user
+          setUser(updatedUser); // Update state user
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
