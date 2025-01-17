@@ -1,23 +1,33 @@
 const multer = require("multer");
+const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
 // Storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    let folderPath = "";
+
     if (file.fieldname === "musicFile") {
-      cb(null, "./src/uploads/music/");
+      folderPath = "./src/uploads/music/";
     } else if (file.fieldname === "thumbnail") {
-      cb(null, "./src/uploads/music/thumbnails/");
+      folderPath = "./src/uploads/music/thumbnails/";
     } else if (file.fieldname === "albumThumbnail") {
-      cb(null, "./src/uploads/albums");
+      folderPath = "./src/uploads/albums/";
     } else if (file.fieldname === "playlistThumbnail") {
-      cb(null, "./src/uploads/playlists");
+      folderPath = "./src/uploads/playlists/";
     } else if (file.fieldname === "avatar") {
-      cb(null, "./src/uploads/avatars/");
+      folderPath = "./src/uploads/avatars/";
     } else {
-      cb(new Error("Unknown fieldname"), false);
+      return cb(new Error("Unknown fieldname"), false);
     }
+
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath, { recursive: true });
+    }
+
+    cb(null, folderPath); 
+  
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${crypto.randomBytes(6).toString("hex")}`;

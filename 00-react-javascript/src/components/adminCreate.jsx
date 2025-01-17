@@ -79,7 +79,10 @@ const AdminCreatePage = () => {
       window.dispatchEvent(new CustomEvent("authUpdate"));
     } catch (error) {
       const errorMessage =
-        error.response?.data?.message || "Failed to create user.";
+        error.data?.message ||
+        error.statusText ||
+        "Failed to register user. Please try again.";
+
       notification.error({
         message: "Error",
         description: errorMessage,

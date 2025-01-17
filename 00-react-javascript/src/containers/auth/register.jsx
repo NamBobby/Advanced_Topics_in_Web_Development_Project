@@ -73,12 +73,16 @@ const RegisterPage = () => {
       });
       navigate("/login");
     } catch (error) {
-      console.error("Axios Error:", error);
+      //console.error("Full Error:", error);
+
+      const errorMessage =
+        error.data?.message ||
+        error.statusText ||
+        "Failed to register user. Please try again.";
+
       notification.error({
         message: "Error",
-        description:
-          error.response?.data?.message ||
-          "Failed to register user. Please try again.",
+        description: errorMessage,
       });
     }
   };
@@ -100,7 +104,8 @@ const RegisterPage = () => {
             className="register-custom-form"
             onFinish={onFinish}
             autoComplete="off"
-            layout="vertical">
+            layout="vertical"
+          >
             <Form.Item
               label="Email"
               name="email"
@@ -110,14 +115,15 @@ const RegisterPage = () => {
                   message: "Please input your email!",
                 },
                 {
-                  type: "email", 
+                  type: "email",
                   message: "The input is not a valid email!",
                 },
                 {
                   pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                   message: "Email must follow the format: example@domain.com",
                 },
-              ]}>
+              ]}
+            >
               <Input placeholder="Email" />
             </Form.Item>
 
@@ -129,7 +135,8 @@ const RegisterPage = () => {
                   required: true,
                   message: "Please input your password!",
                 },
-              ]}>
+              ]}
+            >
               <Input.Password
                 className="custom-password-input"
                 placeholder="Password"
@@ -160,7 +167,8 @@ const RegisterPage = () => {
                     return Promise.reject(new Error("Passwords do not match!"));
                   },
                 }),
-              ]}>
+              ]}
+            >
               <Input.Password
                 placeholder="Confirm Password"
                 iconRender={(visible) =>
@@ -181,7 +189,8 @@ const RegisterPage = () => {
                   required: true,
                   message: "Please input your username!",
                 },
-              ]}>
+              ]}
+            >
               <Input placeholder="Username" />
             </Form.Item>
 
@@ -191,7 +200,8 @@ const RegisterPage = () => {
                   <Form.Item
                     name="day"
                     noStyle
-                    rules={[{ required: true, message: "Select day!" }]}>
+                    rules={[{ required: true, message: "Select day!" }]}
+                  >
                     <Select placeholder="Day">
                       {days.map((day) => (
                         <Select.Option key={day} value={day}>
@@ -205,7 +215,8 @@ const RegisterPage = () => {
                   <Form.Item
                     name="month"
                     noStyle
-                    rules={[{ required: true, message: "Select month!" }]}>
+                    rules={[{ required: true, message: "Select month!" }]}
+                  >
                     <Select placeholder="Month">
                       {months.map((month, index) => (
                         <Select.Option key={index + 1} value={index + 1}>
@@ -228,7 +239,8 @@ const RegisterPage = () => {
                         pattern: /^(19\d{2}|20(0\d|1\d|2[0-4]))$/,
                         message: "Year must be between 1900 and 2024!",
                       },
-                    ]}>
+                    ]}
+                  >
                     <Input type="number" placeholder="Year" />
                   </Form.Item>
                 </Col>
@@ -243,7 +255,8 @@ const RegisterPage = () => {
                   required: true,
                   message: "Please select your gender!",
                 },
-              ]}>
+              ]}
+            >
               <Radio.Group>
                 <Radio value="Man">Man</Radio>
                 <Radio value="Woman">Woman</Radio>
@@ -256,7 +269,8 @@ const RegisterPage = () => {
               <Button
                 type="primary"
                 htmlType="submit"
-                className="register-button">
+                className="register-button"
+              >
                 Sign Up
               </Button>
             </Form.Item>

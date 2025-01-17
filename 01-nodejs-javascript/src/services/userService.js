@@ -21,13 +21,15 @@ const path = require("path");
 // Create user service
 const createUserService = async ({ name, email, password, dateOfBirth, gender }) => {
   try {
-    if (!email) {
-      throw new Error("Email is required");
-    }
 
     const existingAccount = await Account.findOne({ where: { email } });
     if (existingAccount) {
       return { EC: 1, EM: "Email already exists" };
+    }
+
+    const existingName = await User.findOne({ name });
+    if (existingName) {
+      return { EC: 1, EM: "Username already exists" };
     }
 
     const hashPassword = await bcrypt.hash(password, saltRounds);

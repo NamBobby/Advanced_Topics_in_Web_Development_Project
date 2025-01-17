@@ -40,13 +40,13 @@ const UserRegister = async (req, res) => {
       gender,
     });
 
-    if (result.EC !== 0) {
+    if (result.EC === 0) {
+      return res.status(201).json({ message: result.EM, data: result.data });
+    } else {
       return res.status(400).json({ message: result.EM });
     }
-
-    return res.status(201).json({ message: result.EM, data: result.data });
   } catch (error) {
-    console.error("Error in UserRegister:", error);
+    console.error("Error in createUser controller:", error);
     return res.status(500).json({ message: "Error registering user" });
   }
 };

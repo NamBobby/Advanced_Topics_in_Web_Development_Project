@@ -33,6 +33,11 @@ const createAccountService = async ({
       return { EC: 1, EM: "Email already exists" };
     }
 
+    const existingName = await User.findOne({ name });
+    if (existingName) {
+      return { EC: 1, EM: "Username already exists" };
+    }
+
     // Create account in `accounts` table
     const hashedPassword = await bcrypt.hash(password, 10);
     const newAccount = await Account.create({

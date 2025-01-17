@@ -64,7 +64,11 @@ instance.interceptors.response.use(
   (error) => {
     hideLoading(); // Hide spinner if response fails
     console.error("Axios Error:", error.response || error.message);
-    return Promise.reject(error.response?.data || { message: "An unexpected error occurred" });
+    return Promise.reject({
+      data: error.response?.data || null,
+      status: error.response?.status || null,
+      statusText: error.response?.statusText || "An unexpected error occurred",
+    });
   }
 );
 
