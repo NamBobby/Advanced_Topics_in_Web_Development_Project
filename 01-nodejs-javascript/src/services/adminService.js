@@ -33,7 +33,7 @@ const createAccountService = async ({
       return { EC: 1, EM: "Email already exists" };
     }
 
-    const existingName = await User.findOne({ name });
+    const existingName = await Account.findOne({ where: {name} });
     if (existingName) {
       return { EC: 1, EM: "Username already exists" };
     }
