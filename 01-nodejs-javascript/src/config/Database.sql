@@ -1,5 +1,3 @@
--- MySQL dump for database: bobby
-
 -- Table structure for table `accounts`
 DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts` (
@@ -207,8 +205,8 @@ CREATE TABLE `userfollows` (
   KEY `artistId` (`artistId`),
   KEY `albumId` (`albumId`),
   CONSTRAINT `userfollows_ibfk_1` FOREIGN KEY (`accountId`) REFERENCES `accounts` (`accountId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `userfollows_ibfk_2` FOREIGN KEY (`artistId`) REFERENCES `artists` (`accountId`),
-  CONSTRAINT `userfollows_ibfk_3` FOREIGN KEY (`albumId`) REFERENCES `albums` (`albumId`)
+  CONSTRAINT `userfollows_ibfk_2` FOREIGN KEY (`artistId`) REFERENCES `artists` (`accountId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `userfollows_ibfk_3` FOREIGN KEY (`albumId`) REFERENCES `albums` (`albumId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
