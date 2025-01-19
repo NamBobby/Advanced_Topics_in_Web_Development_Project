@@ -32,23 +32,23 @@ https://drive.google.com/file/d/1qaysnChbnyepMbtOalB4DuBBPfH6tL7j/view?usp=shari
 ### Backend Environment Setup (MUST DO): 
 1. Navigate to the project directory in your terminal.
 2. Navigate to `01-nodejs-javascript` directory following this command: `cd .\01-nodejs-javascript\`
-3. Read the `README.md` file in this directory to understand how to run the project and do the requirements strictly as the project guide "Installation Steps" step by step. 
+3. Read the `README.MD` file in this directory to understand how to run the project and do the requirements strictly as the project guide "Installation Steps" step by step. 
 
 ### Frontend Environment Setup (MUST DO): 
 1. Navigate to the project directory in your terminal.
 2. Navigate to `00-react-javascript` directory following this command: `cd .\00-react-javascript\`
-3. Read the `README.md` file in this directory to understand how to run the project and do the requirements strictly as the project guide "Installation Steps" step by step. 
+3. Read the `README.MD` file in this directory to understand how to run the project and do the requirements strictly as the project guide "Installation Steps" step by step. 
 
 ===
 
 ### Default Created Account:
 
-## Administrator:
+#### Administrator:
 
 email: bobby@gmail.com
 password: 123456
 
-## Actor:
+#### Actor:
 
 (Maroon 5)
 email: maroon5@example.com
@@ -70,7 +70,7 @@ password: 123456
 email: onedirection@example.com
 password: 123456
 
-## User:
+#### User:
 
 email: lethpnam27@gmail.com
 password: 123456
