@@ -25,6 +25,7 @@ Download that repository via this link: https://github.com/NamBobby/Advanced_Top
 ===
 
 ### Project Setup Tutorial video: 
+https://drive.google.com/file/d/1qaysnChbnyepMbtOalB4DuBBPfH6tL7j/view?usp=sharing
 
 ===
 
@@ -37,4 +38,41 @@ Download that repository via this link: https://github.com/NamBobby/Advanced_Top
 1. Navigate to the project directory in your terminal.
 2. Navigate to `00-react-javascript` directory following this command: `cd .\00-react-javascript\`
 3. Read the `README.md` file in this directory to understand how to run the project and do the requirements strictly as the project guide "Installation Steps" step by step. 
+
+===
+
+### Default Created Account:
+
+## Administrator:
+
+email: bobby@gmail.com
+password: 123456
+
+## Actor:
+
+(Maroon 5)
+email: maroon5@example.com
+password: 123456
+
+(Justin Bieber)
+email: justinbieber@example.com
+password: 123456
+
+(Bruno Mars)
+email: brunomars@example.com
+password: 123456
+
+(Taylor Swift)
+email: taylorswift@example.com
+password: 123456
+
+(One Direction)
+email: onedirection@example.com
+password: 123456
+
+## User:
+
+email: lethpnam27@gmail.com
+password: 123456
+
 
