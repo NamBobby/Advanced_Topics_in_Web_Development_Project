@@ -24,8 +24,8 @@ Download that repository via this link: https://github.com/NamBobby/Advanced_Top
 
 ===
 
-### Project Setup Tutorial video: 
-https://drive.google.com/file/d/1qaysnChbnyepMbtOalB4DuBBPfH6tL7j/view?usp=sharing
+### Project Setup Tutorial video (if needed): 
+https://drive.google.com/file/d/1TL7WB9195idVNezeuQlMqWxl5lNIOylx/view?usp=drive_link
 
 ===
 
