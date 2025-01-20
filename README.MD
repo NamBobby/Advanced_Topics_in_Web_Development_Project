@@ -1,6 +1,6 @@
 ### Project Overview:  
 
-Music Streaming Website is a special web development project for building an interactive and scalable website for music lovers and independent artists. As a personal project, I used the knowledge I learned to build a website that emphasizes empowering artists to upload and manage their music independently, allowing users to enjoy it. To meet the requirements for this course, we applied ReactJS + Vite for the frontend and Node.js for the backend. (Le Thanh Phuong Nam_23083609_WAD Report, 2025)
+Music Streaming Website is a special web development project for building an interactive and scalable website for music lovers and independent artists. As a personal project, I used the knowledge I learned to build a website that emphasizes empowering artists to upload and manage their music independently, allowing users to enjoy it. To meet the requirements for this course, we applied ReactJS + Vite for the frontend and Node.js for the backend. (Le Thanh Phuong Nam_23083609_AWD Report, 2025)
 
 ===
 
@@ -48,7 +48,7 @@ https://drive.google.com/file/d/1TL7WB9195idVNezeuQlMqWxl5lNIOylx/view?usp=drive
 email: bobby@gmail.com
 password: 123456
 
-#### Actor:
+#### Artist:
 
 (Maroon 5)
 email: maroon5@example.com
