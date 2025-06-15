@@ -3,8 +3,8 @@ const { Sequelize } = require("sequelize");
 
 let sequelize;
 
-// Try to use DATABASE_URL (Supabase/PostgreSQL)
 if (process.env.DATABASE_URL) {
+  // Primary: Supabase PostgreSQL
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: "postgres",
     protocol: "postgres",
@@ -19,7 +19,7 @@ if (process.env.DATABASE_URL) {
   });
   console.log("Using Supabase PostgreSQL configuration.");
 } else {
-  // Fallback to local development config
+  // Fallback: Local development config
   sequelize = new Sequelize(
     process.env.DB_DATABASE_NAME,
     process.env.DB_USERNAME,
@@ -29,9 +29,7 @@ if (process.env.DATABASE_URL) {
       port: process.env.DB_PORT,
       dialect: process.env.DB_DIALECT || "postgres",
       logging: false,
-      query: {
-        raw: true,
-      },
+      query: { raw: true },
       timezone: "+07:00",
       dialectOptions: {
         ssl: process.env.DB_SSL === "true",
