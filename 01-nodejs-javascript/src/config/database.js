@@ -1,34 +1,52 @@
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize(
-  process.env.DB_DATABASE_NAME,
-  process.env.DB_USERNAME,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: process.env.DB_DIALECT,
+let sequelize;
+
+// Try to use DATABASE_URL (Supabase/PostgreSQL)
+if (process.env.DATABASE_URL) {
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: "postgres",
+    protocol: "postgres",
     logging: false,
-    query: {
-      raw: true,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
     },
     timezone: "+07:00",
-    dialectOptions: {
-      ssl: process.env.DB_SSL === "true",
-    },
-  }
-);
+  });
+  console.log("Using Supabase PostgreSQL configuration.");
+} else {
+  // Fallback to local development config
+  sequelize = new Sequelize(
+    process.env.DB_DATABASE_NAME,
+    process.env.DB_USERNAME,
+    process.env.DB_PASSWORD,
+    {
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      dialect: process.env.DB_DIALECT || "postgres",
+      logging: false,
+      query: {
+        raw: true,
+      },
+      timezone: "+07:00",
+      dialectOptions: {
+        ssl: process.env.DB_SSL === "true",
+      },
+    }
+  );
+  console.log("Using local development database configuration.");
+}
 
-// connected to db
 const connectToDatabase = async () => {
   try {
     await sequelize.authenticate();
-    console.log(
-      `Connected to database at ${sequelize.options.host}:${sequelize.options.port}`
-    ); 
+    console.log("Connected to database successfully!");
   } catch (error) {
-    return console.error("Unable to connect to the database:", error);
+    console.error("Unable to connect to the database:", error);
   }
 };
 

@@ -3,3 +3,5 @@
 .idea/modules.xml
 .idea/workspace.xml
 .DS_Store
+01-nodejs-javascript/.env.production
+00-react-javascript/.env.production
