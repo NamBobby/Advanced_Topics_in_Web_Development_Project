@@ -13,24 +13,24 @@ require("./models/associations");
 const app = express();
 const port = process.env.PORT || 8888;
 
-// Config CORS
+// CORS setup
 app.use(cors());
 
-// Config req.body
+// Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Config template engine
+// View engine setup
 configViewEngine(app);
 
+// Routes
 const webAPI = express.Router();
 webAPI.get("/", getHomepage);
-
-// Define route
 app.use("/", webAPI);
 app.use("/v1/api/", apiRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Function to initialize DB from SQL file
 const processAndRunSQLFile = async (filePath) => {
   try {
     let sql = fs.readFileSync(filePath, "utf8");
@@ -42,28 +42,27 @@ const processAndRunSQLFile = async (filePath) => {
       .replace(/--.*?(\r?\n|$)/g, "")
       .replace(/\/\*.*?\*\//gs, "");
 
-    sql = `SET FOREIGN_KEY_CHECKS = 0;\n${sql}\nSET FOREIGN_KEY_CHECKS = 1;`;
-
     const statements = sql.split(";").filter((stmt) => stmt.trim());
 
     for (const stmt of statements) {
       await sequelize.query(stmt);
     }
+
     console.log("Database initialized successfully.");
   } catch (error) {
     console.error("Error initializing database:", error);
   }
 };
 
+// Function to check if required tables exist in PostgreSQL
 const checkAndInitializeDatabase = async (sqlFilePath) => {
   try {
     const tables = ["accounts", "administrators", "albums", "artists", "music"];
     const missingTables = [];
 
     for (const table of tables) {
-      const result = await sequelize.query(
-        `SHOW TABLES LIKE '${table}'`,
-        { type: sequelize.QueryTypes.SHOWTABLES }
+      const [result] = await sequelize.query(
+        `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name = '${table}'`
       );
       if (result.length === 0) {
         missingTables.push(table);
@@ -72,9 +71,7 @@ const checkAndInitializeDatabase = async (sqlFilePath) => {
 
     if (missingTables.length > 0) {
       console.warn(
-        `Missing tables detected: ${missingTables.join(
-          ", "
-        )}. Reinitializing database...`
+        `Missing tables: ${missingTables.join(", ")}. Reinitializing database...`
       );
       await processAndRunSQLFile(sqlFilePath);
     } else {
@@ -86,6 +83,7 @@ const checkAndInitializeDatabase = async (sqlFilePath) => {
   }
 };
 
+// Main server runner
 (async () => {
   try {
     await connectToDatabase();
@@ -101,7 +99,7 @@ const checkAndInitializeDatabase = async (sqlFilePath) => {
     }
 
     app.listen(port, () => {
-      console.log(`Backend Nodejs App listening on port ${port}`);
+      console.log(`Backend Node.js App is running on port ${port}`);
     });
   } catch (error) {
     console.error(">>> Error connecting to DB:", error);
