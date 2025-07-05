@@ -35,9 +35,7 @@ const auth = async (req, res, next) => {
         console.log('🔓 Decoded token:', decoded);
         console.log('🔓 Looking for accountId:', decoded.accountId);
 
-        const user = await Account.findOne({
-          where: { accountId: decoded.accountId },
-        });
+        const user = await Account.findByPk(decoded.accountId);
         
         // Debug: Log user query result
         console.log('👤 User found:', !!user);
