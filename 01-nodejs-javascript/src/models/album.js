@@ -8,6 +8,7 @@ const Album = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      field: 'album_id'
     },
     name: {
       type: DataTypes.STRING,
@@ -26,19 +27,23 @@ const Album = sequelize.define(
     thumbnailPath: {
       type: DataTypes.STRING,
       allowNull: true,
+      field: 'thumbnail_path'
     },
     createdDate: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
+      field: 'created_date'
     },
     publishedYear: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      field: 'published_year'
     },
     accountId: {
       type: DataTypes.INTEGER, 
       primaryKey: true,
+      field: 'account_id',
       references: {
         model: "artists",
         key: "accountId",

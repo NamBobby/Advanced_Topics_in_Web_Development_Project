@@ -8,11 +8,13 @@ const UserFollow = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      field: 'user_follow_id'
     },
     accountId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
+      field: 'account_id',
       references: {
         model: "accounts",
         key: "accountId",
@@ -22,10 +24,12 @@ const UserFollow = sequelize.define(
     followType: {
       type: DataTypes.ENUM("Album", "Artist"),
       allowNull: false,
+      field: 'follow_type'
     },
     artistId: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      field: 'artist_id',
       references: {
         model: "artists", 
         key: "accountId",
@@ -35,6 +39,7 @@ const UserFollow = sequelize.define(
     albumId: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      field: 'album_id',
       references: {
         model: "albums",
         key: "albumId",
@@ -44,6 +49,7 @@ const UserFollow = sequelize.define(
   },
   {
     timestamps: false,
+    tableName: 'user_follows',
     validate: {
       onlyOneFollowId() {
         if (!this.artistId && !this.albumId) {

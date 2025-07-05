@@ -8,6 +8,7 @@ const Music = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      field: 'music_id'
     },
     title: {
       type: DataTypes.STRING,
@@ -33,6 +34,7 @@ const Music = sequelize.define(
     filePath: {
       type: DataTypes.STRING,
       allowNull: false,
+      field: 'file_path',
       validate: {
         notEmpty: true,
       },
@@ -44,19 +46,23 @@ const Music = sequelize.define(
     thumbnailPath: {
       type: DataTypes.STRING,
       allowNull: true,
+      field: 'thumbnail_path'
     },
     uploadDate: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
+      field: 'upload_date'
     },
     publishedYear: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      field: 'published_year'
     },
     accountId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      field: 'account_id',
       references: {
         model: "artists",
         key: "accountId",
@@ -67,6 +73,7 @@ const Music = sequelize.define(
     },
     albumId: {
       type: DataTypes.INTEGER,
+      field: 'album_id',
       references: {
         model: "albums",
         key: "albumId",

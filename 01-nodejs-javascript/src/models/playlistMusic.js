@@ -6,6 +6,7 @@ const PlaylistMusic = sequelize.define(
   {
     playlistId: {
       type: DataTypes.INTEGER,
+      field: 'playlist_id',
       references: {
         model: "playlists",
         key: "playlistId",
@@ -14,6 +15,7 @@ const PlaylistMusic = sequelize.define(
     },
     musicId: {
       type: DataTypes.INTEGER,
+      field: 'music_id',
       references: {
         model: "music",
         key: "musicId",
@@ -21,7 +23,10 @@ const PlaylistMusic = sequelize.define(
       allowNull: false,
     },
   },
-  { timestamps: false }
+  { 
+    timestamps: false,
+    tableName: 'playlist_music'
+  }
 );
 
 module.exports = PlaylistMusic;

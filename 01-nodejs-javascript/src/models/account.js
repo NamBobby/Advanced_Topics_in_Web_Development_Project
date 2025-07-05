@@ -9,6 +9,7 @@ Account.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      field: 'account_id' 
     },
     name: {
       type: DataTypes.STRING,
@@ -23,6 +24,7 @@ Account.init(
     avatarPath: {
       type: DataTypes.STRING,
       allowNull: true,
+      field: 'avatar_path'
     },
     password: {
       type: DataTypes.STRING,
@@ -31,6 +33,7 @@ Account.init(
     dateOfBirth: {
       type: DataTypes.DATEONLY,
       allowNull: false,
+      field: 'date_of_birth',
       validate: {
         isDate: true,
       },
@@ -58,6 +61,7 @@ User.init({
     type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false,
+    field: 'account_id',
     references: {
       model: Account,
       key: "accountId",
@@ -67,11 +71,13 @@ User.init({
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW,
+    field: 'created_at'
   },
   updatedAt: {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW,
+    field: 'updated_at'
   },
 }, { sequelize, modelName: "User", tableName: "users", timestamps: false });
 User.addHook("beforeCreate", (user) => {
@@ -84,6 +90,7 @@ Artist.init({
     type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false,
+    field: 'account_id',
     references: {
       model: Account,
       key: "accountId",
@@ -93,11 +100,13 @@ Artist.init({
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW,
+    field: 'created_at'
   },
   updatedAt: {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW,
+    field: 'updated_at'
   },
 }, { sequelize, modelName: "Artist", tableName: "artists", timestamps: false });
 Artist.addHook("beforeCreate", (artist) => {
@@ -110,6 +119,7 @@ Administrator.init({
     type: DataTypes.INTEGER,
     primaryKey: true,
     allowNull: false,
+    field: 'account_id',
     references: {
       model: Account,
       key: "accountId",
@@ -119,11 +129,13 @@ Administrator.init({
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW,
+    field: 'created_at'
   },
   updatedAt: {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW,
+    field: 'updated_at'
   },
 }, { sequelize, modelName: "Administrator", tableName: "administrators", timestamps: false });
 Administrator.addHook("beforeCreate", (admin) => {
