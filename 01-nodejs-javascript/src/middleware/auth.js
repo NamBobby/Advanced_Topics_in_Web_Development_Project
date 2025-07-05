@@ -7,6 +7,7 @@ const auth = async (req, res, next) => {
     "/register",
     "/user",
     "/login",
+    "/account",
     "/sendemail",
     "/sendotp",
     "/verifyotp",
