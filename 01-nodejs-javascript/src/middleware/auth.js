@@ -17,8 +17,10 @@ const auth = async (req, res, next) => {
     "/albums",
   ];
 
-  if (allow_lists.find((item) => "/v1/api" + item === req.originalUrl)) {
+  const fullAllowList = allow_lists.map((item) => `/v1/api${item}`);
+  if (fullAllowList.some((path) => req.originalUrl.startsWith(path))) {
     next();
+
   } else {
     if (req.headers && req.headers.authorization) {
       const token = req.headers.authorization.split(" ")[1];
