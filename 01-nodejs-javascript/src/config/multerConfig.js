@@ -1,53 +1,21 @@
 const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
 const crypto = require("crypto");
+const supabase = require('./supabase');
 
-// Storage configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    let folderPath = "";
+// Use memory storage instead of disk storage
+const storage = multer.memoryStorage();
 
-    if (file.fieldname === "musicFile") {
-      folderPath = "./src/uploads/music/";
-    } else if (file.fieldname === "thumbnail") {
-      folderPath = "./src/uploads/music/thumbnails/";
-    } else if (file.fieldname === "albumThumbnail") {
-      folderPath = "./src/uploads/albums/";
-    } else if (file.fieldname === "playlistThumbnail") {
-      folderPath = "./src/uploads/playlists/";
-    } else if (file.fieldname === "avatar") {
-      folderPath = "./src/uploads/avatars/";
-    } else {
-      return cb(new Error("Unknown fieldname"), false);
-    }
-
-    if (!fs.existsSync(folderPath)) {
-      fs.mkdirSync(folderPath, { recursive: true });
-    }
-
-    cb(null, folderPath); 
-  
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${crypto.randomBytes(6).toString("hex")}`;
-    cb(null, `${uniqueSuffix}${path.extname(file.originalname)}`);
-  },
-});
-
-// File filter
+// File filter (same logic as before)
 const fileFilter = (req, file, cb) => {
   const allowedMusicTypes = ["audio/mp3", "audio/mpeg", "audio/aac"];
   const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
 
-  // Check if it's a valid music file
   if (file.fieldname === "musicFile" && !allowedMusicTypes.includes(file.mimetype)) {
     const error = new Error("Incorrect music file type");
     error.status = 400;
     return cb(error, false);
   }
 
-  // Check if it's a valid image file
   if (["avatar", "thumbnail", "albumThumbnail", "playlistThumbnail"].includes(file.fieldname) && !allowedImageTypes.includes(file.mimetype)) {
     const error = new Error("Incorrect image file type");
     error.status = 400;
@@ -57,12 +25,12 @@ const fileFilter = (req, file, cb) => {
   cb(null, true);
 };
 
-// Middleware for handling file upload with file size restrictions
+// Upload to memory first
 const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 6 * 1024 * 1024, // 6MB max for music file
+    fileSize: 6 * 1024 * 1024, // 6MB max
   },
 }).fields([
   { name: "musicFile", maxCount: 1 },
@@ -72,23 +40,66 @@ const upload = multer({
   { name: "avatar", maxCount: 1 },
 ]);
 
-// Custom middleware for additional size checking for specific files (e.g., thumbnails)
+// Helper function to upload to Supabase Storage
+const uploadToSupabase = async (file, bucketName, folderPath = '') => {
+  try {
+    const fileExt = file.originalname.split('.').pop();
+    const fileName = `${folderPath}${Date.now()}-${crypto.randomBytes(6).toString("hex")}.${fileExt}`;
+    
+    const { data, error } = await supabase.storage
+      .from(bucketName)
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: false
+      });
+
+    if (error) throw error;
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from(bucketName)
+      .getPublicUrl(fileName);
+
+    return {
+      path: fileName,
+      publicUrl: publicUrl
+    };
+  } catch (error) {
+    console.error('Error uploading to Supabase:', error);
+    throw error;
+  }
+};
+
+// Helper function to delete from Supabase Storage
+const deleteFromSupabase = async (bucketName, filePath) => {
+  try {
+    const { error } = await supabase.storage
+      .from(bucketName)
+      .remove([filePath]);
+    
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Error deleting from Supabase:', error);
+    return false;
+  }
+};
+
 const checkThumbnailSize = (req, res, next) => {
   if (req.files) {
-    if (req.files.albumThumbnail && req.files.albumThumbnail[0].size > 5 * 1024 * 1024) {
-      return next(new Error("Album thumbnail file size exceeds 5MB limit"));
-    }
-    if (req.files.playlistThumbnail && req.files.playlistThumbnail[0].size > 5 * 1024 * 1024) {
-      return next(new Error("Playlist thumbnail file size exceeds 5MB limit"));
-    }
-    if (req.files.musicFile && req.files.musicFile[0].size > 5 * 1024 * 1024) {
-      return next(new Error("Music file size exceeds 5MB limit"));
-    }
-    if (req.files.avatar && req.files.avatar[0].size > 5 * 1024 * 1024) {
-      return next(new Error("Avatar file size exceeds 5MB limit"));
+    const files = ['albumThumbnail', 'playlistThumbnail', 'musicFile', 'avatar'];
+    for (const fileType of files) {
+      if (req.files[fileType] && req.files[fileType][0].size > 5 * 1024 * 1024) {
+        return next(new Error(`${fileType} file size exceeds 5MB limit`));
+      }
     }
   }
   next();
 };
 
-module.exports = { upload, checkThumbnailSize };
+module.exports = { 
+  upload, 
+  checkThumbnailSize, 
+  uploadToSupabase, 
+  deleteFromSupabase 
+};
