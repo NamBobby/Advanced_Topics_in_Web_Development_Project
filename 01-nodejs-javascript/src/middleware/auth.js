@@ -20,19 +20,35 @@ const auth = async (req, res, next) => {
   const fullAllowList = allow_lists.map((item) => `/v1/api${item}`);
   if (fullAllowList.some((path) => req.originalUrl.startsWith(path))) {
     next();
-
   } else {
     if (req.headers && req.headers.authorization) {
       const token = req.headers.authorization.split(" ")[1];
 
       try {
+        // Debug: Log JWT_SECRET exists
+        console.log('🔑 JWT_SECRET exists:', !!process.env.JWT_SECRET);
+        console.log('🔑 JWT_SECRET length:', process.env.JWT_SECRET?.length);
+        
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // Debug: Log decoded token
+        console.log('🔓 Decoded token:', decoded);
+        console.log('🔓 Looking for accountId:', decoded.accountId);
 
         const user = await Account.findOne({
           where: { accountId: decoded.accountId },
         });
+        
+        // Debug: Log user query result
+        console.log('👤 User found:', !!user);
+        console.log('👤 User data:', user ? { id: user.accountId, email: user.email } : 'null');
+        
         if (!user) {
-          return res.status(401).json({ message: "Account not found" });
+          console.log('❌ Account not found for accountId:', decoded.accountId);
+          return res.status(401).json({ 
+            success: false,
+            message: "Account not found" 
+          });
         }
 
         req.user = {
@@ -45,13 +61,22 @@ const auth = async (req, res, next) => {
           role: user.role,
         };
 
-        //console.log(">>> check auth: ", req.user);
+        console.log("✅ Auth successful for user:", user.email);
         next();
       } catch (error) {
-        return res.status(401).json({ message: "TokenExpired/Error" });
+        console.log('❌ JWT Error:', error.message);
+        console.log('❌ JWT Error type:', error.name);
+        return res.status(401).json({ 
+          success: false,
+          message: "TokenExpired/Error" 
+        });
       }
     } else {
-      return res.status(401).json({ message: "Unauthorized access" });
+      console.log('❌ No authorization header');
+      return res.status(401).json({ 
+        success: false,
+        message: "Authentication required" 
+      });
     }
   }
 };
