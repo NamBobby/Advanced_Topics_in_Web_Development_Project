@@ -28,7 +28,7 @@ const webAPI = express.Router();
 webAPI.get("/", getHomepage);
 app.use("/", webAPI);
 app.use("/v1/api/", apiRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Function to initialize DB from SQL file
 const processAndRunSQLFile = async (filePath) => {

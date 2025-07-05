@@ -22,7 +22,7 @@ const {
   unfollowItemService,
 } = require("../services/userService");
 const { Account } = require("../models/associations");
-const { upload, checkThumbnailSize } = require("../config/multerConfig");
+const { upload, checkThumbnailSize, uploadToSupabase, deleteFromSupabase } = require("../config/multerConfig");
 
 const UserRegister = async (req, res) => {
   try {
@@ -71,7 +71,17 @@ const updateUser = async (req, res) => {
     let avatarPath = account.avatarPath;
 
     if (avatarFile) {
-      avatarPath = `avatars/${avatarFile.filename}`;
+      // Upload new avatar to Supabase
+      const avatarUpload = await uploadToSupabase(avatarFile, 'avatars', 'profiles/');
+      avatarPath = avatarUpload.publicUrl;
+
+      // Optional: Delete old avatar from Supabase if it exists and is a Supabase URL
+      if (account.avatarPath && account.avatarPath.includes('supabase.co')) {
+        // Extract filename from URL for deletion
+        const urlParts = account.avatarPath.split('/');
+        const oldFileName = urlParts[urlParts.length - 1];
+        await deleteFromSupabase('avatars', `profiles/${oldFileName}`);
+      }
     }
 
     const profileData = {
@@ -153,6 +163,8 @@ const createPlaylist = [
   checkThumbnailSize,
   async (req, res) => {
     try {
+      const thumbnailFile = req.files.playlistThumbnail ? req.files.playlistThumbnail[0] : null;
+
       const account = await Account.findOne({
         where: { email: req.user.email },
       });
@@ -161,13 +173,16 @@ const createPlaylist = [
       }
 
       const { name } = req.body;
-      const thumbnailPath = req.files.playlistThumbnail
-        ? req.files.playlistThumbnail[0].path
-        : null;
+
+      // Upload playlist thumbnail to Supabase if provided
+      let thumbnailUpload = null;
+      if (thumbnailFile) {
+        thumbnailUpload = await uploadToSupabase(thumbnailFile, 'playlists', 'covers/');
+      }
 
       const playlist = await createPlaylistService({
         name,
-        thumbnailPath,
+        thumbnailPath: thumbnailUpload ? thumbnailUpload.publicUrl : null,
         accountId: account.accountId,
         creationDate: new Date(),
       });

@@ -141,22 +141,7 @@ const updateUserService = async (profileData) => {
       return { EC: 6, EM: "User not found" };
     }
 
-    if (
-      profileData.avatarPath &&
-      user.avatarPath &&
-      profileData.avatarPath !== user.avatarPath
-    ) {
-      const oldAvatarPath = path.join(__dirname, "../uploads", user.avatarPath);
-      console.log("Old Avatar Path:", oldAvatarPath);
-
-      if (fs.existsSync(oldAvatarPath)) {
-        fs.unlinkSync(oldAvatarPath);
-        console.log("Old avatar deleted successfully.");
-      } else {
-        console.log("Old avatar does not exist.");
-      }
-    }
-
+    // No need to delete local files - now handled by Supabase in controller
     const updatedFields = {
       ...(profileData.dateOfBirth && { dateOfBirth: profileData.dateOfBirth }),
       ...(profileData.gender && { gender: profileData.gender }),

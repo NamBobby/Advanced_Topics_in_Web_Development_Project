@@ -6,10 +6,9 @@ const {
   deleteAlbumService,
   deleteMusicService,
 } = require("../services/artistService");
-const { upload, checkThumbnailSize } = require("../config/multerConfig");
+const { upload, checkThumbnailSize, uploadToSupabase, deleteFromSupabase } = require("../config/multerConfig");
 const { Artist, Account } = require("../models/associations");
 
-// Upload music function
 const uploadMusical = [
   upload,
   checkThumbnailSize,
@@ -40,17 +39,23 @@ const uploadMusical = [
         return res.status(400).json({ message: "Missing required fields" });
       }
 
-      const filePath = musicFile.path;
-      const thumbnailPath = thumbnailFile ? thumbnailFile.path : null;
+      // Upload music file to Supabase
+      const musicUpload = await uploadToSupabase(musicFile, 'music-files', 'tracks/');
+      
+      // Upload thumbnail if provided
+      let thumbnailUpload = null;
+      if (thumbnailFile) {
+        thumbnailUpload = await uploadToSupabase(thumbnailFile, 'thumbnails', 'music/');
+      }
 
       const musicData = {
         title,
         artist: account.name,
         genre,
-        filePath,
+        filePath: musicUpload.publicUrl, // Store public URL instead of local path
         publishedYear,
         description,
-        thumbnailPath,
+        thumbnailPath: thumbnailUpload ? thumbnailUpload.publicUrl : null,
         uploadDate: new Date(),
         accountId: artist.accountId,
         albumId: albumId || null,
@@ -87,7 +92,7 @@ const createAlbum = [
 
       const { accountId, role } = req.user;
       if (role !== "Artist") {
-        return res.status(403).json({ message: "Only artists can upload music" });
+        return res.status(403).json({ message: "Only artists can create albums" });
       }
 
       const artist = await Artist.findOne({ where: { accountId } });
@@ -101,10 +106,16 @@ const createAlbum = [
         return res.status(400).json({ message: "Album name is required" });
       }
 
+      // Upload album thumbnail to Supabase if provided
+      let thumbnailUpload = null;
+      if (thumbnailFile) {
+        thumbnailUpload = await uploadToSupabase(thumbnailFile, 'albums', 'covers/');
+      }
+
       const albumData = {
         name,
         artist: account.name,
-        thumbnailPath: thumbnailFile ? thumbnailFile.path : null,
+        thumbnailPath: thumbnailUpload ? thumbnailUpload.publicUrl : null,
         publishedYear: publishedYear || null,
         accountId: artist.accountId,
         creationDate: new Date(),
