@@ -153,8 +153,23 @@ const verifyOtp = async (req, res) => {
 };
 
 const getAccount = async (req, res) => {
-  const data = await getProfileService(req.user.accountId);
-  return res.status(200).json(data);
+  try {
+    if (!req.user?.accountId) {
+      return res.status(401).json({ 
+        success: false, 
+        message: "Authentication required" 
+      });
+    }
+    
+    const data = await getProfileService(req.user.accountId);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error("Error in getAccount:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Error fetching account" 
+    });
+  }
 };
 
 // Create playlist function
