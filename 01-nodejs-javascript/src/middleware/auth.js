@@ -28,24 +28,27 @@ const auth = async (req, res, next) => {
         // Debug: Log JWT_SECRET exists
         console.log('🔑 JWT_SECRET exists:', !!process.env.JWT_SECRET);
         console.log('🔑 JWT_SECRET length:', process.env.JWT_SECRET?.length);
-        
+
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
+
         // Debug: Log decoded token
         console.log('🔓 Decoded token:', decoded);
         console.log('🔓 Looking for accountId:', decoded.accountId);
 
-        const user = await Account.findByPk(decoded.accountId);
-        
+        const user = await Account.findOne({
+          where: { accountId: decoded.accountId },
+          raw: true
+        });
+
         // Debug: Log user query result
         console.log('👤 User found:', !!user);
         console.log('👤 User data:', user ? { id: user.accountId, email: user.email } : 'null');
-        
+
         if (!user) {
           console.log('❌ Account not found for accountId:', decoded.accountId);
-          return res.status(401).json({ 
+          return res.status(401).json({
             success: false,
-            message: "Account not found" 
+            message: "Account not found"
           });
         }
 
@@ -64,16 +67,16 @@ const auth = async (req, res, next) => {
       } catch (error) {
         console.log('❌ JWT Error:', error.message);
         console.log('❌ JWT Error type:', error.name);
-        return res.status(401).json({ 
+        return res.status(401).json({
           success: false,
-          message: "TokenExpired/Error" 
+          message: "TokenExpired/Error"
         });
       }
     } else {
       console.log('❌ No authorization header');
-      return res.status(401).json({ 
+      return res.status(401).json({
         success: false,
-        message: "Authentication required" 
+        message: "Authentication required"
       });
     }
   }
